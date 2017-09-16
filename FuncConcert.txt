@@ -1,0 +1,34 @@
+pragma solidity ^0.4.16;
+
+contract FuncConcert {
+    
+    address owner;
+    uint public ticketsAmount;
+    uint constant price = 1 ether;
+    mapping (address => uint) public purchasers;
+    
+    function FuncConcert(uint _ticketsAmount) {
+        owner = msg.sender;
+        ticketsAmount = _ticketsAmount;
+    }
+    
+    function () payable {
+        buyTickets(1);
+    }
+    
+    function buyTickets(uint _amount) payable {
+        if (msg.value != (_amount * price) || _amount > ticketsAmount) {
+            return;
+        }
+        purchasers[msg.sender] += _amount;
+        ticketsAmount -= _amount;
+        
+        if (ticketsAmount == 0) {
+            selfdestruct(owner);
+        }
+    }
+    
+    function website() returns (string) {
+        
+    }
+}
