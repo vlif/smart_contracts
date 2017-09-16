@@ -1,5 +1,9 @@
 pragma solidity ^0.4.16;
 
+interface Refundable {
+    function refund(uint _numTickets) returns (bool);
+}
+
 contract FuncConcert {
     
     address owner;
@@ -30,5 +34,26 @@ contract FuncConcert {
     
     function website() returns (string) {
         
+    }
+}
+
+contract AbstractFuncAttack is FuncConcert(10), Refundable {
+
+    event TicketsRefunded(address _sender, uint _tickets);
+    
+    function refund(uint _numTickets) returns (bool) {
+        if (purchasers[msg.sender] < _numTickets) {
+            return false;
+        }
+        msg.sender.transfer(_numTickets * price);
+        purchasers[msg.sender] -= _numTickets;
+        
+        ticketsAmount += _numTickets;
+        TicketsRefunded(msg.sender, _numTickets);
+        return true;
+    }
+    
+    function website() returns (string) {
+        return "http://website.com";
     }
 }
