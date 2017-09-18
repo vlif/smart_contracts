@@ -15,7 +15,7 @@ contract ESportsToken is usingESportsConstants, MintableToken {
     mapping(address => bool) excluded;
 
     function name() constant public returns (string _name) {
-        return "ESports Coin";
+        return "ESports Token";
     }
 
     function symbol() constant public returns (bytes32 _symbol) {
