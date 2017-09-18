@@ -12,10 +12,8 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
 	// Overall 100.00% 60 000 000
 	uint constant teamTokens = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
 	uint constant investorTokens = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00%
-	// Buffer: Token bonus (e.g pre sale, first week), team and advisor tokens. The unused amount will be controlled by the company.
 	uint constant bufferTokens = 6000000 * TOKEN_DECIMAL_MULTIPLIER; // 10.00%
 	uint constant bonusTokens = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00%
-	// Company cold storage: Company controlled tokens used for coverage of wins in betting or giving out rewards for creating community content.
 	uint constant companyColdStorage = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
     uint constant icoTokens = 24000000 * TOKEN_DECIMAL_MULTIPLIER; // 40.00%
 
@@ -32,7 +30,6 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
 		uint32 _startTime,
         uint32 _endTime,
         address _wallet, //address _addressOfTokenUsedAsReward,
-		// 1. Our minimum funding goal stands at 2 Million €. If we do not reach that goal, all funds will be returned automatically by the smart contract, minus transaction costs and marketing campaign expenses (see below).
 		uint _softCapWei,
 		uint _hardCapTokens
 	) RefundableCrowdsale(
