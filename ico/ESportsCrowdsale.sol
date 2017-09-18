@@ -6,7 +6,7 @@ contract ESportsCrowdsale {
 	function ESportsCrowdsale(
 		uint32 _startTime,
         uint32 _endTime,
-        address addressOfTokenUsedAsReward, //address _wallet,
+        address addressOfTokenUsedAsReward //address _wallet,
 	) {
 		
 	}
