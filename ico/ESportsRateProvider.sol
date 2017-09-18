@@ -96,6 +96,7 @@ contract ESportsRateProvider is usingESportsConstants, ESportsRateProviderI, Own
             }
             rate += rate * eRate.bonusPercent1000 / 1000;
         }
+        
         return rate;
     }
 
