@@ -535,3 +535,342 @@ contract RefundVault is Ownable {
     }
 }
 
+/**
+ * @title RefundableCrowdsale
+ * @dev Extension of Crowdsale contract that adds a funding goal, and
+ * the possibility of users getting a refund if goal is not met.
+ * Uses a RefundVault as the crowdsale's vault.
+ */
+contract RefundableCrowdsale is FinalizableCrowdsale {
+    using SafeMath for uint256;
+
+    // minimum amount of funds to be raised in weis
+    uint public goal;
+
+    // refund vault used to hold funds while crowdsale is running
+    RefundVault public vault;
+
+    function RefundableCrowdsale(uint32 _startTime, uint32 _endTime, uint _rate, uint _hardCap, address _wallet, uint _goal)
+            FinalizableCrowdsale(_startTime, _endTime, _rate, _hardCap, _wallet) {
+        require(_goal > 0);
+        vault = new RefundVault(wallet);
+        goal = _goal;
+    }
+
+    // We're overriding the fund forwarding from Crowdsale.
+    // In addition to sending the funds, we want to call
+    // the RefundVault deposit function
+    function forwardFunds(uint amountWei) internal {
+        if (goalReached()) {
+            wallet.transfer(amountWei);
+        }
+        else {
+            vault.deposit.value(amountWei)(msg.sender);
+        }
+    }
+
+    // if crowdsale is unsuccessful, investors can claim refunds here
+    function claimRefund() public {
+        require(isFinalized);
+        require(!goalReached());
+
+        vault.refund(msg.sender);
+    }
+
+    /**
+     * @dev Close vault only if goal was reached.
+     */
+    function closeVault() public onlyOwner {
+        require(goalReached());
+        vault.close();
+    }
+
+    // vault finalization task, called when owner calls finalize()
+    function finalization() internal {
+        super.finalization();
+
+        if (goalReached()) {
+            vault.close();
+        }
+        else {
+            vault.enableRefunds();
+        }
+    }
+
+    function goalReached() public constant returns (bool) {
+        return weiRaised >= goal;
+    }
+
+}
+
+
+
+
+
+
+contract usingESportsConstants {
+    uint constant TOKEN_DECIMALS = 18;
+    uint8 constant TOKEN_DECIMALS_UINT8 = 18;
+    uint constant TOKEN_DECIMAL_MULTIPLIER = 10 ** TOKEN_DECIMALS;
+}
+
+contract ESportsToken is usingESportsConstants, MintableToken {
+    /**
+     * @dev Pause token transfer. After successfully finished crowdsale it becomes true.
+     */
+    bool public paused = true;
+    /**
+     * @dev Accounts who can transfer token even if paused. Works only during crowdsale.
+     */
+    mapping(address => bool) excluded;
+
+    function name() constant public returns (string _name) {
+        return "ESports Token";
+    }
+
+    function symbol() constant public returns (bytes32 _symbol) {
+        return "ERT";
+    }
+
+    function decimals() constant public returns (uint8 _decimals) {
+        return TOKEN_DECIMALS_UINT8;
+    }
+    
+    function crowdsaleFinished() onlyOwner {
+        paused = false;
+    }
+
+
+    function addExcluded(address _toExclude) onlyOwner {
+        excluded[_toExclude] = true;
+    }
+
+
+    function transferFrom(address _from, address _to, uint256 _value) returns (bool) {
+        require(!paused || excluded[_from]);
+        return super.transferFrom(_from, _to, _value);
+    }
+
+    function transfer(address _to, uint256 _value) returns (bool) {
+        require(!paused || excluded[msg.sender]);
+        return super.transfer(_to, _value);
+    }
+}
+
+contract ESportsRateProviderI {
+    /**
+     * @dev Calculate actual rate using the specified parameters.
+     * @param buyer     Investor (buyer) address.
+     * @param totalSold Amount of sold tokens.
+     * @param amountWei Amount of wei to purchase.
+     * @return ETH to Token rate.
+     */
+    function getRate(address buyer, uint totalSold, uint amountWei) public constant returns (uint);
+
+    /**
+     * @dev rate scale (or divider), to support not integer rates.
+     * @return Rate divider.
+     */
+    function getRateScale() public constant returns (uint);
+}
+
+contract ESportsRateProvider is usingESportsConstants, ESportsRateProviderI, Ownable {
+    // rate calculate accuracy
+    uint constant RATE_SCALE = 10000;
+
+    uint constant STEP_30 = 20000000 * TOKEN_DECIMAL_MULTIPLIER;
+    uint constant STEP_20 = 40000000 * TOKEN_DECIMAL_MULTIPLIER;
+    uint constant STEP_10 = 60000000 * TOKEN_DECIMAL_MULTIPLIER;
+
+    uint constant RATE_30 = 1950 * RATE_SCALE;
+    uint constant RATE_20 = 1800 * RATE_SCALE;
+    uint constant RATE_10 = 1650 * RATE_SCALE;
+
+    uint constant BASE_RATE = 1500 * RATE_SCALE;
+
+    struct ExclusiveRate {
+        // be careful, accuracies this about 15 minutes
+        uint32 workUntil;
+        // exclusive rate or 0
+        uint rate;
+        // rate bonus percent, which will be divided by 1000 or 0
+        uint16 bonusPercent1000;
+        // flag to check, that record exists
+        bool exists;
+    }
+
+    mapping(address => ExclusiveRate) exclusiveRate;
+
+    function getRateScale() public constant returns (uint) {
+        return RATE_SCALE;
+    }
+
+    function getRate(address buyer, uint totalSold, uint amountWei) public constant returns (uint) {
+        uint rate;
+        
+        // apply sale
+        if (totalSold < STEP_30) {
+            rate = RATE_30;
+        }
+        else if (totalSold < STEP_20) {
+            rate = RATE_20;
+        }
+        else if (totalSold < STEP_10) {
+            rate = RATE_10;
+        }
+        else {
+            rate = BASE_RATE;
+        }
+
+        // apply bonus for amount
+        if (amountWei >= 1000 ether) {
+            rate += rate * 13 / 100;
+        }
+        else if (amountWei >= 500 ether) {
+            rate += rate * 10 / 100;
+        }
+        else if (amountWei >= 100 ether) {
+            rate += rate * 7 / 100;
+        }
+        else if (amountWei >= 50 ether) {
+            rate += rate * 5 / 100;
+        }
+        else if (amountWei >= 30 ether) {
+            rate += rate * 4 / 100;
+        }
+        else if (amountWei >= 10 ether) {
+            rate += rate * 25 / 1000;
+        }
+
+        ExclusiveRate memory eRate = exclusiveRate[buyer];
+        if (eRate.exists && eRate.workUntil >= now) {
+            if (eRate.rate != 0) {
+                rate = eRate.rate;
+            }
+            rate += rate * eRate.bonusPercent1000 / 1000;
+        }
+        
+        return rate;
+    }
+
+    function setExclusiveRate(address _investor, uint _rate, uint16 _bonusPercent1000, uint32 _workUntil) onlyOwner {
+        exclusiveRate[_investor] = ExclusiveRate(_workUntil, _rate, _bonusPercent1000, true);
+    }
+
+    function removeExclusiveRate(address _investor) onlyOwner {
+        delete exclusiveRate[_investor];
+    }
+}
+
+contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
+	// uint constant minimalPurchase = 0.05 ether; // 50 000 000 000 000 000 Wei
+
+	// Overall 100.00% 60 000 000
+	uint constant teamTokens = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
+	uint constant investorTokens = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00%
+	uint constant bufferTokens = 6000000 * TOKEN_DECIMAL_MULTIPLIER; // 10.00%
+	uint constant bonusTokens = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00%
+	uint constant companyColdStorage = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
+    uint constant icoTokens = 24000000 * TOKEN_DECIMAL_MULTIPLIER; // 40.00%
+
+	address constant teamAddress = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;
+    // address constant bountyAddress = 0x0025ea8bBBB72199cf70FE25F92d3B298C3B162A;
+    address constant icoAccountAddress = 0x583031d1113ad414f02576bd6afabfb302140225;
+
+    ESportsRateProviderI public rateProvider;
+
+	/**
+     * Constructor function
+     */
+    function ESportsCrowdsale(
+		uint32 _startTime,
+        uint32 _endTime,
+        address _wallet, //address _addressOfTokenUsedAsReward,
+		uint _softCapWei,
+		uint _hardCapTokens
+	) RefundableCrowdsale(
+	   _startTime, 
+	   _endTime, 
+	   1500, 
+	   _hardCapTokens * TOKEN_DECIMAL_MULTIPLIER, // 105 000 000
+	   _wallet, //_addressOfTokenUsedAsReward
+	   _softCapWei // _goal // 2 000 000 -> 8000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
+	) {
+		token.mint(teamAddress, teamTokens);
+        // token.mint(bountyAddress, bountyTokens);
+        token.mint(icoAccountAddress, icoTokens);
+
+        // ESportsToken(token).addExcluded(teamAddress);
+        // ESportsToken(token).addExcluded(bountyAddress);
+        // ESportsToken(token).addExcluded(icoAccountAddress);
+
+        ESportsRateProvider provider = new ESportsRateProvider();
+        provider.transferOwnership(owner);
+        rateProvider = provider;
+
+
+
+	}
+
+	/**
+     * @dev Override token creation to integrate with ESports token.
+     */
+    function createTokenContract() internal returns (MintableToken) {
+        return new ESportsToken();
+    }
+
+
+    /**
+     * @dev Override getRate to integrate with rate provider.
+     */
+    function getRate(uint _value) internal constant returns (uint) {
+        return rateProvider.getRate(msg.sender, soldTokens, _value);
+    }
+
+    /**
+     * @dev Override getRateScale to integrate with rate provider.
+     */
+    function getRateScale() internal constant returns (uint) {
+        return rateProvider.getRateScale();
+    }
+
+    /**
+     * @dev Admin can set new rate provider.
+     * @param _rateProviderAddress New rate provider.
+     */
+    function setRateProvider(address _rateProviderAddress) onlyOwner {
+        require(_rateProviderAddress != 0);
+        rateProvider = ESportsRateProviderI(_rateProviderAddress);
+    }
+
+
+	/**
+     * @dev Admin can move end time.
+     * @param _endTime New end time.
+     */
+    function setEndTime(uint32 _endTime) onlyOwner {
+        endTime = _endTime;
+    }
+
+    // function validPurchase(uint _amountWei, uint _actualRate, uint _totalSupply) internal constant returns (bool) {
+    //     if (_amountWei < minimalPurchase) {
+    //         return false;
+    //     }
+
+    //     return super.validPurchase(_amountWei, _actualRate, _totalSupply);
+    // }
+
+    function finalization() internal {
+        super.finalization();
+        token.finishMinting();
+        if (!goalReached()) {
+            return;
+        }
+
+        ESportsToken(token).crowdsaleFinished();
+        
+        token.transferOwnership(owner);
+    }
+}
+
+
