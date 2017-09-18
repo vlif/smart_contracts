@@ -30,9 +30,11 @@ contract ESportsToken is usingESportsConstants, MintableToken {
         paused = false;
     }
 
+
     function addExcluded(address _toExclude) onlyOwner {
         excluded[_toExclude] = true;
     }
+
 
     function transferFrom(address _from, address _to, uint256 _value) returns (bool) {
         require(!paused || excluded[_from]);

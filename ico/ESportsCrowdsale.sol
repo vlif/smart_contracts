@@ -7,7 +7,7 @@ import "./ESportsToken.sol";
 import "./ESportsRateProvider.sol";
 
 contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
-	// uint constant minimalPurchase = 0.05 ether;
+	// uint constant minimalPurchase = 0.05 ether; // 50 000 000 000 000 000 Wei
 
 	// Overall 100.00% 60 000 000
 	uint constant teamTokens = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
@@ -17,40 +17,40 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
 	uint constant companyColdStorage = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
     uint constant icoTokens = 24000000 * TOKEN_DECIMAL_MULTIPLIER; // 40.00%
 
-	// address constant teamAddress = 0x001a041f7ABAb9871a22D2bEd0EC4dAb228866c3;
+	address constant teamAddress = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;
     // address constant bountyAddress = 0x0025ea8bBBB72199cf70FE25F92d3B298C3B162A;
-    // address constant icoAccountAddress = 0x003b3f928c428525e9836C1d1b52016F4833c2f0;
+    address constant icoAccountAddress = 0x583031d1113ad414f02576bd6afabfb302140225;
 
     ESportsRateProviderI public rateProvider;
 
 	/**
      * Constructor function
      */
-	function ESportsCrowdsale(
+    function ESportsCrowdsale(
 		uint32 _startTime,
         uint32 _endTime,
         address _wallet, //address _addressOfTokenUsedAsReward,
 		uint _softCapWei,
 		uint _hardCapTokens
 	) RefundableCrowdsale(
-		_startTime, 
-		_endTime, 
-		1500, 
-		_hardCapTokens * TOKEN_DECIMAL_MULTIPLIER, // 105 000 000
-		_wallet, //_addressOfTokenUsedAsReward
-		_softCapWei // _goal
+	   _startTime, 
+	   _endTime, 
+	   1500, 
+	   _hardCapTokens * TOKEN_DECIMAL_MULTIPLIER, // 105 000 000
+	   _wallet, //_addressOfTokenUsedAsReward
+	   _softCapWei // _goal // 2 000 000 -> 8000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
 	) {
-		// token.mint(teamAddress, teamTokens);
+		token.mint(teamAddress, teamTokens);
         // token.mint(bountyAddress, bountyTokens);
-        // token.mint(icoAccountAddress, icoTokens);
+        token.mint(icoAccountAddress, icoTokens);
 
         // ESportsToken(token).addExcluded(teamAddress);
         // ESportsToken(token).addExcluded(bountyAddress);
         // ESportsToken(token).addExcluded(icoAccountAddress);
 
-        // ESportsRateProvider provider = new ESportsRateProvider();
-        // provider.transferOwnership(owner);
-        // rateProvider = provider;
+        ESportsRateProvider provider = new ESportsRateProvider();
+        provider.transferOwnership(owner);
+        rateProvider = provider;
 
 
 
