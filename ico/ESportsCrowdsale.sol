@@ -23,6 +23,8 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
     // address constant bountyAddress = 0x0025ea8bBBB72199cf70FE25F92d3B298C3B162A;
     // address constant icoAccountAddress = 0x003b3f928c428525e9836C1d1b52016F4833c2f0;
 
+    ESportsRateProviderI public rateProvider;
+
 	/**
      * Constructor function
      */
