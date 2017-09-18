@@ -1,6 +1,6 @@
 pragma solidity ^0.4.16;
 
-import "./ESportsConsts.sol";
+import "./ESportsConstants.sol";
 import "./zeppelin/ownership/Ownable.sol";
 
 contract ESportsRateProviderI {
