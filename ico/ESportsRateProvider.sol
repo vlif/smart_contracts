@@ -1,7 +1,8 @@
 pragma solidity ^0.4.16;
 
-import "./ESportsConstants.sol";
 import "./zeppelin/ownership/Ownable.sol";
+
+import "./ESportsConstants.sol";
 
 contract ESportsRateProviderI {
     /**
@@ -20,7 +21,7 @@ contract ESportsRateProviderI {
     function getRateScale() public constant returns (uint);
 }
 
-contract ESportsRateProvider is ESportsRateProviderI, Ownable {
+contract ESportsRateProvider is usingESportsConstants, ESportsRateProviderI, Ownable {
     // rate calculate accuracy
     uint constant RATE_SCALE = 10000;
 
