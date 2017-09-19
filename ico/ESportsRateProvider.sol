@@ -40,16 +40,16 @@ contract ESportsRateProvider is usingESportsConstants, ESportsRateProviderI, Own
         address buyer, 
         uint totalSold, 
         uint amountWei, 
-        uint32 crowdsaleStartTime
+        uint32 startTime //crowdsaleStartTime
     ) public constant returns (uint) {
         uint rate;
 
         rate = BASE_RATE;
 
         // apply bonus for amount
-        if (now < crowdsaleStartTime + firstWeek * 1 days) {
-            rate += rate * 10 / 100; // + 10%
-        }
+        // if (now < startTime + firstWeek * 1 days) {
+        //     rate += rate * 10 / 100; // + 10%
+        // }
         
         return rate;
     }
