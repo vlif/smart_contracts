@@ -6,8 +6,8 @@ import "./ESportsConstants.sol";
 import "./ESportsToken.sol";
 import "./ESportsRateProvider.sol";
 
-contract ESportsCrowdsale is RefundableCrowdsale { //usingESportsConstants,
-    using usingESportsConstants;
+contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
+    // using usingESportsConstants..;
 
     // uint constant minimalPurchase = 0.05 ether; // 50 000 000 000 000 000 Wei
 
