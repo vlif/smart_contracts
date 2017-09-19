@@ -42,9 +42,9 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
 	   _wallet, //_addressOfTokenUsedAsReward
 	   _softCapWei // _goal // 2 000 000 -> 8 000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
 	) {
-		token.mint(teamAddress, teamTokens);
+		token.mint(teamAddressRemix, teamTokens);
         // token.mint(bountyAddress, bountyTokens);
-        token.mint(icoAccountAddress, icoTokens);
+        token.mint(icoAccountAddressRemix, icoTokens);
 
         // ESportsToken(token).addExcluded(teamAddress);
         // ESportsToken(token).addExcluded(bountyAddress);
