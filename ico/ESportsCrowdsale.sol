@@ -6,8 +6,10 @@ import "./ESportsConstants.sol";
 import "./ESportsToken.sol";
 import "./ESportsRateProvider.sol";
 
-contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
-	// uint constant minimalPurchase = 0.05 ether; // 50 000 000 000 000 000 Wei
+contract ESportsCrowdsale is RefundableCrowdsale { //usingESportsConstants,
+    using usingESportsConstants;
+
+    // uint constant minimalPurchase = 0.05 ether; // 50 000 000 000 000 000 Wei
 
 	// Overall 100.00% 60 000 000
 	uint constant teamTokens = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
@@ -42,9 +44,9 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
 	   _wallet, //_addressOfTokenUsedAsReward
 	   _softCapWei // _goal // 2 000 000 -> 8 000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
 	) {
-		token.mint(teamAddressRemix, teamTokens);
+		token.mint(teamAddressKovan, teamTokens);
         // token.mint(bountyAddress, bountyTokens);
-        token.mint(icoAccountAddressRemix, icoTokens);
+        token.mint(icoAccountAddressKovan, icoTokens);
 
         // ESportsToken(token).addExcluded(teamAddress);
         // ESportsToken(token).addExcluded(bountyAddress);
@@ -69,8 +71,13 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
     /**
      * @dev Override getRate to integrate with rate provider.
      */
-    function getRate(uint _value) internal constant returns (uint) {
-        return rateProvider.getRate(msg.sender, soldTokens, _value);
+    function getRate(uint _value) constant returns (uint) { //internal
+        return rateProvider.getRate(
+            msg.sender, 
+            soldTokens, 
+            _value,
+            _startTime
+        );
     }
 
     /**
