@@ -26,6 +26,7 @@ contract ESportsToken is usingESportsConstants, MintableToken {
         return TOKEN_DECIMALS_UINT8;
     }
     
+
     function crowdsaleFinished() onlyOwner {
         paused = false;
     }

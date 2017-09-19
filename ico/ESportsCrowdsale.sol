@@ -17,9 +17,11 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
 	uint constant companyColdStorage = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
     uint constant icoTokens = 24000000 * TOKEN_DECIMAL_MULTIPLIER; // 40.00%
 
-	address constant teamAddress = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;
+	address constant teamAddressKovan = 0x0065ee8FB8697C686C27C0cE79ec6FA1f395D27e; // kovan test net
     // address constant bountyAddress = 0x0025ea8bBBB72199cf70FE25F92d3B298C3B162A;
-    address constant icoAccountAddress = 0x583031d1113ad414f02576bd6afabfb302140225;
+    address constant icoAccountAddressKovan = 0x00cbCcd31cdeeF93c302F1f0440e0aba1E45a6A4; // kovan test net
+    address constant teamAddressRemix = 0x583031d1113ad414f02576bd6afabfb302140225;
+    address constant icoAccountAddressRemix = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;
 
     ESportsRateProviderI public rateProvider;
 
@@ -35,10 +37,10 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
 	) RefundableCrowdsale(
 	   _startTime, 
 	   _endTime, 
-	   1500, 
+	   100,
 	   _hardCapTokens * TOKEN_DECIMAL_MULTIPLIER, // 105 000 000
 	   _wallet, //_addressOfTokenUsedAsReward
-	   _softCapWei // _goal // 2 000 000 -> 8000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
+	   _softCapWei // _goal // 2 000 000 -> 8 000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
 	) {
 		token.mint(teamAddress, teamTokens);
         // token.mint(bountyAddress, bountyTokens);
