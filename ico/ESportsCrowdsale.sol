@@ -71,7 +71,7 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
     /**
      * @dev Override getRate to integrate with rate provider.
      */
-    function getRate(uint _value) constant returns (uint) { //internal
+    function getRate(uint _value) internal constant returns (uint) {
         return rateProvider.getRate(
             msg.sender, 
             soldTokens, 
@@ -96,6 +96,15 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
         rateProvider = ESportsRateProviderI(_rateProviderAddress);
     }
 
+    function getRateTest(uint _value) constant returns (uint) {
+        return rateProvider.getRate(
+            msg.sender, 
+            soldTokens, 
+            _value,
+            startTime
+        );
+    }
+    
 
 	/**
      * @dev Admin can move end time.
