@@ -1,6 +1,7 @@
 pragma solidity ^0.4.16;
 
 import "./zeppelin/crowdsale/RefundableCrowdsale.sol";
+// import "./zeppelin/token/TokenTimelock.sol";
 
 import "./ESportsConstants.sol";
 import "./ESportsToken.sol";
@@ -12,18 +13,18 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
     // uint constant minimalPurchase = 0.05 ether; // 50 000 000 000 000 000 Wei
 
 	// Overall 100.00% 60 000 000
-	uint constant teamTokens = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
-	uint constant investorTokens = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00%
-	uint constant bufferTokens = 6000000 * TOKEN_DECIMAL_MULTIPLIER; // 10.00%
-	uint constant bonusTokens = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00%
-	uint constant companyColdStorage = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
-    uint constant icoTokens = 24000000 * TOKEN_DECIMAL_MULTIPLIER; // 40.00%
+	uint constant TEAM_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
+	uint constant INVESTOR_TOKENS = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00%
+	uint constant BUFFER_TOKENS = 6000000 * TOKEN_DECIMAL_MULTIPLIER; // 10.00%
+	uint constant BONUS_TOKENS = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00%
+	uint constant COMPANY_COLD_STORAGE = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
+    // uint constant ICO_TOKENS = 24000000 * TOKEN_DECIMAL_MULTIPLIER; // 40.00%
 
-	address constant teamAddressKovan = 0x0065ee8FB8697C686C27C0cE79ec6FA1f395D27e; // kovan test net
-    // address constant bountyAddress = 0x0025ea8bBBB72199cf70FE25F92d3B298C3B162A;
-    address constant icoAccountAddressKovan = 0x00cbCcd31cdeeF93c302F1f0440e0aba1E45a6A4; // kovan test net
-    address constant teamAddressRemix = 0x583031d1113ad414f02576bd6afabfb302140225;
-    address constant icoAccountAddressRemix = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;
+	address constant TEAM_ADDRESS_KOVAN = 0x0065ee8FB8697C686C27C0cE79ec6FA1f395D27e;
+    // address constant BOUNTY_ADDRESS = 0x0025ea8bBBB72199cf70FE25F92d3B298C3B162A;
+    // address constant ICO_ACCOUNT_ADDRESS_KOVAN = 0x00cbCcd31cdeeF93c302F1f0440e0aba1E45a6A4;
+    address constant TEAM_ADDRESS_REMIX = 0x583031d1113ad414f02576bd6afabfb302140225;
+    address constant ICO_ACCOUNT_ADDRESS_REMIX = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;
 
     ESportsRateProviderI public rateProvider;
 
@@ -37,20 +38,22 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
 		uint _softCapWei,
 		uint _hardCapTokens
 	) RefundableCrowdsale(
-	   _startTime, 
-	   _endTime, 
-	   100,
-	   _hardCapTokens * TOKEN_DECIMAL_MULTIPLIER, // 105 000 000
-	   _wallet, //_addressOfTokenUsedAsReward
-	   _softCapWei // _goal // 2 000 000 -> 8 000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
+        _startTime, 
+        _endTime, 
+        100,
+        _hardCapTokens * TOKEN_DECIMAL_MULTIPLIER, //(_hardCapTokens * TOKEN_DECIMAL_MULTIPLIER - TEAM_TOKENS - INVESTOR_TOKENS - ....), // 105 000 000 // 60 000 000
+        _wallet, //_addressOfTokenUsedAsReward
+        _softCapWei // _goal // 2 000 000 -> 8 000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
 	) {
-		token.mint(teamAddressKovan, teamTokens);
-        // token.mint(bountyAddress, bountyTokens);
-        token.mint(icoAccountAddressKovan, icoTokens);
+		token.mint(TEAM_ADDRESS_KOVAN, TEAM_TOKENS/2);
+        token.mintTimelocked(TEAM_ADDRESS_KOVAN, TEAM_TOKENS/2, _startTime + 1 years);
+        
+        // token.mint(BOUNTY_ADDRESS, bountyTokens);
+        // token.mint(ICO_ACCOUNT_ADDRESS_KOVAN, icoTokens);
 
-        // ESportsToken(token).addExcluded(teamAddress);
-        // ESportsToken(token).addExcluded(bountyAddress);
-        // ESportsToken(token).addExcluded(icoAccountAddress);
+        // ESportsToken(token).addExcluded(TEAM_ADDRESS_KOVAN);
+        // ESportsToken(token).addExcluded(BOUNTY_ADDRESS);
+        // ESportsToken(token).addExcluded(ICO_ACCOUNT_ADDRESS_KOVAN);
 
         ESportsRateProvider provider = new ESportsRateProvider();
         provider.transferOwnership(owner);
@@ -72,12 +75,7 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
      * @dev Override getRate to integrate with rate provider.
      */
     function getRate(uint _value) internal constant returns (uint) {
-        return rateProvider.getRate(
-            msg.sender, 
-            soldTokens, 
-            _value,
-            startTime
-        );
+        return rateProvider.getRate(msg.sender, soldTokens, _value, startTime);
     }
 
     /**
@@ -96,15 +94,6 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
         rateProvider = ESportsRateProviderI(_rateProviderAddress);
     }
 
-    function getRateTest(uint _value) constant returns (uint) {
-        return rateProvider.getRate(
-            msg.sender, 
-            soldTokens, 
-            _value,
-            startTime
-        );
-    }
-    
 
 	/**
      * @dev Admin can move end time.
@@ -130,7 +119,6 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
         }
 
         ESportsToken(token).crowdsaleFinished();
-        
         token.transferOwnership(owner);
     }
 }

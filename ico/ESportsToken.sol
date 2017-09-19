@@ -1,6 +1,7 @@
 pragma solidity ^0.4.16;
 
 import "./zeppelin/token/MintableToken.sol";
+import "./zeppelin/token/TokenTimelock.sol";
 
 import "./ESportsConstants.sol";
 
@@ -45,5 +46,18 @@ contract ESportsToken is usingESportsConstants, MintableToken {
     function transfer(address _to, uint256 _value) returns (bool) {
         require(!paused || excluded[msg.sender]);
         return super.transfer(_to, _value);
+    }
+
+
+    /**
+     * @dev mint timelocked tokens
+     */
+    function mintTimelocked(address _to, uint256 _amount, uint256 _releaseTime)
+        onlyOwner canMint returns (TokenTimelock) {
+
+        TokenTimelock timelock = new TokenTimelock(this, _to, _releaseTime);
+        mint(timelock, _amount);
+
+        return timelock;
     }
 }

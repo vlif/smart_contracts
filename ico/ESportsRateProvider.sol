@@ -30,7 +30,7 @@ contract ESportsRateProvider is usingESportsConstants, ESportsRateProviderI, Own
     // rate calculate accuracy
     uint constant RATE_SCALE = 10000;
     uint constant BASE_RATE = 1500 * RATE_SCALE;
-    uint firstWeek = 7;
+    uint constant FIRST_WEEK = 7;
 
     function getRateScale() public constant returns (uint) {
         return RATE_SCALE;
@@ -44,12 +44,15 @@ contract ESportsRateProvider is usingESportsConstants, ESportsRateProviderI, Own
     ) public constant returns (uint) {
         uint rate;
 
+
         rate = BASE_RATE;
 
+
         // apply bonus for amount
-        // if (now < startTime + firstWeek * 1 days) {
-        //     rate += rate * 10 / 100; // + 10%
-        // }
+        if (now < startTime + FIRST_WEEK * 1 days) {
+            rate += rate * 10 / 100; // + 10%
+        }
+        
         
         return rate;
     }

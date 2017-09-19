@@ -52,11 +52,13 @@ contract RefundVault is Ownable {
         RefundsEnabled();
     }
 
-    function refund(address investor) onlyOwner {
+    function refund(address investor, uint weiRaised) onlyOwner {
         require(state == State.Refunding);
+
         uint256 depositedValue = deposited[investor];
         deposited[investor] = 0;
         investor.transfer(depositedValue);
+        
         Refunded(investor, depositedValue);
     }
 }
