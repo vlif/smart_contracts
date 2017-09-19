@@ -76,7 +76,7 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
             msg.sender, 
             soldTokens, 
             _value,
-            _startTime
+            startTime
         );
     }
 
