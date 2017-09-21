@@ -2,7 +2,10 @@ pragma solidity ^0.4.11;
 
 
 import './ERC20Basic.sol';
-import "../token/SafeERC20.sol";
+// import "../token/SafeERC20.sol";
+// import '../ownership/Ownable.sol';
+
+// import "../../ESportsToken.sol";
 
 
 /**
@@ -10,8 +13,8 @@ import "../token/SafeERC20.sol";
  * @dev TokenTimelock is a token holder contract that will allow a
  * beneficiary to extract the tokens after a given release time
  */
-contract TokenTimelock {
-    using SafeERC20 for ERC20Basic;
+contract TokenTimelock { //is Ownable
+    // using SafeERC20 for ERC20Basic;
 
     // ERC20 basic token contract being held
     ERC20Basic token;
@@ -33,7 +36,7 @@ contract TokenTimelock {
       * @notice Transfers tokens held by timelock to beneficiary.
       * Deprecated: please use TokenTimelock#release instead.
       */
-    function claim() {
+    function claim() { //onlyOwner
         require(msg.sender == beneficiary);
         release();
     }
@@ -41,12 +44,13 @@ contract TokenTimelock {
     /**
      * @notice Transfers tokens held by timelock to beneficiary.
      */
-    function release() {
+    function release() { //onlyOwner
         require(now >= releaseTime);
 
         uint256 amount = token.balanceOf(this);
         require(amount > 0);
 
-        token.safeTransfer(beneficiary, amount);
+        // token.safeTransfer(beneficiary, amount);
+        token.transfer(beneficiary, amount);
     }
 }

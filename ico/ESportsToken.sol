@@ -7,6 +7,8 @@ import './zeppelin/math/SafeMath.sol';
 import "./ESportsConstants.sol";
 
 contract ESportsToken is usingESportsConstants, MintableToken { //TokenTimelock
+    // using SafeERC20 for ERC20;
+    
     /**
      * @dev Pause token transfer. After successfully finished crowdsale it becomes true.
      */
@@ -62,7 +64,7 @@ contract ESportsToken is usingESportsConstants, MintableToken { //TokenTimelock
 
         return timelock;
     }
-    
+
     /**
      * @dev Mint tokens and freeze some of them
      */
@@ -70,7 +72,7 @@ contract ESportsToken is usingESportsConstants, MintableToken { //TokenTimelock
         onlyOwner canMint returns (bool) {
         require(excluded[_to]);
         require(_freezingPercent <= 100);
-        
+
         uint256 freezingAmount = _totalAmount.mul(_freezingPercent).div(100);
         mint(_to, _totalAmount.sub(freezingAmount));
         mintTimelocked(_to, freezingAmount, _releaseTime);
