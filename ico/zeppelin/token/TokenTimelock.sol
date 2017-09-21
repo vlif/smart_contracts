@@ -17,10 +17,10 @@ contract TokenTimelock {
     ERC20Basic token;
 
     // beneficiary of tokens after they are released
-    address beneficiary;
+    address public beneficiary;
 
     // timestamp when token release is enabled
-    uint64 releaseTime;
+    uint64 public releaseTime;
 
     function TokenTimelock(ERC20Basic _token, address _beneficiary, uint64 _releaseTime) {
         require(_releaseTime > now);

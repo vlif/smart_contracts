@@ -43,13 +43,13 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         _wallet,
         _softCapWei // _goal // 2 000 000 -> 8 000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
 	) {
+        ESportsToken(token).addExcluded(TEAM_ADDRESS_KOVAN);
+
 		// token.mint(TEAM_ADDRESS_KOVAN, TEAM_TOKENS);
         ESportsToken(token).mintAndFreezePart(TEAM_ADDRESS_KOVAN, TEAM_TOKENS, 50, _startTime + 20 * 1 minutes); //+1 years
-
         // token.mint(BOUNTY_ADDRESS, bountyTokens);
         // token.mint(ICO_ACCOUNT_ADDRESS_KOVAN, icoTokens);
-
-        ESportsToken(token).addExcluded(TEAM_ADDRESS_KOVAN);
+        
         // ESportsToken(token).addExcluded(BOUNTY_ADDRESS);
         // ESportsToken(token).addExcluded(ICO_ACCOUNT_ADDRESS_KOVAN);
 
@@ -115,5 +115,10 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
 
         ESportsToken(token).crowdsaleFinished();
         token.transferOwnership(owner);
+    }
+
+    function tokenFreezePart(address _beneficiary, uint8 _freezingPercent, uint64 _releaseTime) 
+            onlyOwner returns (bool) {
+        return ESportsToken(token).freezePart(_beneficiary, _freezingPercent, _releaseTime);
     }
 }

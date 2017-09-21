@@ -8,14 +8,14 @@ import '../ownership/Ownable.sol';
  * @dev This is a truffle contract, needed for truffle integration, not meant for use by Zeppelin users.
  */
 contract Migrations is Ownable {
-  uint256 public lastCompletedMigration;
+  	uint256 public lastCompletedMigration;
 
-  function setCompleted(uint256 completed) onlyOwner {
-    lastCompletedMigration = completed;
-  }
+  	function setCompleted(uint256 completed) onlyOwner {
+    	lastCompletedMigration = completed;
+  	}
 
-  function upgrade(address newAddress) onlyOwner {
-    Migrations upgraded = Migrations(newAddress);
-    upgraded.setCompleted(lastCompletedMigration);
-  }
+  	function upgrade(address newAddress) onlyOwner {
+    	Migrations upgraded = Migrations(newAddress);
+    	upgraded.setCompleted(lastCompletedMigration);
+  	}
 }

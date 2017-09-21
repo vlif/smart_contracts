@@ -58,11 +58,11 @@ contract ESportsToken is usingESportsConstants, MintableToken { //TokenTimelock
 
         TokenTimelock timelock = new TokenTimelock(this, _to, _releaseTime);
         mint(timelock, _amount);
-        frozen[_to].add(_amount);
+        frozen[_to] = frozen[_to].add(_amount);
 
         return timelock;
     }
-
+    
     /**
      * @dev Mint tokens and freeze some of them
      */
@@ -70,7 +70,7 @@ contract ESportsToken is usingESportsConstants, MintableToken { //TokenTimelock
         onlyOwner canMint returns (bool) {
         require(excluded[_to]);
         require(_freezingPercent <= 100);
-
+        
         uint256 freezingAmount = _totalAmount.mul(_freezingPercent).div(100);
         mint(_to, _totalAmount.sub(freezingAmount));
         mintTimelocked(_to, freezingAmount, _releaseTime);
