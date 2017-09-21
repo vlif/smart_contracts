@@ -52,7 +52,6 @@ contract Crowdsale {
      */
     event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint value, uint amount);
 
-
     function Crowdsale(uint32 _startTime, uint32 _endTime, uint _rate, uint _hardCap, address _wallet) {
         require(_startTime >= now);
         require(_endTime >= _startTime);
@@ -108,7 +107,9 @@ contract Crowdsale {
 
         require(validPurchase(amountWei, actualRate, totalSupply));
 
+
         // calculate token amount to be created
+        // uint tokens = rate.mul(msg.value).div(1 ether);
         uint tokens = amountWei.mul(actualRate).div(rateScale);
 
         // change, if minted token would be less

@@ -42,5 +42,7 @@ contract FinalizableCrowdsale is Crowdsale, Ownable {
      * executed entirely.
      */
     function finalization() internal {
+
+        
     }
 }

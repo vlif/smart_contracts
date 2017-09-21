@@ -18,7 +18,7 @@ contract ESportsRateProviderI {
         uint amountWei, 
         uint32 crowdsaleStartTime
     ) public constant returns (uint);
-
+    
     /**
      * @dev rate scale (or divider), to support not integer rates.
      * @return Rate divider.
@@ -29,7 +29,7 @@ contract ESportsRateProviderI {
 contract ESportsRateProvider is usingESportsConstants, ESportsRateProviderI, Ownable {
     // rate calculate accuracy
     uint constant RATE_SCALE = 10000;
-    uint constant BASE_RATE = 1500 * RATE_SCALE;
+    uint constant BASE_RATE = 240 * RATE_SCALE;
     uint constant FIRST_WEEK = 7;
 
     function getRateScale() public constant returns (uint) {
@@ -43,17 +43,13 @@ contract ESportsRateProvider is usingESportsConstants, ESportsRateProviderI, Own
         uint32 startTime //crowdsaleStartTime
     ) public constant returns (uint) {
         uint rate;
-
-
         rate = BASE_RATE;
-
 
         // apply bonus for amount
         if (now < startTime + FIRST_WEEK * 1 days) {
             rate += rate * 10 / 100; // + 10%
         }
-        
-        
+                
         return rate;
     }
 }

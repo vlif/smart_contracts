@@ -71,5 +71,4 @@ contract RefundableCrowdsale is FinalizableCrowdsale {
     function goalReached() public constant returns (bool) {
         return weiRaised >= goal;
     }
-
 }

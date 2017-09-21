@@ -1,13 +1,11 @@
 pragma solidity ^0.4.16;
 
 import "./zeppelin/crowdsale/RefundableCrowdsale.sol";
-// import "./zeppelin/token/TokenTimelock.sol";
-
 import "./ESportsConstants.sol";
 import "./ESportsToken.sol";
 import "./ESportsRateProvider.sol";
 
-contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
+contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     // using usingESportsConstants..;
 
     // uint constant minimalPurchase = 0.05 ether; // 50 000 000 000 000 000 Wei
@@ -31,36 +29,33 @@ contract ESportsCrowdsale is usingESportsConstants, RefundableCrowdsale {
 	/**
      * Constructor function
      */
-    function ESportsCrowdsale(
+    function ESportsMainCrowdsale(
 		uint32 _startTime,
         uint32 _endTime,
-        address _wallet, //address _addressOfTokenUsedAsReward,
+        address _wallet,
 		uint _softCapWei,
 		uint _hardCapTokens
 	) RefundableCrowdsale(
         _startTime, 
         _endTime, 
-        100,
-        _hardCapTokens * TOKEN_DECIMAL_MULTIPLIER, //(_hardCapTokens * TOKEN_DECIMAL_MULTIPLIER - TEAM_TOKENS - INVESTOR_TOKENS - ....), // 105 000 000 // 60 000 000
-        _wallet, //_addressOfTokenUsedAsReward
+        240, // 240 ETR = 1 ETH at the rate 1 ETH = 250 EUR
+        _hardCapTokens * TOKEN_DECIMAL_MULTIPLIER, //(_hardCapTokens * TOKEN_DECIMAL_MULTIPLIER - TEAM_TOKENS - INVESTOR_TOKENS - ....), // 60 000 000
+        _wallet,
         _softCapWei // _goal // 2 000 000 -> 8 000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
 	) {
-		token.mint(TEAM_ADDRESS_KOVAN, TEAM_TOKENS/2);
-        token.mintTimelocked(TEAM_ADDRESS_KOVAN, TEAM_TOKENS/2, _startTime + 1 years);
-        
+		// token.mint(TEAM_ADDRESS_KOVAN, TEAM_TOKENS);
+        ESportsToken(token).mintAndFreezePart(TEAM_ADDRESS_KOVAN, TEAM_TOKENS, 50, _startTime + 20 * 1 minutes); //+1 years
+
         // token.mint(BOUNTY_ADDRESS, bountyTokens);
         // token.mint(ICO_ACCOUNT_ADDRESS_KOVAN, icoTokens);
 
-        // ESportsToken(token).addExcluded(TEAM_ADDRESS_KOVAN);
+        ESportsToken(token).addExcluded(TEAM_ADDRESS_KOVAN);
         // ESportsToken(token).addExcluded(BOUNTY_ADDRESS);
         // ESportsToken(token).addExcluded(ICO_ACCOUNT_ADDRESS_KOVAN);
 
         ESportsRateProvider provider = new ESportsRateProvider();
         provider.transferOwnership(owner);
         rateProvider = provider;
-
-
-
 	}
 
 	/**
