@@ -37,7 +37,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     // ESportsRateProviderI public rateProvider;
     ESportsBonusProviderI public bonusProvider;
 
-    bool private bMintToFounders = false;
+    bool private isInit = false;
 
 	/**
      * Constructor function
@@ -45,29 +45,21 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     function ESportsMainCrowdsale(
         uint32 _startTime,
         uint32 _endTime,
+        uint _softCapWei,
+        uint _hardCapTokens,
         address _wallet,
-		uint _softCapWei,
-		uint _hardCapTokens
+        address _token
 	) RefundableCrowdsale(
         _startTime,
         _endTime, 
         240, // 240 ETR = 1 ETH at the rate 1 ETH = 250 EUR
         _hardCapTokens * TOKEN_DECIMAL_MULTIPLIER, //(_hardCapTokens * TOKEN_DECIMAL_MULTIPLIER - TEAM_TOKENS - INVESTOR_TOKENS - ....), // 60 000 000
         _wallet, //=WALLET_ADDRESS_KOVAN
+        _token,
         _softCapWei // _goal // 2 000 000 -> 8 000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
 	) {
-        // token.mint(INVESTOR_ADDRESS_KOVAN, INVESTOR_TOKENS);
+        // token.delegatecall(bytes4(sha3("transferOwnership(address)")), this);
 
-        // // bonuses
-        // token.mint(BONUS_ADDRESS_KOVAN, BONUS_TOKENS);
-        // token.mint(this, BUFFER_TOKENS);
-
-        // // ESportsToken(token).addExcluded(TEAM_ADDRESS_KOVAN);
-        // ESportsToken(token).addExcluded(INVESTOR_ADDRESS_KOVAN);
-        // ESportsToken(token).addExcluded(BONUS_ADDRESS_KOVAN);
-
-        // initProviders();
-        
 
 
 	}
@@ -75,9 +67,9 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
 	/**
      * @dev Override token creation to integrate with ESports token.
      */
-    function createTokenContract() internal returns(MintableToken) {
-        return new ESportsToken();
-    }
+    // function createTokenContract() internal returns(MintableToken) {
+    //     return new ESportsToken();
+    // }
 
     /**
      * @dev Override getRate to integrate with rate provider.
@@ -103,12 +95,16 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     //     rateProvider = ESportsRateProviderI(_rateProviderAddress);
     // }
 
-    function addBonus(uint _amountTokens) onlyOwner internal returns(uint) {
+    function addBonus(uint _amountTokens) internal returns(uint) {
         return bonusProvider.addBonus(msg.sender, soldTokens, _amountTokens, startTime);
     }
 
-    function getBonus() public returns(uint) {
+    function getBonus() returns(uint) {
         return bonusProvider.getBonus(msg.sender, soldTokens);
+    }
+
+    function sendBonus(address _beneficiary, uint _amountBonusTokens) internal returns(uint) {
+        return bonusProvider.sendBonus(_beneficiary, _amountBonusTokens);
     }
 
     function setBonusProvider(address _bonusProviderAddress) onlyOwner {
@@ -144,9 +140,28 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         token.transferOwnership(owner); // change token owner
     }
 
-    function mintToFounders() onlyOwner returns(bool) {
-        require(!bMintToFounders);
+    function init() onlyOwner public returns(bool) {
+        require(!isInit);
 
+        mintToFounders();
+
+        token.mint(INVESTOR_ADDRESS_KOVAN, INVESTOR_TOKENS);
+
+        // bonuses
+        token.mint(BONUS_ADDRESS_KOVAN, BONUS_TOKENS);
+        token.mint(this, BUFFER_TOKENS);
+
+        // ESportsToken(token).addExcluded(TEAM_ADDRESS_KOVAN);
+        ESportsToken(token).addExcluded(INVESTOR_ADDRESS_KOVAN);
+        ESportsToken(token).addExcluded(BONUS_ADDRESS_KOVAN);
+
+        initProviders();
+
+        isInit = true;
+        return isInit;
+    }
+
+    function mintToFounders() onlyOwner internal returns(bool) {
         // ESportsToken(token).mintAndFreezePart(TEAM_ADDRESS_KOVAN, TEAM_TOKENS, 50, _startTime + 5 * 1 minutes); //+1 years
         // token.mint(TEAM_ADDRESS_KOVAN, TEAM_TOKENS);
 
@@ -158,16 +173,12 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS_KOVAN, TEAM_PHIL_TOKENS.mul(20).div(100), startTime + 1 years); //minutes
         ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS_KOVAN, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 3 years); //minutes
         ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS_KOVAN, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 5 years); //minutes
-        bool result = token.mint(TEAM_PHIL_ADDRESS_KOVAN, TEAM_PHIL_TOKENS.mul(20).div(100));
+        token.mint(TEAM_PHIL_ADDRESS_KOVAN, TEAM_PHIL_TOKENS.mul(20).div(100));
 
-        if (result) {
-            bMintToFounders = true;
-        }
-
-        return bMintToFounders;
+        return true;
     }
 
-    function initProviders() {
+    function initProviders() onlyOwner internal returns(bool) {
         // ESportsRateProvider rProvider = new ESportsRateProvider();
         // rProvider.transferOwnership(owner);
         // rateProvider = rProvider;
@@ -176,7 +187,6 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         // bProvider.transferOwnership(owner);
         bonusProvider = bProvider;
 
-
-
+        return true;
     }
 }

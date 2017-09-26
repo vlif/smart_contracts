@@ -1,9 +1,7 @@
 pragma solidity ^0.4.11;
 
-
 import '../token/MintableToken.sol';
 import '../math/SafeMath.sol';
-
 
 /**
  * @title Crowdsale 
@@ -52,14 +50,16 @@ contract Crowdsale {
      */
     event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint value, uint amount);
 
-    function Crowdsale(uint32 _startTime, uint32 _endTime, uint _rate, uint _hardCap, address _wallet) {
+    function Crowdsale(uint32 _startTime, uint32 _endTime, uint _rate, uint _hardCap, address _wallet, address _token) {
         require(_startTime >= now);
         require(_endTime >= _startTime);
         require(_rate > 0);
         require(_wallet != 0x0);
         require(_hardCap > _rate);
 
-        token = createTokenContract();
+        // token = createTokenContract();
+        token = MintableToken(_token);
+
         startTime = _startTime;
         endTime = _endTime;
         rate = _rate;
@@ -67,13 +67,11 @@ contract Crowdsale {
         wallet = _wallet;
     }
 
-
     // creates the token to be sold.
     // override this method to have crowdsale of a specific mintable token.
-    function createTokenContract() internal returns (MintableToken) {
-        return new MintableToken();
-    }
-
+    // function createTokenContract() internal returns (MintableToken) {
+    //     return new MintableToken();
+    // }
 
     /**
      * @dev this method might be overridden for implementing any sale logic.
@@ -91,15 +89,17 @@ contract Crowdsale {
         return 10000; //1
     }
 
-
     function addBonus(uint _amount) internal returns (uint) {
+        return 0;
+    }
+
+    function sendBonus(address _beneficiary, uint _amount) internal returns (uint) {
         return 0;
     }
 
     function getBonus() public returns (uint) {
         return 0;
     }
-
 
     // fallback function can be used to buy tokens
     function() payable {
@@ -119,11 +119,9 @@ contract Crowdsale {
 
         require(validPurchase(amountWei, actualRate, totalSupply));
 
-
         // calculate token amount to be created
         // uint tokens = rate.mul(msg.value).div(1 ether);
         uint tokens = amountWei.mul(actualRate).div(rateScale);
-
 
         // change, if minted token would be less
         uint change = 0;
@@ -143,6 +141,9 @@ contract Crowdsale {
 
         // bonuses
         uint bonuses = addBonus(tokens);
+        if (bonuses > 0) {
+            sendBonus(beneficiary, bonuses);
+        }
 
 
         // update state
