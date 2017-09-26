@@ -39,12 +39,13 @@ contract Crowdsale is usingESportsConstants {
     Token public token;
     
     uint constant TEAM_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00% // Founders
-    address constant TEAM_ADDRESS_KOVAN = 0x0065ee8FB8697C686C27C0cE79ec6FA1f395D27e;
+    //address constant TEAM_ADDRESS_KOVAN = 0x0065ee8FB8697C686C27C0cE79ec6FA1f395D27e;
+    address constant TEAM_ADDRESS_KOVAN = 0x4b0897b0513fdc7c541b6d9d7e929c4e5364d2db;
     
     function Crowdsale(address _addr, uint32 _startTime) {
         token = Token(_addr);
         //token.mint(0xdD870fA1b7C4700F2BD7f44238821C26f7392148, 12000000);
-        token.mintTimelocked(TEAM_ADDRESS_KOVAN, TEAM_TOKENS.mul(20).div(100), _startTime + 1 minutes);
+        token.mintTimelocked(TEAM_ADDRESS_KOVAN, TEAM_TOKENS.mul(20).div(100), _startTime + 10 seconds);
         token.mintTimelocked(TEAM_ADDRESS_KOVAN, TEAM_TOKENS.mul(30).div(100), _startTime + 3 minutes);
         token.mintTimelocked(TEAM_ADDRESS_KOVAN, TEAM_TOKENS.mul(30).div(100), _startTime + 5 minutes);
         token.mint(TEAM_ADDRESS_KOVAN, TEAM_TOKENS.mul(20).div(100));
@@ -56,8 +57,13 @@ contract Crowdsale is usingESportsConstants {
         return token.getFrozenFundsTotalAmount(_beneficiary);
     }
     
-    function returnFrozenFreeFunds(address _beneficiary) constant public returns (uint) {
+    function returnFrozenFreeFunds(address _beneficiary) public returns (uint) {
         return token.returnFrozenFreeFunds(_beneficiary);
+    }
+    
+    function tokenFreezePart(address _beneficiary, uint _freezingAmount, uint64 _releaseTime) //uint8 _freezingPercent
+         returns (bool) {
+        return token.freezePart(_beneficiary, _freezingAmount, _releaseTime);
     }
 }
 
@@ -82,7 +88,9 @@ contract Token {
     //mapping(uint => Foo[]) foo;
     //mapping (address => address[]) public frozen;
     
-    function mint(address _to, uint256 _amount) returns (bool) {
+    mapping(address => bool) excluded;
+    
+    function mint(address _to, uint256 _amount) returns (bool) { 
         totalSupply = totalSupply+_amount;
         balances[_to] = balances[_to]+_amount;
         return true;
@@ -119,11 +127,11 @@ contract Token {
         return balances[_owner];
     }
     
-    function returnFrozenFreeFunds(address _beneficiary) constant public returns (uint) {
+    function returnFrozenFreeFunds(address _beneficiary) public returns (uint) {
         uint total = 0;
-        var frozen = frozenFunds[_beneficiary];
+        ESportsFreezingStorage[] storage frozen = frozenFunds[_beneficiary];
         for (uint x = 0; x < frozen.length; x++) {
-            address frozenContract = frozen[x];
+            //address frozenContract = frozen[x];
             uint ft = frozen[x].release(_beneficiary);
             total = total + ft;
         }
@@ -134,10 +142,48 @@ contract Token {
         require(_to != address(0));
 
         // SafeMath.sub will throw if there is not enough balance.
-        address test = msg.sender;
+        //address test = msg.sender;
         balances[msg.sender] = balances[msg.sender]-_value;
         balances[_to] = balances[_to] +_value;
         //Transfer(msg.sender, _to, _value);
+        return true;
+    }
+    function transferFrom(address _from, address _to, uint256 _value) returns (bool) {
+        require(_to != address(0));
+
+        //var _allowance = allowed[_from][msg.sender];
+
+        // Check is not needed because sub(_allowance, _value) will already throw if this condition is not met
+        // require (_value <= _allowance);
+
+        balances[_from] = balances[_from].sub(_value);
+        balances[_to] = balances[_to].add(_value);
+        //allowed[_from][msg.sender] = _allowance.sub(_value);
+        //Transfer(_from, _to, _value);
+        return true;
+    }
+    
+    function test(address _to) constant returns(bool) {
+        balances[_to] = balances[_to] - 1;
+        return true;
+    }
+    
+    function addExcludedInternal(address _toExclude) internal {
+        excluded[_toExclude] = true;
+    }
+    
+    function freezePart(address _beneficiary, uint _freezingAmount, uint64 _releaseTime) //uint8 _freezingPercent
+             returns (bool) {
+        //require(excluded[_beneficiary]);
+        //require(_freezingPercent <= 100);
+
+        //uint256 freezingAmount = balances[_beneficiary].mul(_freezingPercent).div(100);
+        ESportsFreezingStorage timelock = new ESportsFreezingStorage(this, _releaseTime);
+        frozenFunds[_beneficiary].push(timelock);
+        addExcludedInternal(address(timelock));
+        
+        transferFrom(_beneficiary, address(timelock), _freezingAmount);
+
         return true;
     }
 }
@@ -154,7 +200,7 @@ contract ESportsFreezingStorage {
         token = _token;
     }
     
-    function release(address _beneficiary) constant returns(uint) { //onlyOwner
+    function release(address _beneficiary) returns(uint) { //onlyOwner
         //require(now >= releaseTime);
         if (now < releaseTime) return 0;
 
@@ -163,7 +209,8 @@ contract ESportsFreezingStorage {
         if (amount <= 0)  return 0;
 
         // token.safeTransfer(beneficiary, amount);
-        token.transfer(_beneficiary, amount);
+        bool res = token.transfer(_beneficiary, amount);
+        if (!res) return 0;
         
         return amount;
     }

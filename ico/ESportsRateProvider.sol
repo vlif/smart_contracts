@@ -30,26 +30,30 @@ contract ESportsRateProvider is usingESportsConstants, ESportsRateProviderI, Own
     // rate calculate accuracy
     uint constant RATE_SCALE = 10000;
     uint constant BASE_RATE = 240 * RATE_SCALE;
-    uint constant FIRST_WEEK = 7;
+    // uint constant FIRST_WEEK = 7;
+    // uint constant BONUS_THRESHOLD_ETR = 20000 * 240; // 5 000 000 EUR -> 20 000 ETH -> ETR
 
     function getRateScale() public constant returns (uint) {
         return RATE_SCALE;
     }
 
     function getRate(
-        address buyer, 
-        uint totalSold, 
-        uint amountWei, 
+        address buyer,
+        uint totalSold,
+        uint amountWei,
         uint32 startTime //crowdsaleStartTime
     ) public constant returns (uint) {
         uint rate;
+
         rate = BASE_RATE;
 
+
         // apply bonus for amount
-        if (now < startTime + FIRST_WEEK * 1 days) {
-            rate += rate * 10 / 100; // + 10%
-        }
-                
+        // if (now < startTime + FIRST_WEEK * 1 days) {
+        //     rate += rate * 10 / 100; // + 10%
+        // }
+
+
         return rate;
     }
 }

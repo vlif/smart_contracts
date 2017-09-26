@@ -32,12 +32,15 @@ contract ESportsToken is usingESportsConstants, MintableToken {
         return TOKEN_DECIMALS_UINT8;
     }
     
-
     function crowdsaleFinished() onlyOwner {
         paused = false;
     }
 
     function addExcluded(address _toExclude) onlyOwner {
+        excluded[_toExclude] = true;
+    }
+    
+    function addExcludedInternal(address _toExclude) private {
         excluded[_toExclude] = true;
     }
 
@@ -63,12 +66,13 @@ contract ESportsToken is usingESportsConstants, MintableToken {
 
     //     return timelock;
     // }
-    function mintTimelocked(address _to, uint _amount, uint64 _releaseTime)
+    function mintTimelocked(address _to, uint _amount, uint32 _releaseTime)
             onlyOwner canMint returns (ESportsFreezingStorage) {
-        ESportsFreezingStorage timelock = new ESportsFreezingStorage(_releaseTime);
+        ESportsFreezingStorage timelock = new ESportsFreezingStorage(this, _releaseTime);
         mint(timelock, _amount);
 
         frozenFunds[_to].push(timelock);
+        addExcludedInternal(timelock); //address()
 
         return timelock;
     }
@@ -89,22 +93,9 @@ contract ESportsToken is usingESportsConstants, MintableToken {
     // }
 
     /**
-     * @dev To freeze part of the token holder
+     * @dev Get the total number of frozen tokens [optional]
      */
-    // function freezePart(address _beneficiary, uint8 _freezingPercent, uint64 _releaseTime) 
-    //         onlyOwner returns (bool) {
-    //     require(excluded[_beneficiary]);
-    //     require(_freezingPercent <= 100);
-    //     require(balances[_beneficiary] > 0);
-
-    //     uint256 freezingAmount = balances[_beneficiary].mul(_freezingPercent).div(100);
-    //     balances[_beneficiary] = balances[_beneficiary].sub(freezingAmount);
-    //     mintTimelocked(_beneficiary, freezingAmount, _releaseTime);
-
-    //     return true;
-    // }
-
-    function getFrozenFundsTotalAmount(address _beneficiary) onlyOwner constant returns(uint) {
+    function getFrozenFundsTotalAmount(address _beneficiary) constant returns(uint) {
         uint total = 0;
         for (uint x = 0; x < frozenFunds[_beneficiary].length; x++) {
             // total = total + balances[frozenFunds[_beneficiary][x]];
@@ -114,15 +105,14 @@ contract ESportsToken is usingESportsConstants, MintableToken {
         return total;
     }
 
-    function returnFrozenFreeFunds(address _beneficiary) constant public returns (uint64) {
-        for (uint x = 0; x < frozenFunds[_beneficiary].length; x++) {
-            if (now >= frozenFunds[_beneficiary][x].releaseTime()) {
-                uint256 amount = token.balanceOf(this);
-                require(amount > 0);
-
-                // token.safeTransfer(beneficiary, amount);
-                token.transfer(beneficiary, amount);
-            }
+    function returnFrozenFreeFunds() public returns (uint) {
+        uint total = 0;
+        ESportsFreezingStorage[] storage frozenStorages = frozenFunds[msg.sender];
+        for (uint x = 0; x < frozenStorages.length; x++) {
+            uint amount = frozenStorages[x].release(msg.sender);
+            total = total.add(amount);
         }
+
+        return total;
     }
 }

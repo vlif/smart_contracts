@@ -67,18 +67,20 @@ contract Crowdsale {
         wallet = _wallet;
     }
 
+
     // creates the token to be sold.
     // override this method to have crowdsale of a specific mintable token.
     function createTokenContract() internal returns (MintableToken) {
         return new MintableToken();
     }
 
+
     /**
      * @dev this method might be overridden for implementing any sale logic.
      * @return Actual rate.
      */
     function getRate(uint amount) internal constant returns (uint) {
-        return rate;
+        return rate * getRateScale(); //rate
     }
 
     /**
@@ -86,8 +88,18 @@ contract Crowdsale {
      * @return Rate divider.
      */
     function getRateScale() internal constant returns (uint) {
-        return 1;
+        return 10000; //1
     }
+
+
+    function addBonus(uint _amount) internal returns (uint) {
+        return 0;
+    }
+
+    function getBonus() public returns (uint) {
+        return 0;
+    }
+
 
     // fallback function can be used to buy tokens
     function() payable {
@@ -112,6 +124,7 @@ contract Crowdsale {
         // uint tokens = rate.mul(msg.value).div(1 ether);
         uint tokens = amountWei.mul(actualRate).div(rateScale);
 
+
         // change, if minted token would be less
         uint change = 0;
 
@@ -126,6 +139,11 @@ contract Crowdsale {
             change = amountWei - realAmount;
             amountWei = realAmount;
         }
+
+
+        // bonuses
+        uint bonuses = addBonus(tokens);
+
 
         // update state
         weiRaised = weiRaised.add(amountWei);
