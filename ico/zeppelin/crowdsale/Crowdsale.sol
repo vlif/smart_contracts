@@ -93,11 +93,15 @@ contract Crowdsale {
         return 0;
     }
 
+    function addDelayedBonus(uint _amount) internal returns (uint) {
+        return 0;
+    }
+
     function sendBonus(address _beneficiary, uint _amount) internal returns (uint) {
         return 0;
     }
 
-    function getBonus() public returns (uint) {
+    function releaseBonus() public returns (uint) {
         return 0;
     }
 
@@ -138,13 +142,9 @@ contract Crowdsale {
             amountWei = realAmount;
         }
 
-
         // bonuses
         uint bonuses = addBonus(tokens);
-        if (bonuses > 0) {
-            sendBonus(beneficiary, bonuses);
-        }
-
+        addDelayedBonus(tokens);
 
         // update state
         weiRaised = weiRaised.add(amountWei);
@@ -152,6 +152,10 @@ contract Crowdsale {
 
         token.mint(beneficiary, tokens);
         TokenPurchase(msg.sender, beneficiary, amountWei, tokens);
+
+        if (bonuses > 0) {
+            sendBonus(beneficiary, bonuses);
+        }
 
         if (change != 0) {
             msg.sender.transfer(change);

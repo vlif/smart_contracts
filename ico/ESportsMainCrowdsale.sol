@@ -19,10 +19,8 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     uint constant COMPANY_COLD_STORAGE_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
 	// it is separate wallet which is driven by the team and can be rewarded from to any investor the TEAM choose
     uint constant INVESTOR_TOKENS = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00%
-    
     uint constant BONUS_TOKENS = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00% // pre-sale
 	uint constant BUFFER_TOKENS = 6000000 * TOKEN_DECIMAL_MULTIPLIER; // 10.00%
-
     uint constant PRE_ICO_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER;
     // uint constant ICO_TOKENS = 24000000 * TOKEN_DECIMAL_MULTIPLIER; // 40.00%
 
@@ -59,9 +57,6 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         _softCapWei // _goal // 2 000 000 -> 8 000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
 	) {
         // token.delegatecall(bytes4(sha3("transferOwnership(address)")), this);
-
-
-
 	}
 
 	/**
@@ -99,19 +94,23 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         return bonusProvider.addBonus(msg.sender, soldTokens, _amountTokens, startTime);
     }
 
-    function getBonus() returns(uint) {
-        return bonusProvider.getBonus(msg.sender, soldTokens);
+    function addDelayedBonus(uint _amountTokens) internal returns(uint) {
+        return bonusProvider.addDelayedBonus(msg.sender, soldTokens, _amountTokens, startTime);
+    }
+
+    function releaseBonus() returns(uint) {
+        return bonusProvider.releaseBonus(msg.sender, soldTokens);
     }
 
     function sendBonus(address _beneficiary, uint _amountBonusTokens) internal returns(uint) {
         return bonusProvider.sendBonus(_beneficiary, _amountBonusTokens);
     }
 
-    function setBonusProvider(address _bonusProviderAddress) onlyOwner {
-        require(_bonusProviderAddress != 0);
+    // function setBonusProvider(address _bonusProviderAddress) onlyOwner {
+    //     require(_bonusProviderAddress != 0);
 
-        bonusProvider = ESportsBonusProviderI(_bonusProviderAddress);
-    }
+    //     bonusProvider = ESportsBonusProviderI(_bonusProviderAddress);
+    // }
 
 	///**
     // * @dev Admin can move end time.
@@ -143,22 +142,28 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     function init() onlyOwner public returns(bool) {
         require(!isInit);
 
+        // ESportsRateProvider rProvider = new ESportsRateProvider();
+        // rProvider.transferOwnership(owner);
+        // rateProvider = rProvider;
+
+        ESportsBonusProvider bProvider = new ESportsBonusProvider(ESportsToken(token));
+        // bProvider.transferOwnership(owner);
+        bonusProvider = bProvider;
+
         mintToFounders();
 
         token.mint(INVESTOR_ADDRESS_KOVAN, INVESTOR_TOKENS);
 
         // bonuses
         token.mint(BONUS_ADDRESS_KOVAN, BONUS_TOKENS);
-        token.mint(this, BUFFER_TOKENS);
+        token.mint(bonusProvider, BUFFER_TOKENS); // mint bonus tokent to bonus provider
 
         // ESportsToken(token).addExcluded(TEAM_ADDRESS_KOVAN);
         ESportsToken(token).addExcluded(INVESTOR_ADDRESS_KOVAN);
         ESportsToken(token).addExcluded(BONUS_ADDRESS_KOVAN);
 
-        initProviders();
-
         isInit = true;
-        return isInit;
+        return true;
     }
 
     function mintToFounders() onlyOwner internal returns(bool) {
@@ -174,18 +179,6 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS_KOVAN, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 3 years); //minutes
         ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS_KOVAN, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 5 years); //minutes
         token.mint(TEAM_PHIL_ADDRESS_KOVAN, TEAM_PHIL_TOKENS.mul(20).div(100));
-
-        return true;
-    }
-
-    function initProviders() onlyOwner internal returns(bool) {
-        // ESportsRateProvider rProvider = new ESportsRateProvider();
-        // rProvider.transferOwnership(owner);
-        // rateProvider = rProvider;
-
-        ESportsBonusProvider bProvider = new ESportsBonusProvider(this, ESportsToken(token));
-        // bProvider.transferOwnership(owner);
-        bonusProvider = bProvider;
 
         return true;
     }
