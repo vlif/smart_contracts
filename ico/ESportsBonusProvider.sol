@@ -16,7 +16,7 @@ contract ESportsBonusProviderI is Ownable {
         uint _amountTokens,
         uint32 _startTime
     ) onlyOwner public returns (uint); //constant
-
+    
     function addDelayedBonus(
         address _buyer, 
         uint _totalSold,

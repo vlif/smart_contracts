@@ -148,6 +148,7 @@ contract Crowdsale {
         wallet.transfer(amountWei);
     }
 
+    // Trasfer bonuses and adding delayed bonuses
     function postBuyTokens(address _beneficiary, uint _tokens) internal;
 
     /**

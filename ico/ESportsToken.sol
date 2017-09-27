@@ -32,6 +32,7 @@ contract ESportsToken is usingESportsConstants, MintableToken {
         return TOKEN_DECIMALS_UINT8;
     }
     
+
     function crowdsaleFinished() onlyOwner {
         paused = false;
     }
@@ -39,7 +40,7 @@ contract ESportsToken is usingESportsConstants, MintableToken {
     function addExcluded(address _toExclude) onlyOwner {
         excluded[_toExclude] = true;
     }
-    
+
     function addExcludedInternal(address _toExclude) private {
         excluded[_toExclude] = true;
     }
@@ -105,6 +106,10 @@ contract ESportsToken is usingESportsConstants, MintableToken {
         return total;
     }
 
+    /**
+     * @dev Release frozen tokens
+     * @return total amount of released tokens
+     */
     function returnFrozenFreeFunds() public returns (uint) {
         uint total = 0;
         ESportsFreezingStorage[] storage frozenStorages = frozenFunds[msg.sender];

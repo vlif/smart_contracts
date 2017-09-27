@@ -30,6 +30,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     address constant WALLET_ADDRESS_KOVAN = 0x00cbCcd31cdeeF93c302F1f0440e0aba1E45a6A4;
     address constant INVESTOR_ADDRESS_KOVAN = 0x00657a4639f55083524242540ED3B0bdA534f69B;
     address constant BONUS_ADDRESS_KOVAN = 0x0005762D49BC63F16B39aead421b2ad9Db794f2B;
+    address constant COMPANY_COLD_STORAGE_ADDRESS_KOVAN = 0x0019d9b0BF58beA7b5aFB6977Af87243650bBcC4;
     // address constant PRE_ICO_ADDRESS = ;
 
     // ESportsRateProviderI public rateProvider;
@@ -193,6 +194,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         mintToFounders();
 
         token.mint(INVESTOR_ADDRESS_KOVAN, INVESTOR_TOKENS);
+        token.mint(COMPANY_COLD_STORAGE_ADDRESS_KOVAN, COMPANY_COLD_STORAGE_TOKENS);
 
         // bonuses
         token.mint(BONUS_ADDRESS_KOVAN, BONUS_TOKENS);
@@ -201,6 +203,8 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         // ESportsToken(token).addExcluded(TEAM_ADDRESS_KOVAN);
         ESportsToken(token).addExcluded(INVESTOR_ADDRESS_KOVAN);
         ESportsToken(token).addExcluded(BONUS_ADDRESS_KOVAN);
+        ESportsToken(token).addExcluded(COMPANY_COLD_STORAGE_ADDRESS_KOVAN);
+
         ESportsToken(token).addExcluded(bonusProvider);
 
         isInit = true;
