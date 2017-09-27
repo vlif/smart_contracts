@@ -2,12 +2,16 @@ pragma solidity ^0.4.16;
 
 import "./zeppelin/token/MintableToken.sol";
 // import "./zeppelin/token/TokenTimelock.sol";
-import './zeppelin/math/SafeMath.sol';
+import "./zeppelin/math/SafeMath.sol";
+// import "./zeppelin/token/BurnableToken.sol";
 
 import "./ESportsConstants.sol";
 import "./ESportsFreezingStorage.sol";
+// import "./ESportsMainCrowdsale.sol";
 
 contract ESportsToken is usingESportsConstants, MintableToken {
+    event Burn(address indexed burner, uint256 value);
+
     /**
      * @dev Pause token transfer. After successfully finished crowdsale it becomes true.
      */
@@ -119,5 +123,18 @@ contract ESportsToken is usingESportsConstants, MintableToken {
         }
 
         return total;
+    }
+
+    /**
+     * @dev Burns a specific amount of tokens.
+     * @param _value The amount of token to be burned.
+     */
+    function burn(uint256 _value) public {
+        require(_value > 0);
+
+        address burner = msg.sender;
+        balances[burner] = balances[burner].sub(_value);
+        totalSupply = totalSupply.sub(_value);
+        Burn(burner, _value);
     }
 }

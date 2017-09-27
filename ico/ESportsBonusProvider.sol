@@ -9,6 +9,7 @@ import "./ESportsToken.sol";
 contract ESportsBonusProviderI is Ownable {
     // address public bonusWallet;
     ESportsToken public token;
+    address public returnAddressBonuses;
 
     function getBonusAmount(
         address _buyer, 
@@ -16,7 +17,7 @@ contract ESportsBonusProviderI is Ownable {
         uint _amountTokens,
         uint32 _startTime
     ) onlyOwner public returns (uint); //constant
-    
+
     function addDelayedBonus(
         address _buyer, 
         uint _totalSold,
@@ -31,22 +32,28 @@ contract ESportsBonusProviderI is Ownable {
     }
 
     function releaseBonus(address _buyer, uint _totalSold) onlyOwner public returns (uint);
+
+    function releaseThisBonuses() onlyOwner public returns (uint) {
+        uint remainBonusTokens = token.balanceOf(returnAddressBonuses); // send all remaining bonuses
+        require(token.transfer(returnAddressBonuses, remainBonusTokens));
+    }
 }
 
 contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
     // 1) 10% on your investment during first week
     // 2) 10% to all investors during ICO ( not presale) if we reach 5 000 000 euro investments
     // 3) 5% on the investments with the referal link
-    
+
     using SafeMath for uint;
 
     mapping (address => uint256) investorBonuses;
     uint constant FIRST_WEEK = 7 * 1 days;
     uint constant BONUS_THRESHOLD_ETR = 1 * TOKEN_DECIMAL_MULTIPLIER; // 20000 * 240 // 5 000 000 EUR -> 20 000 ETH -> ETR
 
-    function ESportsBonusProvider(ESportsToken _token) { //address _bonusWallet
+    function ESportsBonusProvider(ESportsToken _token, address _returnAddressBonuses) { //address _bonusWallet
         // bonusWallet = _bonusWallet;
         token = _token;
+        returnAddressBonuses = _returnAddressBonuses;
     }
 
     function getBonusAmount(

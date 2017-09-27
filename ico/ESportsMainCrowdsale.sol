@@ -6,15 +6,13 @@ import './zeppelin/math/SafeMath.sol';
 import "./ESportsConstants.sol";
 import "./ESportsToken.sol";
 // import "./ESportsRateProvider.sol";
-// import "./ESportsFreezingStorage.sol";
 import "./ESportsBonusProvider.sol";
 
 contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     // uint constant minimalPurchase = 0.05 ether; // 50 000 000 000 000 000 Wei
 
 	// Overall 100.00% 60 000 000
-	// uint constant TEAM_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00% // Founders
-    uint constant TEAM_BEN_TOKENS = 6000000 * TOKEN_DECIMAL_MULTIPLIER;
+    uint constant TEAM_BEN_TOKENS = 6000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00% // Founders
     uint constant TEAM_PHIL_TOKENS = 6000000 * TOKEN_DECIMAL_MULTIPLIER;
     uint constant COMPANY_COLD_STORAGE_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
 	// it is separate wallet which is driven by the team and can be rewarded from to any investor the TEAM choose
@@ -22,16 +20,16 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     uint constant BONUS_TOKENS = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00% // pre-sale
 	uint constant BUFFER_TOKENS = 6000000 * TOKEN_DECIMAL_MULTIPLIER; // 10.00%
     uint constant PRE_ICO_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER;
-    // uint constant ICO_TOKENS = 24000000 * TOKEN_DECIMAL_MULTIPLIER; // 40.00%
+    uint constant PRESALE_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
 
-	// address constant TEAM_ADDRESS_KOVAN = 0x0065ee8FB8697C686C27C0cE79ec6FA1f395D27e;
-    address constant TEAM_BEN_ADDRESS_KOVAN = 0x000b341E1774b02D77a1175971BC50b841D21eD0;
-    address constant TEAM_PHIL_ADDRESS_KOVAN = 0x004C05E2c37a73233B63d09c52C4f68AFDfb1763;
-    address constant WALLET_ADDRESS_KOVAN = 0x00cbCcd31cdeeF93c302F1f0440e0aba1E45a6A4;
-    address constant INVESTOR_ADDRESS_KOVAN = 0x00657a4639f55083524242540ED3B0bdA534f69B;
-    address constant BONUS_ADDRESS_KOVAN = 0x0005762D49BC63F16B39aead421b2ad9Db794f2B;
-    address constant COMPANY_COLD_STORAGE_ADDRESS_KOVAN = 0x0019d9b0BF58beA7b5aFB6977Af87243650bBcC4;
-    // address constant PRE_ICO_ADDRESS = ;
+    // Kovan addresses
+    address constant TEAM_BEN_ADDRESS = 0x000b341E1774b02D77a1175971BC50b841D21eD0;
+    address constant TEAM_PHIL_ADDRESS = 0x004C05E2c37a73233B63d09c52C4f68AFDfb1763;
+    address constant WALLET_ADDRESS = 0x00cbCcd31cdeeF93c302F1f0440e0aba1E45a6A4;
+    address constant INVESTOR_ADDRESS = 0x00657a4639f55083524242540ED3B0bdA534f69B;
+    address constant BONUS_ADDRESS = 0x0005762D49BC63F16B39aead421b2ad9Db794f2B;
+    address constant COMPANY_COLD_STORAGE_ADDRESS = 0x0019d9b0BF58beA7b5aFB6977Af87243650bBcC4;
+    address constant PRESALE_ADDRESS = 0x00F1Eb3e6009De9460DcBaE5b2496a40c2DBE576;
 
     // ESportsRateProviderI public rateProvider;
     ESportsBonusProviderI public bonusProvider;
@@ -52,12 +50,15 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         _startTime,
         _endTime, 
         240, // 240 ETR = 1 ETH at the rate 1 ETH = 250 EUR
-        _hardCapTokens * TOKEN_DECIMAL_MULTIPLIER, //(_hardCapTokens * TOKEN_DECIMAL_MULTIPLIER - TEAM_TOKENS - INVESTOR_TOKENS - ....), // 60 000 000
-        _wallet, //=WALLET_ADDRESS_KOVAN
+        _hardCapTokens * TOKEN_DECIMAL_MULTIPLIER, // 60 000 000
+        _wallet, //=WALLET_ADDRESS
         _token,
         _softCapWei // _goal // 2 000 000 -> 8 000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
 	) {
         // token.delegatecall(bytes4(sha3("transferOwnership(address)")), this);
+
+
+
 	}
 
 	/**
@@ -172,6 +173,8 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
             return;
         }
 
+        bonusProvider.releaseThisBonuses();
+
         ESportsToken(token).crowdsaleFinished();
         token.transferOwnership(owner); // change token owner
     }
@@ -187,23 +190,25 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         // rProvider.transferOwnership(owner);
         // rateProvider = rProvider;
 
-        ESportsBonusProvider bProvider = new ESportsBonusProvider(ESportsToken(token));
+        ESportsBonusProvider bProvider = new ESportsBonusProvider(ESportsToken(token), COMPANY_COLD_STORAGE_ADDRESS);
         // bProvider.transferOwnership(owner);
         bonusProvider = bProvider;
 
         mintToFounders();
 
-        token.mint(INVESTOR_ADDRESS_KOVAN, INVESTOR_TOKENS);
-        token.mint(COMPANY_COLD_STORAGE_ADDRESS_KOVAN, COMPANY_COLD_STORAGE_TOKENS);
+        token.mint(INVESTOR_ADDRESS, INVESTOR_TOKENS);
+        token.mint(COMPANY_COLD_STORAGE_ADDRESS, COMPANY_COLD_STORAGE_TOKENS);
+        token.mint(PRESALE_ADDRESS, PRESALE_TOKENS);
 
         // bonuses
-        token.mint(BONUS_ADDRESS_KOVAN, BONUS_TOKENS);
+        token.mint(BONUS_ADDRESS, BONUS_TOKENS);
         token.mint(bonusProvider, BUFFER_TOKENS); // mint bonus tokent to bonus provider
 
-        // ESportsToken(token).addExcluded(TEAM_ADDRESS_KOVAN);
-        ESportsToken(token).addExcluded(INVESTOR_ADDRESS_KOVAN);
-        ESportsToken(token).addExcluded(BONUS_ADDRESS_KOVAN);
-        ESportsToken(token).addExcluded(COMPANY_COLD_STORAGE_ADDRESS_KOVAN);
+        // ESportsToken(token).addExcluded(TEAM_ADDRESS);
+        ESportsToken(token).addExcluded(INVESTOR_ADDRESS);
+        ESportsToken(token).addExcluded(BONUS_ADDRESS);
+        ESportsToken(token).addExcluded(COMPANY_COLD_STORAGE_ADDRESS);
+        ESportsToken(token).addExcluded(PRESALE_ADDRESS);
 
         ESportsToken(token).addExcluded(bonusProvider);
 
@@ -215,18 +220,18 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
      * @dev Mint of tokens in the name of the founders and freeze part of them
      */
     function mintToFounders() onlyOwner internal returns(bool) {
-        // ESportsToken(token).mintAndFreezePart(TEAM_ADDRESS_KOVAN, TEAM_TOKENS, 50, _startTime + 5 * 1 minutes); //+1 years
-        // token.mint(TEAM_ADDRESS_KOVAN, TEAM_TOKENS);
+        // ESportsToken(token).mintAndFreezePart(TEAM_ADDRESS, TEAM_TOKENS, 50, _startTime + 5 * 1 minutes); //+1 years
+        // token.mint(TEAM_ADDRESS, TEAM_TOKENS);
 
-        ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS_KOVAN, TEAM_BEN_TOKENS.mul(20).div(100), startTime + 1 years); //minutes
-        ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS_KOVAN, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 3 years); //minutes
-        ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS_KOVAN, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 5 years); //minutes
-        token.mint(TEAM_BEN_ADDRESS_KOVAN, TEAM_BEN_TOKENS.mul(20).div(100));
+        ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(20).div(100), startTime + 1 years); //minutes
+        ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 3 years); //minutes
+        ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 5 years); //minutes
+        token.mint(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(20).div(100));
 
-        ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS_KOVAN, TEAM_PHIL_TOKENS.mul(20).div(100), startTime + 1 years); //minutes
-        ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS_KOVAN, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 3 years); //minutes
-        ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS_KOVAN, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 5 years); //minutes
-        token.mint(TEAM_PHIL_ADDRESS_KOVAN, TEAM_PHIL_TOKENS.mul(20).div(100));
+        ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(20).div(100), startTime + 1 years); //minutes
+        ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 3 years); //minutes
+        ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 5 years); //minutes
+        token.mint(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(20).div(100));
 
         return true;
     }
