@@ -14,14 +14,14 @@ contract ESportsBonusProviderI is Ownable {
         address _buyer, 
         uint _totalSold,
         uint _amountTokens,
-        uint32 _crowdsaleStartTime
+        uint32 _startTime
     ) onlyOwner public returns (uint); //constant
 
     function addDelayedBonus(
         address _buyer, 
         uint _totalSold,
         uint _amountTokens,
-        uint32 _crowdsaleStartTime
+        uint32 _startTime
     ) onlyOwner public returns (uint);
 
     function sendBonus(address _buyer, uint _amountBonusTokens) onlyOwner public {
@@ -37,7 +37,7 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
     // 1) 10% on your investment during first week
     // 2) 10% to all investors during ICO ( not presale) if we reach 5 000 000 euro investments
     // 3) 5% on the investments with the referal link
-
+    
     using SafeMath for uint;
 
     mapping (address => uint256) investorBonuses;
@@ -87,8 +87,7 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
         require(investorBonuses[_buyer] > 0);
 
         uint amountBonusTokens = investorBonuses[_buyer];
-        bool result = token.transfer(_buyer, amountBonusTokens);
-        if (!result) return 0;
+        require(token.transfer(_buyer, amountBonusTokens));
         investorBonuses[_buyer] = 0;
 
         return amountBonusTokens;

@@ -90,22 +90,46 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     //     rateProvider = ESportsRateProviderI(_rateProviderAddress);
     // }
 
+    /**
+     * @dev Get amount of bonus tokens
+     * @param _amountTokens Number of purchased tokens
+     * @return amount of bonus tokens
+     */
     function getBonusAmount(uint _amountTokens) internal returns(uint) {
         return bonusProvider.getBonusAmount(msg.sender, soldTokens, _amountTokens, startTime);
     }
 
+    /**
+     * @dev Add delayed bonus tokens
+     * @param _amountTokens Number of purchased tokens
+     * @return amount of bonus tokens added
+     */
     function addDelayedBonus(uint _amountTokens) internal returns(uint) {
         return bonusProvider.addDelayedBonus(msg.sender, soldTokens, _amountTokens, startTime);
     }
 
+    /**
+     * @dev Release delayed bonus tokens
+     * @return amount of got bonus tokens
+     */
     function releaseBonus() returns(uint) {
         return bonusProvider.releaseBonus(msg.sender, soldTokens);
     }
 
+    /**
+     * @dev Send bonus tokens to beneficiary
+     * @param _beneficiary future bonuses holder
+     * @param _amountBonusTokens amount of sent bonus tokens
+     */
     function sendBonus(address _beneficiary, uint _amountBonusTokens) internal {
         bonusProvider.sendBonus(_beneficiary, _amountBonusTokens);
     }
 
+    /**
+     * @dev Trasfer bonuses and adding delayed bonuses
+     * @param _beneficiary future bonuses holder
+     * @param _tokens amount of bonus tokens
+     */
     function postBuyTokens(address _beneficiary, uint _tokens) internal {
         uint bonuses = getBonusAmount(_tokens);
         addDelayedBonus(_tokens);
@@ -137,6 +161,9 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     //     return super.validPurchase(_amountWei, _actualRate, _totalSupply);
     // }
 
+    /**
+     * @dev Finish the crowdsale
+     */
     function finalization() internal {
         super.finalization();
         token.finishMinting();
@@ -148,6 +175,10 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         token.transferOwnership(owner); // change token owner
     }
 
+    /**
+     * @dev Initialization of crowdsale. Starts once after deployment token contract
+     * , deployment crowdsale contract and changу token contract's owner 
+     */
     function init() onlyOwner public returns(bool) {
         require(!isInit);
 
@@ -170,11 +201,15 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         // ESportsToken(token).addExcluded(TEAM_ADDRESS_KOVAN);
         ESportsToken(token).addExcluded(INVESTOR_ADDRESS_KOVAN);
         ESportsToken(token).addExcluded(BONUS_ADDRESS_KOVAN);
+        ESportsToken(token).addExcluded(bonusProvider);
 
         isInit = true;
         return true;
     }
 
+    /**
+     * @dev Mint of tokens in the name of the founders and freeze part of them
+     */
     function mintToFounders() onlyOwner internal returns(bool) {
         // ESportsToken(token).mintAndFreezePart(TEAM_ADDRESS_KOVAN, TEAM_TOKENS, 50, _startTime + 5 * 1 minutes); //+1 years
         // token.mint(TEAM_ADDRESS_KOVAN, TEAM_TOKENS);
