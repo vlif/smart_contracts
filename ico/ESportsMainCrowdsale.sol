@@ -90,8 +90,8 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     //     rateProvider = ESportsRateProviderI(_rateProviderAddress);
     // }
 
-    function addBonus(uint _amountTokens) internal returns(uint) {
-        return bonusProvider.addBonus(msg.sender, soldTokens, _amountTokens, startTime);
+    function getBonusAmount(uint _amountTokens) internal returns(uint) {
+        return bonusProvider.getBonusAmount(msg.sender, soldTokens, _amountTokens, startTime);
     }
 
     function addDelayedBonus(uint _amountTokens) internal returns(uint) {
@@ -102,8 +102,17 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         return bonusProvider.releaseBonus(msg.sender, soldTokens);
     }
 
-    function sendBonus(address _beneficiary, uint _amountBonusTokens) internal returns(uint) {
-        return bonusProvider.sendBonus(_beneficiary, _amountBonusTokens);
+    function sendBonus(address _beneficiary, uint _amountBonusTokens) internal {
+        bonusProvider.sendBonus(_beneficiary, _amountBonusTokens);
+    }
+
+    function postBuyTokens(address _beneficiary, uint _tokens) internal {
+        uint bonuses = getBonusAmount(_tokens);
+        addDelayedBonus(_tokens);
+
+        if (bonuses > 0) {
+            sendBonus(_beneficiary, bonuses);
+        }
     }
 
     // function setBonusProvider(address _bonusProviderAddress) onlyOwner {

@@ -10,12 +10,12 @@ contract ESportsBonusProviderI is Ownable {
     // address public bonusWallet;
     ESportsToken public token;
 
-    function addBonus(
+    function getBonusAmount(
         address _buyer, 
         uint _totalSold,
         uint _amountTokens,
         uint32 _crowdsaleStartTime
-    ) onlyOwner public constant returns (uint);
+    ) onlyOwner public returns (uint); //constant
 
     function addDelayedBonus(
         address _buyer, 
@@ -24,13 +24,10 @@ contract ESportsBonusProviderI is Ownable {
         uint32 _crowdsaleStartTime
     ) onlyOwner public returns (uint);
 
-    function sendBonus(address _buyer, uint _amountBonusTokens) onlyOwner public returns (uint) {
-        require(token.balanceOf(this) >= _amountBonusTokens);
+    function sendBonus(address _buyer, uint _amountBonusTokens) onlyOwner public {
+        // require(token.balanceOf(this) >= _amountBonusTokens);
 
-        bool result = token.transfer(_buyer, _amountBonusTokens);
-        if (!result) return 0;
-
-        return _amountBonusTokens;
+        require(token.transfer(_buyer, _amountBonusTokens));
     }
 
     function releaseBonus(address _buyer, uint _totalSold) onlyOwner public returns (uint);
@@ -52,12 +49,12 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
         token = _token;
     }
 
-    function addBonus(
+    function getBonusAmount(
         address _buyer,
         uint _totalSold,
         uint _amountTokens,
         uint32 _startTime
-    ) onlyOwner public constant returns (uint) {
+    ) onlyOwner public returns (uint) { //constant
         uint bonus = 0;
         
         // apply bonus for amount
@@ -84,7 +81,7 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
 
         return bonus;
     }
-    
+
     function releaseBonus(address _buyer, uint _totalSold) onlyOwner public returns (uint) {
         require(_totalSold >= BONUS_THRESHOLD_ETR);
         require(investorBonuses[_buyer] > 0);
@@ -97,7 +94,7 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
         return amountBonusTokens;
     }
 
-    function getBonus(address _buyer) constant returns(uint) {
+    function getDelayedBonusAmount(address _buyer) constant returns(uint) {
         return investorBonuses[_buyer];
     }
 }

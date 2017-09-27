@@ -89,22 +89,6 @@ contract Crowdsale {
         return 10000; //1
     }
 
-    function addBonus(uint _amount) internal returns (uint) {
-        return 0;
-    }
-
-    function addDelayedBonus(uint _amount) internal returns (uint) {
-        return 0;
-    }
-
-    function sendBonus(address _beneficiary, uint _amount) internal returns (uint) {
-        return 0;
-    }
-
-    function releaseBonus() public returns (uint) {
-        return 0;
-    }
-
     // fallback function can be used to buy tokens
     function() payable {
         buyTokens(msg.sender, msg.value);
@@ -143,8 +127,7 @@ contract Crowdsale {
         }
 
         // bonuses
-        uint bonuses = addBonus(tokens);
-        addDelayedBonus(tokens);
+        postBuyTokens(beneficiary, tokens);
 
         // update state
         weiRaised = weiRaised.add(amountWei);
@@ -152,10 +135,6 @@ contract Crowdsale {
 
         token.mint(beneficiary, tokens);
         TokenPurchase(msg.sender, beneficiary, amountWei, tokens);
-
-        if (bonuses > 0) {
-            sendBonus(beneficiary, bonuses);
-        }
 
         if (change != 0) {
             msg.sender.transfer(change);
@@ -168,6 +147,8 @@ contract Crowdsale {
     function forwardFunds(uint amountWei) internal {
         wallet.transfer(amountWei);
     }
+
+    function postBuyTokens(address _beneficiary, uint _tokens) internal;
 
     /**
      * @dev Check if the specified purchase is valid.
