@@ -34,7 +34,7 @@ contract ESportsBonusProviderI is Ownable {
     function releaseBonus(address _buyer, uint _totalSold) onlyOwner public returns (uint);
 
     function releaseThisBonuses() onlyOwner public returns (uint) {
-        uint remainBonusTokens = token.balanceOf(returnAddressBonuses); // send all remaining bonuses
+        uint remainBonusTokens = token.balanceOf(this); // send all remaining bonuses
         require(token.transfer(returnAddressBonuses, remainBonusTokens));
     }
 }

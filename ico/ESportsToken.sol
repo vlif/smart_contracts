@@ -100,7 +100,7 @@ contract ESportsToken is usingESportsConstants, MintableToken {
     /**
      * @dev Get the total number of frozen tokens [optional]
      */
-    function getFrozenFundsTotalAmount(address _beneficiary) constant returns(uint) {
+    function getTotalAmountFrozenFunds(address _beneficiary) constant returns(uint) {
         uint total = 0;
         for (uint x = 0; x < frozenFunds[_beneficiary].length; x++) {
             // total = total + balances[frozenFunds[_beneficiary][x]];

@@ -19,8 +19,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     uint constant INVESTOR_TOKENS = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00%
     uint constant BONUS_TOKENS = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00% // pre-sale
 	uint constant BUFFER_TOKENS = 6000000 * TOKEN_DECIMAL_MULTIPLIER; // 10.00%
-    uint constant PRE_ICO_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER;
-    uint constant PRESALE_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
+    uint constant PRE_SALE_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
 
     // Kovan addresses
     address constant TEAM_BEN_ADDRESS = 0x000b341E1774b02D77a1175971BC50b841D21eD0;
@@ -29,7 +28,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     address constant INVESTOR_ADDRESS = 0x00657a4639f55083524242540ED3B0bdA534f69B;
     address constant BONUS_ADDRESS = 0x0005762D49BC63F16B39aead421b2ad9Db794f2B;
     address constant COMPANY_COLD_STORAGE_ADDRESS = 0x0019d9b0BF58beA7b5aFB6977Af87243650bBcC4;
-    address constant PRESALE_ADDRESS = 0x00F1Eb3e6009De9460DcBaE5b2496a40c2DBE576;
+    address constant PRE_SALE_ADDRESS = 0x00F1Eb3e6009De9460DcBaE5b2496a40c2DBE576;
 
     // ESportsRateProviderI public rateProvider;
     ESportsBonusProviderI public bonusProvider;
@@ -198,7 +197,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
 
         token.mint(INVESTOR_ADDRESS, INVESTOR_TOKENS);
         token.mint(COMPANY_COLD_STORAGE_ADDRESS, COMPANY_COLD_STORAGE_TOKENS);
-        token.mint(PRESALE_ADDRESS, PRESALE_TOKENS);
+        token.mint(PRE_SALE_ADDRESS, PRE_SALE_TOKENS);
 
         // bonuses
         token.mint(BONUS_ADDRESS, BONUS_TOKENS);
@@ -208,7 +207,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         ESportsToken(token).addExcluded(INVESTOR_ADDRESS);
         ESportsToken(token).addExcluded(BONUS_ADDRESS);
         ESportsToken(token).addExcluded(COMPANY_COLD_STORAGE_ADDRESS);
-        ESportsToken(token).addExcluded(PRESALE_ADDRESS);
+        ESportsToken(token).addExcluded(PRE_SALE_ADDRESS);
 
         ESportsToken(token).addExcluded(bonusProvider);
 
