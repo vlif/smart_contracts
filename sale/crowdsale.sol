@@ -18,7 +18,7 @@ contract Token {
  * 
  */
 contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
-	function Crowdsale (
+	function ExampleCrowdsale (
 		uint32 _startTime,
 		uint32 _endTime, 
 		// uint _rate, 
@@ -36,6 +36,8 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
         _token,
         _softCapWei // goal
 	) {
+		
+
 		
 	}
 }
