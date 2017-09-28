@@ -29,6 +29,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     address constant BONUS_ADDRESS = 0x0005762D49BC63F16B39aead421b2ad9Db794f2B;
     address constant COMPANY_COLD_STORAGE_ADDRESS = 0x0019d9b0BF58beA7b5aFB6977Af87243650bBcC4;
     address constant PRE_SALE_ADDRESS = 0x00F1Eb3e6009De9460DcBaE5b2496a40c2DBE576;
+    address BTC_BUYER = ;
 
     // ESportsRateProviderI public rateProvider;
     ESportsBonusProviderI public bonusProvider;
@@ -233,5 +234,13 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         token.mint(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(20).div(100));
 
         return true;
+    }
+
+    function buyForBitcoin(address _beneficiary, uint _amountWei) public {
+        require(msg.sender == BTC_BUYER);
+        // require(_beneficiary != 0x0);
+        // require(_amountWei > 0);
+
+        buyTokens(_beneficiary, _amountWei, true);
     }
 }
