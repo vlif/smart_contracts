@@ -49,14 +49,16 @@ contract Crowdsale {
      */
     event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
 
-    function Crowdsale(uint256 _startTime, uint256 _endTime, uint256 _rate, uint _hardCap, address _wallet) {
+    function Crowdsale(uint256 _startTime, uint256 _endTime, uint256 _rate, uint _hardCap, address _wallet, address _token) {
         require(_startTime >= now);
         require(_endTime >= _startTime);
         require(_rate > 0);
         require(_wallet != 0x0);
         require(_hardCap > _rate);
 
-        token = createTokenContract();
+        // token = createTokenContract();
+        token = MintableToken(_token);
+
         startTime = _startTime;
         endTime = _endTime;
         rate = _rate;
