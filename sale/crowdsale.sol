@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.4.16;
 
 import "./open_zeppelin/crowdsale/RefundableCrowdsale.sol";
 
@@ -12,6 +12,7 @@ contract Token {
 }
 
 /**
+ * Пример контракта crowdsale
  * Контракт Cryptosale может покупать у Crowdsale со скидоном 
  * 
  */
