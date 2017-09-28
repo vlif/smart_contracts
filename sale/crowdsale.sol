@@ -4,15 +4,6 @@ import "./open_zeppelin/crowdsale/RefundableCrowdsale.sol";
 import "./constants.sol";
 
 /**
- * 
- */
-contract Token {
-	function Token () {
-		
-	}	
-}
-
-/**
  * Пример контракта crowdsale
  * Контракт Cryptosale может покупать у Crowdsale со скидоном 
  * 
@@ -25,7 +16,7 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 		uint _softCapWei,
 		uint _hardCapTokens, 
 		address _wallet, 
-		address _token,
+		// address _token,
 		address _cryptosaleContractAddress
 	) RefundableCrowdsale(
         _startTime,
@@ -33,11 +24,11 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
         100,
         _hardCapTokens * TOKEN_DECIMAL_MULTIPLIER,
         _wallet,
-        _token,
+        // _token,
         _softCapWei // goal
 	) {
 		
 
-		
+
 	}
 }
