@@ -1,6 +1,7 @@
 pragma solidity ^0.4.16;
 
 import "./open_zeppelin/crowdsale/RefundableCrowdsale.sol";
+import "./constants.sol";
 
 /**
  * 
@@ -16,7 +17,7 @@ contract Token {
  * Контракт Cryptosale может покупать у Crowdsale со скидоном 
  * 
  */
-contract ExampleCrowdsale is RefundableCrowdsale {
+contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 	function Crowdsale (
 		uint32 _startTime,
 		uint32 _endTime, 
