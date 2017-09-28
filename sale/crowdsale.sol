@@ -15,7 +15,7 @@ contract Token {
  * Контракт Cryptosale может покупать у Crowdsale со скидоном 
  * 
  */
-contract Crowdsale is RefundableCrowdsale {
+contract ExampleCrowdsale is RefundableCrowdsale {
 	function Crowdsale (
 		uint32 _startTime,
 		uint32 _endTime, 
@@ -35,19 +35,5 @@ contract Crowdsale is RefundableCrowdsale {
         _softCapWei // goal
 	) {
 		
-	}
-}
-
-
-/**
- * 
- */
-contract Cryptosale {
-	function Cryptosale () {
-		
-	}	
-
-	function() payable {
-
 	}
 }
