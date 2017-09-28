@@ -1,6 +1,6 @@
 pragma solidity ^0.4.16;
 
-import "./open_zeppelin/crowdsale/RefundableCrowdsale.sol";
+import "./base/crowdsale/RefundableCrowdsale.sol";
 import "./constants.sol";
 
 /**
