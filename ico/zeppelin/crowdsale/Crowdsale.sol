@@ -91,11 +91,11 @@ contract Crowdsale {
 
     // fallback function can be used to buy tokens
     function() payable {
-        buyTokens(msg.sender, msg.value, false);
+        buyTokens(msg.sender, msg.value);
     }
 
     // low level token purchase function
-    function buyTokens(address beneficiary, uint amountWei, bool _isBtcBuyer) internal {
+    function buyTokens(address beneficiary, uint amountWei) internal {
         require(beneficiary != 0x0);
 
         // total minted tokens
@@ -110,6 +110,10 @@ contract Crowdsale {
         // calculate token amount to be created
         // uint tokens = rate.mul(msg.value).div(1 ether);
         uint tokens = amountWei.mul(actualRate).div(rateScale);
+
+        if (msg.value == 0) { // if it is a btc purchase then check existence all tokens (no change)
+            require(tokens.add(totalSupply) <= hardCap); 
+        }
 
 
         // change, if minted token would be less
@@ -139,10 +143,12 @@ contract Crowdsale {
         TokenPurchase(msg.sender, beneficiary, amountWei, tokens);
 
 
-        if (change != 0) {
-            msg.sender.transfer(change);
+        if (msg.value != 0) {
+            if (change != 0) {
+                msg.sender.transfer(change);
+            }
+            forwardFunds(amountWei);
         }
-        forwardFunds(amountWei);
     }
 
     // send ether to the fund collection wallet

@@ -29,7 +29,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     address constant BONUS_ADDRESS = 0x0005762D49BC63F16B39aead421b2ad9Db794f2B;
     address constant COMPANY_COLD_STORAGE_ADDRESS = 0x0019d9b0BF58beA7b5aFB6977Af87243650bBcC4;
     address constant PRE_SALE_ADDRESS = 0x00F1Eb3e6009De9460DcBaE5b2496a40c2DBE576;
-    address BTC_BUYER = ;
+    address btcBuyer = 0x0068536898Af4548b53ad23b9bbDaAD569bffdAA;
 
     // ESportsRateProviderI public rateProvider;
     ESportsBonusProviderI public bonusProvider;
@@ -236,11 +236,24 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         return true;
     }
 
-    function buyForBitcoin(address _beneficiary, uint _amountWei) public {
-        require(msg.sender == BTC_BUYER);
+    /**
+     * @dev Purchase for bitcoin. Can start only btc buyer
+     */
+    function buyForBitcoin(address _beneficiary, uint _amountWei) public returns(bool) {
+        require(msg.sender == btcBuyer);
         // require(_beneficiary != 0x0);
         // require(_amountWei > 0);
 
-        buyTokens(_beneficiary, _amountWei, true);
+        buyTokens(_beneficiary, _amountWei);
+        return true;
+    }
+
+    /**
+     * @dev Set new address who can buy tokens for bitcoin
+     */
+    function setBtcBuyer(address _newBtcBuyerAddress) onlyOwner returns(bool) {
+        require(_newBtcBuyerAddress != 0x0);
+        btcBuyer = _newBtcBuyerAddress;
+        return true;
     }
 }
