@@ -90,8 +90,8 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
         require(investorBonuses[_buyer] > 0);
 
         uint amountBonusTokens = investorBonuses[_buyer];
-        require(token.transfer(_buyer, amountBonusTokens));
         investorBonuses[_buyer] = 0;
+        require(token.transfer(_buyer, amountBonusTokens));
 
         return amountBonusTokens;
     }
