@@ -77,6 +77,10 @@ contract Crowdsale {
         buyTokens(msg.sender, msg.value);
     }
 
+    /**
+     * @dev this method might be overridden for implementing any sale logic.
+     * @return Actual rate.
+     */
     function getRate() internal constant returns (uint) { //uint amountWei
         return rate;
     }

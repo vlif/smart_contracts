@@ -3,17 +3,19 @@ pragma solidity ^0.4.16;
 import "./base/crowdsale/RefundableCrowdsale.sol";
 import "./constants.sol";
 import "./cryptosale.sol";
+import "./rateProvider.sol";
 
 /**
  * Пример контракта crowdsale
- * Контракт Cryptosale может покупать у Crowdsale со скидоном 
+ * Контракт Cryptosale может покупать у Crowdsale со скидоном (логика в rateProvider)
  * 
  */
+//1506613146, 1506699546, "10000000000000000", 3, "0xdd870fa1b7c4700f2bd7f44238821c26f7392148", "0x5e72914535f202659083db3a02c984188fa26e9f", "0x0dcd2f752394c41875e259e00bb44fd505297caf"
 contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
-	Cryptosale cryptosale;
-
 	address constant TEST_ACC = 0x14723a09acff6d2a60dcdf7aa4aff308fddc160c;
 	uint constant TEST_TOKENS = 10000000;
+
+	RateProvider public rateProvider; //RateProviderI
 
 	function ExampleCrowdsale (
 		uint32 _startTime,
@@ -33,11 +35,24 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
         _token,
         _softCapWei // goal
 	) {
-		cryptosale = Cryptosale(_cryptosaleContractAddress);
+		RateProvider provider = new RateProvider(_cryptosaleContractAddress);
+        // provider.transferOwnership(owner);
+        rateProvider = provider;
 
 		// token.mint(TEST_ACC, TEST_TOKENS);
 
 
 
 	}
+
+	/**
+     * @dev Override getRate to integrate with rate provider.
+     */
+    function getRate() internal constant returns(uint) { //uint _value
+		return rateProvider.getRate(msg.sender, rate); //, soldTokens, _value, startTime
+    }
+
+    function test(uint param) returns(uint) {
+    	return param;
+    }
 }

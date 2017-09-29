@@ -1,23 +1,38 @@
 pragma solidity ^0.4.16;
 
 import "./base/ownership/Ownable.sol";
-import "./crowdsale.sol";
+import "./crowdsaleInterface.sol";
 
 /**
  * 
  */
 contract Cryptosale is Ownable {
-	address crowdsale;
+	CrowdsaleInterface public crowdsale;
 
-	// function Cryptosale () {
-	// }	
+	function Cryptosale (address _crowdsale) {
+		require(_crowdsale != 0x0);
 
-	// function() payable {
-	// }
+		crowdsale = CrowdsaleInterface(_crowdsale);
+	}
+
+	/**
+	 * Тут по ходу нам надо  затариться токенами со скидкой у контракта crowdsale
+	 */
+	function() payable {
+		buyTokens(msg.sender, msg.value);
+	}
 
 	function setCrowdsale(address _crowdsale) onlyOwner returns(bool) {
 		require(_crowdsale != 0x0);
-		crowdsale = _crowdsale;
+
+		crowdsale = CrowdsaleInterface(_crowdsale);
+
 		return true;
+	}
+
+	function buyTokens(address beneficiary, uint amountWei) internal {
+		return crowdsale.test(12);
+
+		
 	}
 }
