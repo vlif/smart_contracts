@@ -9,13 +9,13 @@ import "./constants.sol";
 
 contract RateProvider is usingConstants, Ownable { //RateProviderI
     using SafeMath for uint;
-
+    
     address cryptosale;
 
     function RateProvider(address _cryptosaleContractAddress) { //RateProviderI(_cryptosaleContractAddress)
     	cryptosale = _cryptosaleContractAddress;	
     }
-
+    
     function getRate(
         address _buyer,
         uint _baseRate
@@ -27,7 +27,7 @@ contract RateProvider is usingConstants, Ownable { //RateProviderI
         rate = _baseRate;
 
 		if (_buyer == cryptosale) {
-			rate = rate.add(rate.mul(100).div(100)); // +10%
+			rate = rate.add(rate.mul(10).div(100)); // +10%
 		}
 
         return rate;

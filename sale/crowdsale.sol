@@ -1,6 +1,7 @@
 pragma solidity ^0.4.16;
 
 import "./base/crowdsale/RefundableCrowdsale.sol";
+
 import "./constants.sol";
 import "./cryptosale.sol";
 import "./rateProvider.sol";
