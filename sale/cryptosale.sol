@@ -30,7 +30,7 @@ contract Cryptosale is Ownable {
 		return true;
 	}
 
-	function buyTokens(address beneficiary, uint amountWei) {
+	function buyTokens(address beneficiary, uint amountWei) returns(uint) {
 		return crowdsale.test(12);
 
 		
