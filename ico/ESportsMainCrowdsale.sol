@@ -83,10 +83,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
 
         isInit = true;
 
-        ESportsBonusProvider bProvider = new ESportsBonusProvider(
-            ESportsToken(token), 
-            COMPANY_COLD_STORAGE_ADDRESS
-        );
+        ESportsBonusProvider bProvider = new ESportsBonusProvider(ESportsToken(token), COMPANY_COLD_STORAGE_ADDRESS);
         // bProvider.transferOwnership(owner);
         bonusProvider = bProvider;
 
