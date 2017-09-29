@@ -1,4 +1,4 @@
-1. Произвести деплой контракта токена
-2. Произвести деплой контракта Crowdsale
-3. Изменить владельца контракта токена на контракт Crowdsale (метод transferOwnership())
-4. Выполнить стартовую инициализацию контракта Crowdsale, вызвав метод init() контракта Crowdsale
+1. Deploy Token Contract 
+2. Deploy Crowdsale Contract 
+3. Change Token Contract owner to Crowdsale Contract (method: transferOwmership()) 
+4. Make starting initialization of Crowdsale Contract by calling method init() Crowdsales Contract
