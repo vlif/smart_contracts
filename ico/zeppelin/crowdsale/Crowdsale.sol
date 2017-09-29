@@ -186,14 +186,4 @@ contract Crowdsale {
     function hasStarted() public constant returns (bool) {
         return now >= startTime;
     }
-
-    /**
-     * @dev Check this crowdsale event has ended considering with amount to buy.
-     * @param _value Amount to spend.
-     * @return true if crowdsale event has ended
-     */
-    function hasEnded(uint _value) public constant returns (bool) {
-        uint actualRate = getRate(_value);
-        return now > endTime || token.totalSupply() > hardCap.sub(actualRate);
-    }
 }
