@@ -26,8 +26,6 @@ contract ESportsBonusProviderI is Ownable {
     ) onlyOwner public returns (uint);
 
     function sendBonus(address _buyer, uint _amountBonusTokens) onlyOwner public {
-        // require(token.balanceOf(this) >= _amountBonusTokens);
-
         require(token.transfer(_buyer, _amountBonusTokens));
     }
 
