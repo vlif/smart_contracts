@@ -46,7 +46,7 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
 
     mapping (address => uint256) investorBonuses;
     uint constant FIRST_WEEK = 7 * 1 days;
-    uint constant BONUS_THRESHOLD_ETR = 1 * TOKEN_DECIMAL_MULTIPLIER; // 20000 * 240 // 5 000 000 EUR -> 20 000 ETH -> ETR
+    uint constant BONUS_THRESHOLD_ETR = 20000 * 240 * TOKEN_DECIMAL_MULTIPLIER; // 5 000 000 EUR -> 20 000 ETH -> ETR
 
     function ESportsBonusProvider(ESportsToken _token, address _returnAddressBonuses) { //address _bonusWallet
         // bonusWallet = _bonusWallet;
