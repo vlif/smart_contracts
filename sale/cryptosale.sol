@@ -19,7 +19,7 @@ contract Cryptosale is Ownable {
 	 * Тут по ходу нам надо  затариться токенами со скидкой у контракта crowdsale
 	 */
 	function() payable {
-		buyTokens(msg.sender, msg.value);
+		// buyTokens(msg.sender, msg.value);
 	}
 
 	function setCrowdsale(address _crowdsale) onlyOwner returns(bool) {
@@ -30,7 +30,7 @@ contract Cryptosale is Ownable {
 		return true;
 	}
 
-	function buyTokens(address beneficiary, uint amountWei) internal {
+	function buyTokens(address beneficiary, uint amountWei) {
 		return crowdsale.test(12);
 
 		
