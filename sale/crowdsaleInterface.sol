@@ -8,7 +8,7 @@ contract CrowdsaleInterface {
 	// function goalReached() public constant returns (bool);
 
 	function claimRefund() public;
-
-
-
+	
+	
+	
 }
