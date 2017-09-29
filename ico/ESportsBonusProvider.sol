@@ -15,7 +15,7 @@ contract ESportsBonusProviderI is Ownable {
         uint _totalSold,
         uint _amountTokens,
         uint32 _startTime
-    ) onlyOwner public returns (uint);
+    ) onlyOwner public constant returns (uint);
 
     function addDelayedBonus(
         address _buyer, 
@@ -57,7 +57,7 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
         uint _totalSold,
         uint _amountTokens,
         uint32 _startTime
-    ) onlyOwner public returns (uint) {
+    ) onlyOwner public constant returns (uint) {
         uint bonus = 0;
         
         // apply bonus for amount
