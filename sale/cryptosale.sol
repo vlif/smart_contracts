@@ -9,11 +9,11 @@ import "./crowdsaleInterface.sol";
 contract Cryptosale is Ownable {
 	CrowdsaleInterface public crowdsale;
 
-	function Cryptosale (address _crowdsale) {
+	function Cryptosale () {
 	}
 
 	/**
-	 * Тут по ходу нам надо  затариться токенами со скидкой у контракта crowdsale
+	 * Тут по ходу нам надо затариться токенами со скидкой у контракта crowdsale
 	 */
 	function() payable {
 		// buyTokens(msg.sender, msg.value);
