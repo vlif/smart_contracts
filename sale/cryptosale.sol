@@ -47,7 +47,7 @@ contract Cryptosale is Ownable {
 		address investor = msg.sender;
 		uint256 depositedValue = deposited[investor];
 		require(depositedValue > 0);
-		require(crowdsale.call.claimRefund()); // refund cryptosale
+		require(crowdsale.claimRefund()); // refund cryptosale
 
 		deposited[investor] = 0;
         investor.transfer(depositedValue); // refund investor
