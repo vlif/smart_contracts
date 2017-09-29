@@ -10,9 +10,6 @@ contract Cryptosale is Ownable {
 	CrowdsaleInterface public crowdsale;
 
 	function Cryptosale (address _crowdsale) {
-		require(_crowdsale != 0x0);
-
-		crowdsale = CrowdsaleInterface(_crowdsale);
 	}
 
 	/**
