@@ -78,15 +78,7 @@ contract Crowdsale {
      * @return Actual rate.
      */
     function getRate(uint amount) internal constant returns (uint) {
-        return rate * getRateScale(); //rate
-    }
-
-    /**
-     * @dev rate scale (or divider), to support not integer rates.
-     * @return Rate divider.
-     */
-    function getRateScale() internal constant returns (uint) {
-        return 10000; //1
+        return rate;
     }
 
     // fallback function can be used to buy tokens
@@ -103,16 +95,15 @@ contract Crowdsale {
 
         // actual token minting rate (with considering bonuses and discounts)
         uint actualRate = getRate(amountWei);
-        uint rateScale = getRateScale();
 
         require(validPurchase(amountWei, actualRate, totalSupply));
 
         // calculate token amount to be created
         // uint tokens = rate.mul(msg.value).div(1 ether);
-        uint tokens = amountWei.mul(actualRate).div(rateScale);
+        uint tokens = amountWei.mul(actualRate);
 
         if (msg.value == 0) { // if it is a btc purchase then check existence all tokens (no change)
-            require(tokens.add(totalSupply) <= hardCap); 
+            require(tokens.add(totalSupply) <= hardCap);
         }
 
 
@@ -123,10 +114,10 @@ contract Crowdsale {
         if (tokens.add(totalSupply) > hardCap) {
             // rest tokens
             uint maxTokens = hardCap.sub(totalSupply);
-            uint realAmount = maxTokens.mul(rateScale).div(actualRate);
+            uint realAmount = maxTokens.div(actualRate);
 
             // rest tokens rounded by actualRate
-            tokens = realAmount.mul(actualRate).div(rateScale);
+            tokens = realAmount.mul(actualRate);
             change = amountWei - realAmount;
             amountWei = realAmount;
         }
