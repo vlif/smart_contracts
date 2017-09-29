@@ -149,13 +149,12 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     function finalization() internal {
         super.finalization();
         token.finishMinting();
-        if (!goalReached()) {
-            return;
-        }
 
         bonusProvider.releaseThisBonuses();
 
-        ESportsToken(token).crowdsaleFinished();
+        if (goalReached()) {
+            ESportsToken(token).crowdsaleFinished();
+        }
         token.transferOwnership(owner); // change token owner
     }
 }
