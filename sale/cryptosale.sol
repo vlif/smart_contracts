@@ -43,15 +43,15 @@ contract Cryptosale is Ownable {
 		deposited[_beneficiary] = deposited[_beneficiary].add(_amountWei);
 	}
 
-	function claimRefund() public { //returns(bool)
+	function claimRefund() public returns(bool) {
 		address investor = msg.sender;
 		uint256 depositedValue = deposited[investor];
 		require(depositedValue > 0);
-		require(crowdsale.claimRefund()); // refund cryptosale
+		require(crowdsale.call.claimRefund()); // refund cryptosale
 
 		deposited[investor] = 0;
         investor.transfer(depositedValue); // refund investor
 
-		// return true;
+		return true;
 	}
 }
