@@ -50,28 +50,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         _token,
         _softCapWei // _goal // 2 000 000 -> 8 000 ETH (250) -> 8 000 000 000 000 000 000 000 Wei
 	) {
-
-
-
 	}
-
-    /**
-     * @dev Get amount of bonus tokens
-     * @param _amountTokens Number of purchased tokens
-     * @return amount of bonus tokens
-     */
-    function getBonusAmount(uint _amountTokens) internal returns(uint) {
-        return bonusProvider.getBonusAmount(msg.sender, soldTokens, _amountTokens, startTime);
-    }
-
-    /**
-     * @dev Add delayed bonus tokens
-     * @param _amountTokens Number of purchased tokens
-     * @return amount of bonus tokens added
-     */
-    function addDelayedBonus(uint _amountTokens) internal returns(uint) {
-        return bonusProvider.addDelayedBonus(msg.sender, soldTokens, _amountTokens, startTime);
-    }
 
     /**
      * @dev Release delayed bonus tokens
@@ -82,42 +61,17 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     }
 
     /**
-     * @dev Send bonus tokens to beneficiary
-     * @param _beneficiary future bonuses holder
-     * @param _amountBonusTokens amount of sent bonus tokens
-     */
-    function sendBonus(address _beneficiary, uint _amountBonusTokens) internal {
-        bonusProvider.sendBonus(_beneficiary, _amountBonusTokens);
-    }
-
-    /**
      * @dev Trasfer bonuses and adding delayed bonuses
      * @param _beneficiary future bonuses holder
      * @param _tokens amount of bonus tokens
      */
     function postBuyTokens(address _beneficiary, uint _tokens) internal {
-        uint bonuses = getBonusAmount(_tokens);
-        addDelayedBonus(_tokens);
+        uint bonuses = bonusProvider.getBonusAmount(_beneficiary, soldTokens, _tokens, startTime);
+        bonusProvider.addDelayedBonus(_beneficiary, soldTokens, _tokens, startTime);
 
         if (bonuses > 0) {
-            sendBonus(_beneficiary, bonuses);
+            bonusProvider.sendBonus(_beneficiary, bonuses);
         }
-    }
-
-    /**
-     * @dev Finish the crowdsale
-     */
-    function finalization() internal {
-        super.finalization();
-        token.finishMinting();
-        if (!goalReached()) {
-            return;
-        }
-
-        bonusProvider.releaseThisBonuses();
-
-        ESportsToken(token).crowdsaleFinished();
-        token.transferOwnership(owner); // change token owner
     }
 
     /**
@@ -187,5 +141,21 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         require(_newBtcBuyerAddress != 0x0);
         btcBuyer = _newBtcBuyerAddress;
         return true;
+    }
+
+    /**
+     * @dev Finish the crowdsale
+     */
+    function finalization() internal {
+        super.finalization();
+        token.finishMinting();
+        if (!goalReached()) {
+            return;
+        }
+
+        bonusProvider.releaseThisBonuses();
+
+        ESportsToken(token).crowdsaleFinished();
+        token.transferOwnership(owner); // change token owner
     }
 }
