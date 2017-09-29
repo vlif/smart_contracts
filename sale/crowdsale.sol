@@ -51,8 +51,4 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
     function getRate() internal constant returns(uint) { //uint _value
 		return rateProvider.getRate(msg.sender, rate); //, soldTokens, _value, startTime
     }
-
-    function test(uint param) returns(uint) {
-    	return param;
-    }
 }

@@ -9,14 +9,14 @@ import "./crowdsaleInterface.sol";
 contract Cryptosale is Ownable {
 	CrowdsaleInterface public crowdsale;
 
-	function Cryptosale () {
-	}
+	// function Cryptosale () {
+	// }
 
 	/**
 	 * Тут по ходу нам надо затариться токенами со скидкой у контракта crowdsale
 	 */
 	function() payable {
-		// buyTokens(msg.sender, msg.value);
+		buyTokens(msg.sender, msg.value);
 	}
 
 	function setCrowdsale(address _crowdsale) onlyOwner returns(bool) {
@@ -27,8 +27,8 @@ contract Cryptosale is Ownable {
 		return true;
 	}
 
-	function buyTokens(address beneficiary, uint amountWei) returns(uint) {
-		return crowdsale.test(12);
+	function buyTokens(address beneficiary, uint amountWei) internal {
+		crowdsale.value(amountWei)();
 
 		
 	}
