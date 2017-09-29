@@ -127,19 +127,21 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     function init() onlyOwner public returns(bool) {
         require(!isInit);
 
+        isInit = true;
+
         ESportsBonusProvider bProvider = new ESportsBonusProvider(ESportsToken(token), COMPANY_COLD_STORAGE_ADDRESS);
         // bProvider.transferOwnership(owner);
         bonusProvider = bProvider;
 
         mintToFounders();
 
-        token.mint(INVESTOR_ADDRESS, INVESTOR_TOKENS);
-        token.mint(COMPANY_COLD_STORAGE_ADDRESS, COMPANY_COLD_STORAGE_TOKENS);
-        token.mint(PRE_SALE_ADDRESS, PRE_SALE_TOKENS);
+        require(token.mint(INVESTOR_ADDRESS, INVESTOR_TOKENS));
+        require(token.mint(COMPANY_COLD_STORAGE_ADDRESS, COMPANY_COLD_STORAGE_TOKENS));
+        require(token.mint(PRE_SALE_ADDRESS, PRE_SALE_TOKENS));
 
         // bonuses
-        token.mint(BONUS_ADDRESS, BONUS_TOKENS);
-        token.mint(bonusProvider, BUFFER_TOKENS); // mint bonus tokent to bonus provider
+        require(token.mint(BONUS_ADDRESS, BONUS_TOKENS));
+        require(token.mint(bonusProvider, BUFFER_TOKENS)); // mint bonus tokent to bonus provider
 
         ESportsToken(token).addExcluded(INVESTOR_ADDRESS);
         ESportsToken(token).addExcluded(BONUS_ADDRESS);
@@ -148,7 +150,6 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
 
         ESportsToken(token).addExcluded(bonusProvider);
 
-        isInit = true;
         return true;
     }
 
@@ -159,12 +160,12 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(20).div(100), startTime + 1 years); //minutes
         ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 3 years); //minutes
         ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 5 years); //minutes
-        token.mint(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(20).div(100));
+        require(token.mint(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(20).div(100)));
 
         ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(20).div(100), startTime + 1 years); //minutes
         ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 3 years); //minutes
         ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 5 years); //minutes
-        token.mint(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(20).div(100));
+        require(token.mint(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(20).div(100)));
 
         return true;
     }
