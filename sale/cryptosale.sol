@@ -6,7 +6,7 @@ import './base/math/SafeMath.sol';
 import "./crowdsaleInterface.sol";
 
 /**
- * 
+ * Чудо контракт с фишечкой
  */
 contract Cryptosale is Ownable {
 	using SafeMath for uint256;
@@ -41,9 +41,11 @@ contract Cryptosale is Ownable {
 		require(crowdsale.call.value(_amountWei)());
 
 		deposited[_beneficiary] = deposited[_beneficiary].add(_amountWei);
+
+
 	}
 
-	// Возвращаем бабосики, если не soft cup не пройден
+	// Возвращаем бабосики, если soft cup не пройден
 	function claimRefund() public returns(bool) {
 		address investor = msg.sender;
 		uint256 depositedValue = deposited[investor];

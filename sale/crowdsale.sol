@@ -53,7 +53,8 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 		return rateProvider.getRate(msg.sender, rate); //, soldTokens, _value, startTime
     }
 
-    function getDepositedAmount() returns(uint) {
-    	return vault.deposited(msg.sender);
+    // [optional]
+    function getDepositedAmount(address _beneficiary) onlyOwner returns(uint) {
+    	return vault.deposited(_beneficiary);
     }
 }
