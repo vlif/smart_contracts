@@ -55,13 +55,6 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
 
 	}
 
-	/**
-     * @dev Override token creation to integrate with ESports token.
-     */
-    // function createTokenContract() internal returns(MintableToken) {
-    //     return new ESportsToken();
-    // }
-
     /**
      * @dev Get amount of bonus tokens
      * @param _amountTokens Number of purchased tokens

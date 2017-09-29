@@ -46,14 +46,6 @@ contract RefundableCrowdsale is FinalizableCrowdsale {
         vault.refund(msg.sender, weiRaised);
     }
 
-    /**
-     * @dev Close vault only if goal was reached.
-     */
-    function closeVault() public onlyOwner {
-        require(goalReached());
-        vault.close();
-    }
-
     // vault finalization task, called when owner calls finalize()
     function finalization() internal {
         super.finalization();
