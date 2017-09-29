@@ -45,12 +45,18 @@ contract ESportsToken is usingESportsConstants, MintableToken {
         excluded[_toExclude] = true;
     }
 
+    /**
+     * @dev Wrapper of token.transferFrom 
+     */
     function transferFrom(address _from, address _to, uint256 _value) returns (bool) {
         require(!paused || excluded[_from]);
 
         return super.transferFrom(_from, _to, _value);
     }
 
+    /**
+     * @dev Wrapper of token.transfer 
+     */
     function transfer(address _to, uint256 _value) returns (bool) {
         require(!paused || excluded[msg.sender]);
 
