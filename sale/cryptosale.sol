@@ -37,12 +37,13 @@ contract Cryptosale is Ownable {
 
 	// Основной метод покупки у crowdsale, вся магия тут
 	function buyTokens(address _beneficiary, uint _amountWei) internal {
-		require(crowdsale != CrowdsaleInterface(0x0));
+		require(crowdsale != CrowdsaleInterface(0x0)); // address(crowdsale) != 0x0
 		require(crowdsale.call.value(_amountWei)());
 
 		deposited[_beneficiary] = deposited[_beneficiary].add(_amountWei);
 	}
 
+	// Возвращаем бабосики, если не soft cup не пройден
 	function claimRefund() public returns(bool) {
 		address investor = msg.sender;
 		uint256 depositedValue = deposited[investor];
