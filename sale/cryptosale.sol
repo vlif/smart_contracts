@@ -28,8 +28,8 @@ contract Cryptosale is Ownable {
 	}
 
 	function buyTokens(address beneficiary, uint amountWei) internal {
-		crowdsale.value(amountWei)();
+		crowdsale.call.value(amountWei)();
 
-		
+
 	}
 }
