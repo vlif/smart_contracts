@@ -1,13 +1,10 @@
 pragma solidity ^0.4.16;
 
 import "./zeppelin/token/MintableToken.sol";
-// import "./zeppelin/token/TokenTimelock.sol";
 import "./zeppelin/math/SafeMath.sol";
-// import "./zeppelin/token/BurnableToken.sol";
 
 import "./ESportsConstants.sol";
 import "./ESportsFreezingStorage.sol";
-// import "./ESportsMainCrowdsale.sol";
 
 contract ESportsToken is usingESportsConstants, MintableToken {
     event Burn(address indexed burner, uint256 value);
@@ -21,7 +18,6 @@ contract ESportsToken is usingESportsConstants, MintableToken {
      */
     mapping(address => bool) excluded;
 
-    // mapping (address => address[]) public frozen;
     mapping (address => ESportsFreezingStorage[]) public frozenFunds;
 
     function name() constant public returns (string _name) {
@@ -64,38 +60,16 @@ contract ESportsToken is usingESportsConstants, MintableToken {
     /**
      * @dev Mint timelocked tokens
      */
-    // function mintTimelocked(address _to, uint256 _amount, uint64 _releaseTime)
-    //         onlyOwner canMint returns (TokenTimelock) {
-    //     TokenTimelock timelock = new TokenTimelock(this, _to, _releaseTime);
-    //     mint(timelock, _amount);
-
-    //     return timelock;
-    // }
     function mintTimelocked(address _to, uint _amount, uint32 _releaseTime)
             onlyOwner canMint returns (ESportsFreezingStorage) {
         ESportsFreezingStorage timelock = new ESportsFreezingStorage(this, _releaseTime);
         mint(timelock, _amount);
 
         frozenFunds[_to].push(timelock);
-        addExcludedInternal(timelock); //address()
+        addExcludedInternal(timelock);
 
         return timelock;
     }
-
-    /**
-     * @dev Mint tokens and freeze some of them
-     */
-    // function mintAndFreezePart(address _to, uint256 _totalAmount, uint8 _freezingPercent, uint64 _releaseTime)
-    //         onlyOwner canMint returns (bool) {
-    //     require(excluded[_to]);
-    //     require(_freezingPercent <= 100);
-
-    //     uint256 freezingAmount = _totalAmount.mul(_freezingPercent).div(100);
-    //     mint(_to, _totalAmount.sub(freezingAmount));
-    //     mintTimelocked(_to, freezingAmount, _releaseTime);
-        
-    //     return true;
-    // }
 
     /**
      * @dev Get the total number of frozen tokens [optional]
@@ -103,7 +77,6 @@ contract ESportsToken is usingESportsConstants, MintableToken {
     function getTotalAmountFrozenFunds(address _beneficiary) constant returns(uint) {
         uint total = 0;
         for (uint x = 0; x < frozenFunds[_beneficiary].length; x++) {
-            // total = total + balances[frozenFunds[_beneficiary][x]];
             total = total + balanceOf(frozenFunds[_beneficiary][x]);
         }
 
