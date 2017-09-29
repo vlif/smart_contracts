@@ -38,7 +38,7 @@ contract ESportsToken is usingESportsConstants, MintableToken {
     }
 
     function addExcluded(address _toExclude) onlyOwner {
-        excluded[_toExclude] = true;
+        addExcludedInternal(_toExclude);
     }
 
     function addExcludedInternal(address _toExclude) private {
