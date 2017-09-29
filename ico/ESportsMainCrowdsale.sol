@@ -44,7 +44,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
 	) RefundableCrowdsale(
         _startTime,
         _endTime, 
-        240, // 240 ETR = 1 ETH at the rate 1 ETH = 250 EUR
+        RATE,
         _hardCapTokens * TOKEN_DECIMAL_MULTIPLIER, // 60 000 000
         _wallet,
         _token,
@@ -83,7 +83,10 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
 
         isInit = true;
 
-        ESportsBonusProvider bProvider = new ESportsBonusProvider(ESportsToken(token), COMPANY_COLD_STORAGE_ADDRESS);
+        ESportsBonusProvider bProvider = new ESportsBonusProvider(
+            ESportsToken(token), 
+            COMPANY_COLD_STORAGE_ADDRESS
+        );
         // bProvider.transferOwnership(owner);
         bonusProvider = bProvider;
 
@@ -129,7 +132,6 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
      */
     function buyForBitcoin(address _beneficiary, uint _amountWei) public returns(bool) {
         require(msg.sender == btcBuyer);
-
         buyTokens(_beneficiary, _amountWei);
         return true;
     }

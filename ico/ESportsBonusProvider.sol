@@ -7,7 +7,6 @@ import "./ESportsConstants.sol";
 import "./ESportsToken.sol";
 
 contract ESportsBonusProviderI is Ownable {
-    // address public bonusWallet;
     ESportsToken public token;
     address public returnAddressBonuses;
 
@@ -16,7 +15,7 @@ contract ESportsBonusProviderI is Ownable {
         uint _totalSold,
         uint _amountTokens,
         uint32 _startTime
-    ) onlyOwner public returns (uint); //constant
+    ) onlyOwner public returns (uint);
 
     function addDelayedBonus(
         address _buyer, 
@@ -46,10 +45,9 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
 
     mapping (address => uint256) investorBonuses;
     uint constant FIRST_WEEK = 7 * 1 days;
-    uint constant BONUS_THRESHOLD_ETR = 20000 * 240 * TOKEN_DECIMAL_MULTIPLIER; // 5 000 000 EUR -> 20 000 ETH -> ETR
+    uint constant BONUS_THRESHOLD_ETR = 20000 * RATE * TOKEN_DECIMAL_MULTIPLIER; // 5 000 000 EUR -> 20 000 ETH -> ETR
 
-    function ESportsBonusProvider(ESportsToken _token, address _returnAddressBonuses) { //address _bonusWallet
-        // bonusWallet = _bonusWallet;
+    function ESportsBonusProvider(ESportsToken _token, address _returnAddressBonuses) {
         token = _token;
         returnAddressBonuses = _returnAddressBonuses;
     }
@@ -59,7 +57,7 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
         uint _totalSold,
         uint _amountTokens,
         uint32 _startTime
-    ) onlyOwner public returns (uint) { //constant
+    ) onlyOwner public returns (uint) {
         uint bonus = 0;
         
         // apply bonus for amount

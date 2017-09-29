@@ -32,7 +32,6 @@ contract ESportsToken is usingESportsConstants, MintableToken {
         return TOKEN_DECIMALS_UINT8;
     }
     
-
     function crowdsaleFinished() onlyOwner {
         paused = false;
     }
@@ -40,7 +39,7 @@ contract ESportsToken is usingESportsConstants, MintableToken {
     function addExcluded(address _toExclude) onlyOwner {
         addExcludedInternal(_toExclude);
     }
-
+    
     function addExcludedInternal(address _toExclude) private {
         excluded[_toExclude] = true;
     }
