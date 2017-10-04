@@ -19,7 +19,7 @@ contract Cryptosale is Ownable {
 	 * Тут по ходу нам надо затариться токенами со скидкой у контракта crowdsale через TokenHolder
 	 */
 	function() payable {
-		tokenHolder.buyTokens(msg.sender, msg.value);
+		tokenHolder.buyTokens.value(msg.value)(msg.sender); //,msg.value
 	}
 
 	// Можно затариваться в другом месте, фасадный метод

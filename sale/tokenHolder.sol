@@ -20,11 +20,13 @@ contract TokenHolder is Ownable {
 	}
 
 	// Основной метод покупки у crowdsale, вся магия тут
-	function buyTokens(address _beneficiary, uint _amountWei) onlyOwner public {
+	function buyTokens(address _beneficiary) onlyOwner public payable { //, uint _amountWei
+		uint amountWei = msg.value;
 		require(crowdsale != CrowdsaleInterface(0x0));
-		require(crowdsale.call.value(_amountWei)());
+		require(crowdsale.call.value(amountWei)()); //_amountWei
 
-		deposited[_beneficiary] = deposited[_beneficiary].add(_amountWei);
+		deposited[_beneficiary] = deposited[_beneficiary].add(amountWei); //_amountWei
+
 
 
 	}
