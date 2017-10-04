@@ -37,11 +37,7 @@ contract TokenHolder is Ownable {
 		uint depositedValue = deposited[_investor];
 		require(depositedValue > 0);
 
-		RefundVault vault = RefundVault(address(crowdsale.vault));
-		if (vault.deposited(this) > 0) {
-			crowdsale.claimRefund(); // refund TokenHolder
-		}
-
+		crowdsale.claimRefund(); // refund TokenHolder
 		deposited[_investor] = 0;
         _investor.transfer(depositedValue); // refund investor
 
@@ -50,5 +46,11 @@ contract TokenHolder is Ownable {
 
 	// Без этого чет не работает
 	function() payable {
+	}
+
+	// [optional]
+	function getDepositedAmount() constant returns(uint) {
+		RefundVault vault = RefundVault(address(crowdsale.vault));
+		return vault.deposited(address(this));
 	}
 }
