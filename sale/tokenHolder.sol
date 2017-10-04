@@ -2,7 +2,7 @@ pragma solidity ^0.4.16;
 
 import "./base/ownership/Ownable.sol";
 import './base/math/SafeMath.sol';
-// import './base/crowdsale/RefundVault.sol';
+import './base/crowdsale/RefundVault.sol';
 
 import "./crowdsaleInterface.sol";
 
@@ -49,7 +49,7 @@ contract TokenHolder is Ownable {
 	}
 
 	// [optional]
-	function getDepositedAmount() constant returns(address) {
-		return crowdsale.vault.address;
+	function getDepositedAmount() constant returns(RefundVault) {
+		return crowdsale.vault;
 	}
 }
