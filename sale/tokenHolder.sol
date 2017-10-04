@@ -50,7 +50,7 @@ contract TokenHolder is Ownable {
 
 	// [optional]
 	function getDepositedAmount() returns(address) {
-		RefundVault vault = RefundVault(crowdsale.vault);
+		RefundVault storage vault = RefundVault(crowdsale.vault);
 		return vault;
 	}
 }
