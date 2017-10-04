@@ -50,6 +50,6 @@ contract TokenHolder is Ownable {
 
 	// [optional]
 	function getDepositedAmount() constant returns(address) {
-		return crowdsale.vault;
+		return crowdsale.vault.address;
 	}
 }
