@@ -48,8 +48,9 @@ contract Cryptosale is Ownable {
 	// Возвращаем бабосики, если soft cup не пройден
 	function claimRefund() public returns(bool) {
 		address investor = msg.sender;
-		uint256 depositedValue = deposited[investor];
+		uint depositedValue = deposited[investor];
 		require(depositedValue > 0);
+		
 		crowdsale.claimRefund(); // refund cryptosale
 
 		deposited[investor] = 0;

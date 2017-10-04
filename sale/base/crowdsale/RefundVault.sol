@@ -40,7 +40,7 @@ contract RefundVault is Ownable {
 
         wallet.transfer(this.balance);
     }
-    
+
     function enableRefunds() onlyOwner public {
         require(state == State.Active);
         state = State.Refunding;
@@ -53,5 +53,9 @@ contract RefundVault is Ownable {
         deposited[investor] = 0;
         investor.transfer(depositedValue);
         Refunded(investor, depositedValue);
+    }
+
+    function getBalance() public constant returns(uint) {
+        return this.balance;
     }
 }

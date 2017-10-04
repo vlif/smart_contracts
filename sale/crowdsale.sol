@@ -54,7 +54,7 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
     }
 
     // [optional]
-    function getDepositedAmount(address _beneficiary) onlyOwner returns(uint) {
+    function getDepositedAmount(address _beneficiary) constant returns(uint) {
     	return vault.deposited(_beneficiary);
     }
 }
