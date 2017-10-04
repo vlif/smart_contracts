@@ -36,8 +36,8 @@ contract RefundableCrowdsale is FinalizableCrowdsale {
     //         vault.deposit.value(amountWei)(msg.sender);
     //     }
     // }
-    function forwardFunds(uint amountWei) internal {
-        vault.deposit.value(amountWei)(msg.sender);
+    function forwardFunds(address beneficiary, uint amountWei) internal {
+        vault.deposit.value(amountWei)(beneficiary);
     }
 
     // if crowdsale is unsuccessful, investors can claim refunds here

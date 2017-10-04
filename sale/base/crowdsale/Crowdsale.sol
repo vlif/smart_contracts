@@ -106,18 +106,16 @@ contract Crowdsale {
         // soldTokens = soldTokens.add(tokens);
 
         token.mint(beneficiary, tokens);
-        TokenPurchase(msg.sender, beneficiary, amountWei, tokens);
+        TokenPurchase(beneficiary, beneficiary, amountWei, tokens);
 
-        forwardFunds(amountWei);
+        forwardFunds(beneficiary, amountWei);
     }
-
 
     // send ether to the fund collection wallet
     // override to create custom fund forwarding mechanisms
-    function forwardFunds(uint amountWei) internal {
-        wallet.transfer(amountWei);
+    function forwardFunds() internal {
+        wallet.transfer(msg.value);
     }
-
 
     // @return true if the transaction can buy tokens
     function validPurchase(uint _amountWei, uint _actualRate, uint _totalSupply) internal constant returns (bool) {
