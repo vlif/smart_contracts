@@ -2,7 +2,7 @@ pragma solidity ^0.4.16;
 
 import "./base/ownership/Ownable.sol";
 import './base/math/SafeMath.sol';
-import './base/crowdsale/RefundVault.sol';
+// import './base/crowdsale/RefundVault.sol';
 
 import "./crowdsaleInterface.sol";
 
