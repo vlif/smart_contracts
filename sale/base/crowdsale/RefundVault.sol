@@ -55,7 +55,7 @@ contract RefundVault is Ownable {
         Refunded(investor, depositedValue);
     }
 
-    function getBalance() public constant returns(uint) {
-        return this.balance;
-    }
+    // function getBalance() public constant returns(uint) {
+    //     return this.balance;
+    // }
 }

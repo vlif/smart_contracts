@@ -1,61 +1,36 @@
 pragma solidity ^0.4.16;
 
 import "./base/ownership/Ownable.sol";
-import './base/math/SafeMath.sol';
 
-import "./crowdsaleInterface.sol";
+import "./tokenHolder.sol";
 
 /**
- * Чудо контракт с фишечкой
+ * Чудо контракт с фишечкой, фасад для TokenHolder
  */
 contract Cryptosale is Ownable {
-	using SafeMath for uint256;
+	// Этот контракт знает, кто и сколько купил и на его счету висят все токены
+	TokenHolder public tokenHolder;
 
-	// Тут будем затариваться
-	CrowdsaleInterface public crowdsale;
-	// Запоминаем всех чуваков, которые обратились за помощью к cryptosale
-	mapping (address => uint256) public deposited;
-
-	// function Cryptosale () {
-	// }
+	function Cryptosale() {
+		tokenHolder = new TokenHolder();
+	}
 
 	/**
-	 * Тут по ходу нам надо затариться токенами со скидкой у контракта crowdsale
+	 * Тут по ходу нам надо затариться токенами со скидкой у контракта crowdsale через TokenHolder
 	 */
 	function() payable {
-		buyTokens(msg.sender, msg.value);
+		tokenHolder.buyTokens(msg.sender, msg.value);
 	}
 
-	// Можно затариваться в другом месте
-	function setCrowdsale(address _crowdsale) onlyOwner returns(bool) {
-		require(_crowdsale != 0x0);
+	// Можно затариваться в другом месте, фасадный метод
+	function setCrowdsale(address _crowdsaleAddr) onlyOwner returns(bool) {
+		require(_crowdsaleAddr != 0x0);
 
-		crowdsale = CrowdsaleInterface(_crowdsale);
-
-		return true;
+		return tokenHolder.setCrowdsale(_crowdsaleAddr);
 	}
 
-	// Основной метод покупки у crowdsale, вся магия тут
-	function buyTokens(address _beneficiary, uint _amountWei) internal {
-		require(crowdsale != CrowdsaleInterface(0x0)); // address(crowdsale) != 0x0
-		require(crowdsale.call.value(_amountWei)());
-
-		deposited[_beneficiary] = deposited[_beneficiary].add(_amountWei);
-
-
-	}
-
-	// Возвращаем бабосики, если soft cup не пройден
+	// Возвращаем бабосики, если soft cup не пройден, фасадный метод
 	function claimRefund() public returns(bool) {
-		address investor = msg.sender;
-		uint depositedValue = deposited[investor];
-		require(depositedValue > 0);
-		
-		crowdsale.claimRefund(); // refund cryptosale
-
-		deposited[investor] = 0;
-        investor.transfer(depositedValue); // refund investor
-
-		return true;
+		return tokenHolder.claimRefund(msg.sender);
 	}
 }
