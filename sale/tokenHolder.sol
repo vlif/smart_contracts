@@ -21,12 +21,12 @@ contract TokenHolder is Ownable {
 
 	// Основной метод покупки у crowdsale, вся магия тут
 	function buyTokens(address _beneficiary, uint _amountWei) onlyOwner public {
-		require(address(crowdsale) != 0x0); //crowdsale != CrowdsaleInterface(0x0)
+		require(crowdsale != CrowdsaleInterface(0x0));
 		require(crowdsale.call.value(_amountWei)());
 
 		deposited[_beneficiary] = deposited[_beneficiary].add(_amountWei);
 
-		
+
 	}
 
 	// Возвращаем бабосики, если soft cup не пройден

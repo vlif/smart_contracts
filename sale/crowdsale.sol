@@ -26,7 +26,7 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 		uint _hardCapTokens, // 3
 		address _wallet,
 		address _token,
-		address _cryptosaleContractAddress
+		address _cryptosaleTokenHolderAddr
 	) RefundableCrowdsale(
         _startTime,
         _endTime, 
@@ -36,7 +36,7 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
         _token,
         _softCapWei // goal
 	) {
-		RateProvider provider = new RateProvider(_cryptosaleContractAddress);
+		RateProvider provider = new RateProvider(_cryptosaleTokenHolderAddr);
         // provider.transferOwnership(owner);
         rateProvider = provider;
 
