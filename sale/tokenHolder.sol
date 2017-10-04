@@ -2,6 +2,7 @@ pragma solidity ^0.4.16;
 
 import "./base/ownership/Ownable.sol";
 import './base/math/SafeMath.sol';
+import './base/crowdsale/RefundVault.sol';
 
 import "./crowdsaleInterface.sol";
 
@@ -36,10 +37,11 @@ contract TokenHolder is Ownable {
 		uint depositedValue = deposited[_investor];
 		require(depositedValue > 0);
 
-		if (crowdsale.vault.deposited(this) > 0) {
+		RefundVault vault = RefundVault(crowdsale.vault);
+		if (vault.deposited(this) > 0) {
 			crowdsale.claimRefund(); // refund TokenHolder
 		}
-		
+
 		deposited[_investor] = 0;
         _investor.transfer(depositedValue); // refund investor
 
