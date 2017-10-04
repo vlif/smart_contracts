@@ -113,7 +113,7 @@ contract Crowdsale {
 
     // send ether to the fund collection wallet
     // override to create custom fund forwarding mechanisms
-    function forwardFunds() internal {
+    function forwardFunds(address beneficiary, uint amountWei) internal {
         wallet.transfer(msg.value);
     }
 
