@@ -36,15 +36,17 @@ contract TokenHolder is Ownable {
 		uint depositedValue = deposited[_investor];
 		require(depositedValue > 0);
 
-		crowdsale.claimRefund(); // refund TokenHolder
-
-
+		if (crowdsale.vault.deposited(this) > 0) {
+			crowdsale.claimRefund(); // refund TokenHolder
+		}
+		
 		deposited[_investor] = 0;
         _investor.transfer(depositedValue); // refund investor
 
 		return true;
 	}
 
+	// Без этого чет не работает
 	function() payable {
 	}
 }
