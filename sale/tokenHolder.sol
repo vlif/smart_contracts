@@ -49,7 +49,7 @@ contract TokenHolder is Ownable {
 	}
 
 	// [optional]
-	function getDepositedAmount() constant returns(uint) {
-		return crowdsale.vault.call.deposited(this);
+	function getDepositedAmount() constant returns(address) {
+		return crowdsale.vault
 	}
 }
