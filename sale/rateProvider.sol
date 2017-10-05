@@ -1,7 +1,7 @@
 pragma solidity ^0.4.16;
 
 import "./base/ownership/Ownable.sol";
-import './base/math/SafeMath.sol';
+import "./base/math/SafeMath.sol";
 import "./constants.sol";
 
 // contract RateProviderI {
@@ -10,10 +10,10 @@ import "./constants.sol";
 contract RateProvider is usingConstants, Ownable { //RateProviderI
     using SafeMath for uint;
     
-    address cryptosaleTokenHolderAddr;
+    address tokenHolder;
 
-    function RateProvider(address _cryptosaleTokenHolderAddr) { //RateProviderI(_cryptosaleTokenHolderAddr)
-    	cryptosaleTokenHolderAddr = _cryptosaleTokenHolderAddr;
+    function RateProvider(address _tokenHolder) { //RateProviderI(_tokenHolder)
+    	tokenHolder = _tokenHolder;
     }
     
     function getRate(
@@ -26,8 +26,8 @@ contract RateProvider is usingConstants, Ownable { //RateProviderI
         uint rate;
         rate = _baseRate;
 
-		if (_buyer == cryptosaleTokenHolderAddr) {
-			rate = rate.add(rate.mul(10).div(100)); // +10%
+		if (_buyer == tokenHolder) {
+			rate = rate.add(rate.mul(10).div(100)); // + 10%
 		}
 
         return rate;

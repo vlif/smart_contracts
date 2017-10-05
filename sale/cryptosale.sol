@@ -1,36 +1,87 @@
 pragma solidity ^0.4.16;
 
 import "./base/ownership/Ownable.sol";
+import "./base/math/SafeMath.sol";
 
 import "./tokenHolder.sol";
+import "./cryptosaleRefundVault.sol";
 
 /**
- * Чудо контракт с фишечкой, фасад для TokenHolder
+ * Main cryptosale contract
+ *
  */
 contract Cryptosale is Ownable {
-	// Этот контракт знает, кто и сколько купил и на его счету висят все токены
-	TokenHolder public tokenHolder;
+	using SafeMath for uint;
 
-	function Cryptosale() {
+	// This contract knows that who how much bought tokens
+	TokenHolder public tokenHolder;
+	// Revenue percentage cryptosale
+	uint public revenuePercent;
+	// Storage contract of revenue cryptosale
+	CryptosaleRefundVault public refundVault;
+
+	bool public isFinalized = false;
+
+	/**
+	 * Constructor function
+	 */
+	function Cryptosale(uint _revenuePercent, address _revenueWallet) {
+		require(_revenuePercent < 100);
+
 		tokenHolder = new TokenHolder();
+		refundVault = new CryptosaleRefundVault(_revenueWallet);
+		revenuePercent = _revenuePercent;
 	}
 
 	/**
-	 * Тут по ходу нам надо затариться токенами со скидкой у контракта crowdsale через TokenHolder
+	 * Тут по ходу нам надо затариться токенами со скидкой у контракта crowdsale ! через TokenHolder !
 	 */
 	function() payable {
-		tokenHolder.buyTokens.value(msg.value)(msg.sender); //,msg.value
+		require(!isFinalized);
+
+		buyTokens(msg.sender, msg.value);
+	}
+
+	// Calculation
+	function buyTokens(address _beneficiary, uint _amountWei) internal {
+		uint revenueAmountWei = _amountWei.mul(revenuePercent).div(100);
+		tokenHolder.buyTokens.value(_amountWei.sub(revenueAmountWei))(_beneficiary);
+		refundVault.deposit.value(revenueAmountWei)(_beneficiary);
 	}
 
 	// Можно затариваться в другом месте, фасадный метод
-	function setCrowdsale(address _crowdsaleAddr) onlyOwner returns(bool) {
-		require(_crowdsaleAddr != 0x0);
+	function setCrowdsale(address _crowdsale) onlyOwner public {
+		require(_crowdsale != 0x0);
 
-		return tokenHolder.setCrowdsale(_crowdsaleAddr);
+		tokenHolder.setCrowdsale(_crowdsale);
 	}
 
-	// Возвращаем бабосики, если soft cup не пройден, фасадный метод
-	function claimRefund() public returns(bool) {
-		return tokenHolder.claimRefund(msg.sender);
+	// Возвращаем бабосики, если soft cup не пройден
+	function claimRefund() public {
+		require(isFinalized);
+		require(!tokenHolder.crowdsaleGoalReached());
+
+		tokenHolder.claimRefund(msg.sender);
+		refundVault.claimRefund(msg.sender);
+	}
+
+	function finalize() onlyOwner public {
+		require(!isFinalized);
+		require(tokenHolder.crowdsaleHasEnded());
+
+		if (tokenHolder.crowdsaleGoalReached()) {
+			tokenHolder.close();
+            refundVault.close();
+        } else {
+			tokenHolder.enableRefunds();
+            refundVault.enableRefunds();
+        }
+
+		isFinalized = true;
+	}
+
+	// Фасадный метод
+	function withdraw() public returns(bool) {
+		return tokenHolder.withdraw(msg.sender);
 	}
 }
