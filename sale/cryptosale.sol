@@ -24,7 +24,7 @@ contract Cryptosale is Ownable {
 	bool public isFinalized = false;
 
 	mapping (bytes3 => mapping (address => uint)) public ReferralPartners;
-	RefferalRefundVault public referralRefundVault;
+	ReferralRefundVault public referralRefundVault;
 
 	/**
 	 * Constructor function
@@ -35,7 +35,8 @@ contract Cryptosale is Ownable {
 		tokenHolder = new TokenHolder();
 		refundVault = new CryptosaleRefundVault(_revenueWallet);
 		revenuePercent = _revenuePercent;
-		referralRefundVault = new RefferalRefundVault();
+		
+		referralRefundVault = new ReferralRefundVault();
 	}
 
 	/**
