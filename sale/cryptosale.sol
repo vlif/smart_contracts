@@ -56,7 +56,7 @@ contract Cryptosale is Ownable {
 		uint referralCode = getReferralCode(amountWei);
 		uint restAmountWei = amountWei.sub(revenueAmountWei);
 
-		if (ReferralPartners[referralCode]) {
+		if (ReferralPartners[referralCode] != 0x0) {
 			address partner = ReferralPartners[referralCode];
 			uint bonusPercent = ReferralPartners[referralCode][partner];
 			uint referralRevenueAmountWei = restAmountWei.mul(bonusPercent).div(100);
