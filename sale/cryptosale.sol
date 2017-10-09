@@ -119,7 +119,7 @@ contract Cryptosale is Ownable {
 		// require(code ???...);
 
 		ReferralMapCodePartner[code] = partner;
-		ReferralMapPartnerBonus[partner] = bonus;
+		ReferralMapPartnerBonus[partner] = bonusPercent;
 
 		return true;
 	}
