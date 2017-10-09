@@ -3,6 +3,8 @@ pragma solidity ^0.4.16;
 import "./base/ownership/Ownable.sol";
 
 contract RefundVaultCommon is Ownable {
+    using SafeMath for uint256;
+    
 	mapping (address => uint256) public deposited;
 
 	enum State { Active, Refunding, Withdraw }
@@ -17,6 +19,12 @@ contract RefundVaultCommon is Ownable {
 	 */
     function RefundVaultCommon() {
     	state = State.Active;
+    }
+
+    function deposit(address _investor) onlyOwner payable {
+        require(state == State.Active);
+
+        deposited[_investor] = deposited[_investor].add(msg.value);
     }
 
     function close() onlyOwner public {

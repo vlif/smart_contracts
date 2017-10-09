@@ -5,6 +5,7 @@ import "./base/math/SafeMath.sol";
 
 import "./tokenHolder.sol";
 import "./cryptosaleRefundVault.sol";
+import "./referralRefundVault.sol";
 
 /**
  * Main cryptosale contract
@@ -22,9 +23,8 @@ contract Cryptosale is Ownable {
 
 	bool public isFinalized = false;
 
-	mapping (bytes5 => mapping (address => uint)) public ReferralProgram;
-	// mapping (bytes5 referralCode => address referralPartner) ReferralMapCodePartner;
-	// mapping (address referralPartner => uint referralBonusPercent) ReferralMapPartnerBonusPercent;
+	mapping (bytes3 => mapping (address => uint)) public ReferralPartners;
+	RefferalRefundVault public referralRefundVault;
 
 	/**
 	 * Constructor function
@@ -35,6 +35,7 @@ contract Cryptosale is Ownable {
 		tokenHolder = new TokenHolder();
 		refundVault = new CryptosaleRefundVault(_revenueWallet);
 		revenuePercent = _revenuePercent;
+		referralRefundVault = new RefferalRefundVault();
 	}
 
 	/**
@@ -49,8 +50,11 @@ contract Cryptosale is Ownable {
 	// Calculation
 	function buyTokens(address _beneficiary, uint _amountWei) internal {
 		uint revenueAmountWei = _amountWei.mul(revenuePercent).div(100);
-		tokenHolder.buyTokens.value(_amountWei.sub(revenueAmountWei))(_beneficiary);
+		tokenHolder.deposit.value(_amountWei.sub(revenueAmountWei))(_beneficiary); //buyTokens
 		refundVault.deposit.value(revenueAmountWei)(_beneficiary);
+
+
+
 	}
 
 	// Можно затариваться в другом месте, фасадный метод
@@ -89,10 +93,11 @@ contract Cryptosale is Ownable {
 		return tokenHolder.withdraw(msg.sender);
 	}
 
-	function addReferralCode(bytes5 code, address partner, uint bonusPercent) onlyOwner returns(bool) {
+	function addReferralCode(bytes3 code, address partner, uint bonusPercent) onlyOwner returns(bool) { //99999
+		require(bonusPercent > 0);
 		require(bonusPercent < 100);
 
-		ReferralProgram[code][partner] = bonusPercent;
+		ReferralPartners[code][partner] = bonusPercent;
 
 		return true;
 	}

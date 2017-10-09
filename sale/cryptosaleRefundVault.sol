@@ -25,12 +25,6 @@ contract CryptosaleRefundVault is Ownable, RefundVaultCommon {
         wallet = _wallet;
 	}
 
-    function deposit(address _investor) onlyOwner payable {
-        require(state == State.Active);
-
-        deposited[_investor] = deposited[_investor].add(msg.value);
-    }
-
     function close() onlyOwner {
         super.close();
         wallet.transfer(this.balance); // send revenue to cryptosale

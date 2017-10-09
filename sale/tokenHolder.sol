@@ -21,7 +21,7 @@ contract TokenHolder is Ownable, RefundVaultCommon {
 	}
 
 	// Основной метод покупки у crowdsale, вся магия тут
-	function buyTokens(address _beneficiary) onlyOwner payable public {
+	function deposit(address _beneficiary) onlyOwner payable public { //buyTokens
 		uint amountWei = msg.value;
 		require(crowdsale.call.value(amountWei)());
 
