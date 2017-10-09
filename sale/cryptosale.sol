@@ -23,19 +23,21 @@ contract Cryptosale is Ownable {
 
 	bool public isFinalized = false;
 
-	mapping (bytes3 => mapping (address => uint)) public ReferralPartners;
+	// referralCode => partnerAddr => bonusPercent
+	mapping (uint => mapping (address => uint)) public ReferralPartners;
 	ReferralRefundVault public referralRefundVault;
 
 	/**
 	 * Constructor function
 	 */
 	function Cryptosale(uint _revenuePercent, address _revenueWallet) {
+		require(_revenuePercent > 0);
 		require(_revenuePercent < 100);
 
 		tokenHolder = new TokenHolder();
 		refundVault = new CryptosaleRefundVault(_revenueWallet);
 		revenuePercent = _revenuePercent;
-		
+
 		referralRefundVault = new ReferralRefundVault();
 	}
 
@@ -49,13 +51,23 @@ contract Cryptosale is Ownable {
 	}
 
 	// Calculation
-	function buyTokens(address _beneficiary, uint _amountWei) internal {
-		uint revenueAmountWei = _amountWei.mul(revenuePercent).div(100);
-		tokenHolder.deposit.value(_amountWei.sub(revenueAmountWei))(_beneficiary); //buyTokens
-		refundVault.deposit.value(revenueAmountWei)(_beneficiary);
+	function buyTokens(address beneficiary, uint amountWei) internal {
+		uint revenueAmountWei = amountWei.mul(revenuePercent).div(100);
+		uint referralCode = getReferralCode(amountWei);
+		uint restAmountWei = amountWei.sub(revenueAmountWei);
 
+		if (ReferralPartners[referralCode]) {
+			address partner = ReferralPartners[referralCode];
+			uint bonusPercent = ReferralPartners[referralCode][partner];
+			uint referralRevenueAmountWei = restAmountWei.mul(bonusPercent).div(100);
+		}
+		uint restAmountWei = restAmountWei.sub(referralRevenueAmountWei);
 
-
+		tokenHolder.deposit.value(restAmountWei)(beneficiary); //buyTokens
+		refundVault.deposit.value(revenueAmountWei)(beneficiary);
+		
+		if (referralRevenueAmountWei > 0)
+			referralRefundVault.deposit.value(referralRevenueAmountWei)(beneficiary);
 	}
 
 	// Можно затариваться в другом месте, фасадный метод
@@ -81,9 +93,13 @@ contract Cryptosale is Ownable {
 		if (tokenHolder.crowdsaleGoalReached()) {
 			tokenHolder.close();
             refundVault.close();
+
+            referralRefundVault.close();
         } else {
 			tokenHolder.enableRefunds();
             refundVault.enableRefunds();
+
+            referralRefundVault.enableRefunds();
         }
 
 		isFinalized = true;
@@ -94,6 +110,7 @@ contract Cryptosale is Ownable {
 		return tokenHolder.withdraw(msg.sender);
 	}
 
+	// Add referral partner
 	function addReferralCode(bytes3 code, address partner, uint bonusPercent) onlyOwner returns(bool) { //99999
 		require(bonusPercent > 0);
 		require(bonusPercent < 100);
@@ -101,5 +118,13 @@ contract Cryptosale is Ownable {
 		ReferralPartners[code][partner] = bonusPercent;
 
 		return true;
+	}
+
+	// Get referral code from amount of Wei
+	function getReferralCode(uint amountWei) internal returns(uint) {
+		uint meaningAmount = amountWei.div(100000000000); // 18 - 2 - 5
+		uint mainPartAmount = amountWei.div(10000000000000000).mul(100000); // 18 - 2 * 5
+
+		return meaningAmount.sub(mainPartAmount);
 	}
 }

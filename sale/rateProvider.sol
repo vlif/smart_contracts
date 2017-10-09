@@ -17,16 +17,15 @@ contract RateProvider is usingConstants, Ownable { //RateProviderI
     }
     
     function getRate(
-        address _buyer,
-        uint _baseRate
-        // uint _totalSold,
-        // uint _amountWei,
-        // uint32 _startTime
+        address buyer,
+        uint baseRate
+        // uint totalSold,
+        // uint amountWei,
+        // uint32 startTime
     ) public constant returns (uint) {
-        uint rate;
-        rate = _baseRate;
+        uint rate = baseRate;
 
-		if (_buyer == tokenHolder) {
+		if (buyer == tokenHolder) {
 			rate = rate.add(rate.mul(10).div(100)); // + 10%
 		}
 

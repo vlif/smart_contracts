@@ -22,10 +22,10 @@ contract RefundVaultCommon is Ownable {
     	state = State.Active;
     }
 
-    function deposit(address _investor) onlyOwner payable {
+    function deposit(address investor) onlyOwner payable {
         require(state == State.Active);
 
-        deposited[_investor] = deposited[_investor].add(msg.value);
+        deposited[investor] = deposited[investor].add(msg.value);
     }
 
     function close() onlyOwner public {
@@ -42,13 +42,13 @@ contract RefundVaultCommon is Ownable {
         RefundsEnabled();
 	}
 
-	function claimRefund(address _investor) onlyOwner {
+	function claimRefund(address investor) onlyOwner {
         require(state == State.Refunding);
-        uint depositedValue = deposited[_investor];
+        uint depositedValue = deposited[investor];
         require(depositedValue > 0);
 
-        deposited[_investor] = 0;
-        _investor.transfer(depositedValue); // refund investor
-        Refunded(_investor, depositedValue);
+        deposited[investor] = 0;
+        investor.transfer(depositedValue); // refund investor
+        Refunded(investor, depositedValue);
     }
 }
