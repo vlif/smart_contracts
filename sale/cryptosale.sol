@@ -24,7 +24,8 @@ contract Cryptosale is Ownable {
 	bool public isFinalized = false;
 
 	// referralCode => partnerAddr => bonusPercent
-	mapping (uint => mapping (address => uint)) public ReferralPartners;
+	mapping (uint => address) public ReferralMapCodePartner;
+	mapping (address => uint) public ReferralMapPartnerBonus;
 	ReferralRefundVault public referralRefundVault;
 
 	/**
@@ -53,12 +54,12 @@ contract Cryptosale is Ownable {
 	// Calculation
 	function buyTokens(address beneficiary, uint amountWei) internal {
 		uint revenueAmountWei = amountWei.mul(revenuePercent).div(100);
-		uint referralCode = getReferralCode(amountWei);
 		uint restAmountWei = amountWei.sub(revenueAmountWei);
 
-		if (ReferralPartners[referralCode] != 0x0) {
-			address partner = ReferralPartners[referralCode];
-			uint bonusPercent = ReferralPartners[referralCode][partner];
+		uint referralCode = getReferralCode(amountWei);
+		if (ReferralMapCodePartner[referralCode] != 0x0) {
+			address partner = ReferralMapCodePartner[referralCode];
+			uint bonusPercent = ReferralMapPartnerBonus[partner];
 			uint referralRevenueAmountWei = restAmountWei.mul(bonusPercent).div(100);
 		}
 		restAmountWei = restAmountWei.sub(referralRevenueAmountWei);
@@ -111,11 +112,14 @@ contract Cryptosale is Ownable {
 	}
 
 	// Add referral partner
-	function addReferralCode(bytes3 code, address partner, uint bonusPercent) onlyOwner returns(bool) { //99999
+	function addReferralCode(uint code, address partner, uint bonusPercent) onlyOwner returns(bool) { //99999
 		require(bonusPercent > 0);
 		require(bonusPercent < 100);
+		require(partner != 0x0);
+		// require(code ???...);
 
-		ReferralPartners[code][partner] = bonusPercent;
+		ReferralMapCodePartner[code] = partner;
+		ReferralMapPartnerBonus[partner] = bonus;
 
 		return true;
 	}
