@@ -61,7 +61,7 @@ contract Cryptosale is Ownable {
 			uint bonusPercent = ReferralPartners[referralCode][partner];
 			uint referralRevenueAmountWei = restAmountWei.mul(bonusPercent).div(100);
 		}
-		uint restAmountWei = restAmountWei.sub(referralRevenueAmountWei);
+		restAmountWei = restAmountWei.sub(referralRevenueAmountWei);
 
 		tokenHolder.deposit.value(restAmountWei)(beneficiary); //buyTokens
 		refundVault.deposit.value(revenueAmountWei)(beneficiary);
