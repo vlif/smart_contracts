@@ -22,6 +22,10 @@ contract Cryptosale is Ownable {
 
 	bool public isFinalized = false;
 
+	mapping (bytes5 => mapping (address => uint)) public ReferralProgram;
+	// mapping (bytes5 referralCode => address referralPartner) ReferralMapCodePartner;
+	// mapping (address referralPartner => uint referralBonusPercent) ReferralMapPartnerBonusPercent;
+
 	/**
 	 * Constructor function
 	 */
@@ -38,7 +42,7 @@ contract Cryptosale is Ownable {
 	 */
 	function() payable {
 		require(!isFinalized);
-
+			
 		buyTokens(msg.sender, msg.value);
 	}
 
@@ -83,5 +87,13 @@ contract Cryptosale is Ownable {
 	// Фасадный метод
 	function withdraw() public returns(bool) {
 		return tokenHolder.withdraw(msg.sender);
+	}
+
+	function addReferralCode(bytes5 code, address partner, uint bonusPercent) onlyOwner returns(bool) {
+		require(bonusPercent < 100);
+
+		ReferralProgram[code][partner] = bonusPercent;
+
+		return true;
 	}
 }
