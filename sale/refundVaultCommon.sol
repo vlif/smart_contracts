@@ -1,10 +1,11 @@
 pragma solidity ^0.4.16;
 
+import "./base/math/SafeMath.sol";
 import "./base/ownership/Ownable.sol";
 
 contract RefundVaultCommon is Ownable {
     using SafeMath for uint256;
-    
+
 	mapping (address => uint256) public deposited;
 
 	enum State { Active, Refunding, Withdraw }

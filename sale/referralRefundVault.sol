@@ -1,6 +1,6 @@
 pragma solidity ^0.4.16;
 
-import "./base/math/SafeMath.sol";
+// import "./base/math/SafeMath.sol";
 import "./base/ownership/Ownable.sol";
 
 import "./refundVaultCommon.sol";
@@ -10,4 +10,5 @@ import "./refundVaultCommon.sol";
  *
  */
 contract ReferralRefundVault is Ownable, RefundVaultCommon {
+    // using SafeMath for uint256;
 }

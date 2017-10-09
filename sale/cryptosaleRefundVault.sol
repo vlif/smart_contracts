@@ -1,6 +1,6 @@
 pragma solidity ^0.4.16;
 
-import "./base/math/SafeMath.sol";
+// import "./base/math/SafeMath.sol";
 import "./base/ownership/Ownable.sol";
 
 import "./refundVaultCommon.sol";
@@ -11,7 +11,7 @@ import "./refundVaultCommon.sol";
  *
  */
 contract CryptosaleRefundVault is Ownable, RefundVaultCommon {
-	using SafeMath for uint256;
+	// using SafeMath for uint256;
 
 	// Cryptosale wallet for getting revenue
 	address public wallet;
