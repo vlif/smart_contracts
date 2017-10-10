@@ -58,14 +58,14 @@ contract TokenHolder is Ownable, RefundVaultProvider {
 	}
 
 	// To give tokens investors
-	function withdraw(address investor) onlyOwner public returns(bool) {
+	function withdraw(address investor) onlyOwner public {
 		require(state == State.Withdraw);
 		uint depositedValue = deposited[investor];
         require(depositedValue > 0);
 
         deposited[investor] = 0;
         MintableToken token = MintableToken(crowdsale.token());
-        return token.transfer(investor, depositedValue);
+        token.transfer(investor, depositedValue);
 	}
 
 	// [optional]

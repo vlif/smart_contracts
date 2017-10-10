@@ -109,8 +109,8 @@ contract Cryptosale is Ownable {
 	}
 
 	// Investor can get buyed tokens if tokenHolder's state == Withdraw (facade method)
-	function withdraw() public returns(bool) {
-		return tokenHolder.withdraw(msg.sender);
+	function withdraw() public {
+		tokenHolder.withdraw(msg.sender);
 	}
 
 	// Add referral partner
@@ -135,7 +135,7 @@ contract Cryptosale is Ownable {
 	}
 
 	// Referral partners can get revenue if referralRefundVault's state == Withdraw (facade method)
-	function referralWithdraw() public returns(bool) {
-		return referralRefundVault.withdraw(msg.sender);
+	function referralWithdraw() public {
+		referralRefundVault.withdraw(msg.sender);
 	}
 }

@@ -23,12 +23,12 @@ contract ReferralRefundVault is Ownable, RefundVaultProvider {
     }
 
     // To give referral revenue
-	function withdraw(address partner) onlyOwner returns(bool) {
+	function withdraw(address partner) onlyOwner public {
 		require(state == State.Withdraw);
 		uint depositedValue = partnersFunds[partner];
         require(depositedValue > 0);
 
         partnersFunds[partner] = 0;
-        return partner.transfer(depositedValue); // send revenue to referral partner
+        partner.transfer(depositedValue); // send revenue to referral partner
 	}
 }
