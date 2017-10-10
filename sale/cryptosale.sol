@@ -72,7 +72,7 @@ contract Cryptosale is Ownable {
 	// Method for changing crowdsale contract
 	function setCrowdsale(address _crowdsale) onlyOwner public {
 		require(_crowdsale != 0x0);
-		require(tokenHolder.crowdsale == address(0)); // can set crowdsale once
+		require(tokenHolder.crowdsale() == address(0)); // can set crowdsale once
 
 		tokenHolder.setCrowdsale(_crowdsale);
 	}
