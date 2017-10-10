@@ -15,7 +15,7 @@ contract ReferralRefundVault is Ownable, RefundVaultProvider {
     mapping (address => uint256) public partnersFunds;
 
     // Save investor's deposit funds for refunding and save partner's referral revenue
-    function forwardFunds(address investor, address partner) onlyOwner payable { //deposit
+    function forwardFunds(address investor, address partner) onlyOwner payable public { //deposit
         require(state == State.Active);
 
         deposited[investor] = deposited[investor].add(msg.value);
