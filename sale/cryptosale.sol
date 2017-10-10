@@ -47,22 +47,30 @@ contract Cryptosale is Ownable {
 	function() payable {
 		require(!isFinalized);
 			
-		buyTokens(msg.sender, msg.value);
+		buyTokens(msg.sender, msg.value, 0);
+	}
+
+	function buy(uint referralCode) payable { 
+		require(!isFinalized);
+		require(referralCode >= 10000 && referralCode <= 99999); // 5
+
+		buyTokens(msg.sender, msg.value, referralCode);
 	}
 
 	// Main calculation
-	function buyTokens(address beneficiary, uint amountWei) internal {
+	function buyTokens(address beneficiary, uint amountWei, uint _referralCode) internal {
 		uint revenueAmountWei = amountWei.mul(revenuePercent).div(100);
 		uint restAmountWei = amountWei.sub(revenueAmountWei);
 
-		uint referralCode = getReferralCode(amountWei);
+		if (_referralCode > 0) {
+			uint referralCode = _referralCode; // 2. referral code from function parameter
+		} else {
+			uint referralCode = getReferralCode(amountWei); // 1. referral code from msg.value
+		}
 		address referralPartner = ReferralMapCodePartner[referralCode];
 		if (referralPartner != address(0)) {
 			uint bonusPercent = ReferralMapPartnerBonus[referralPartner];
-			require(revenuePercent.add(bonusPercent) < 100);
-
-			uint referralRevenueAmountWei = restAmountWei.mul(bonusPercent).div(100); // bonusPercent > 0
-			restAmountWei = restAmountWei.sub(referralRevenueAmountWei);
+			uint referralRevenueAmountWei = revenueAmountWei.mul(bonusPercent).div(100); // bonusPercent > 0
 		}
 		
 		tokenHolder.deposit.value(restAmountWei)(beneficiary); //buyTokens
