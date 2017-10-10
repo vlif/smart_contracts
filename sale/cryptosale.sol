@@ -34,8 +34,7 @@ contract Cryptosale is Ownable {
 
 	// Constructor function
 	function Cryptosale(uint _revenuePercent, address _revenueWallet) {
-		require(_revenuePercent > 0);
-		require(_revenuePercent < 100);
+		require(_revenuePercent > 0 && _revenuePercent < 100);
 
 		tokenHolder = new TokenHolder();
 		refundVault = new CryptosaleRefundVault(_revenueWallet);
@@ -121,8 +120,7 @@ contract Cryptosale is Ownable {
 	function addReferralCode(uint code, address partner, uint bonusPercent) onlyOwner returns(bool) { //99999
 		require(bonusPercent > 0 && bonusPercent < 100);
 		require(partner != 0x0);
-		require(code >= 10000); // 5
-		require(code <= 99999);
+		require(code >= 10000 && code <= 99999); // 5
 
 		ReferralMapCodePartner[code] = partner;
 		ReferralMapPartnerBonus[partner] = bonusPercent;

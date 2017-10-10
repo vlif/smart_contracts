@@ -8,7 +8,7 @@ import "./constants.sol";
 contract RateProvider is usingConstants, Ownable {
     using SafeMath for uint;
     
-    address tokenHolder;
+    address public tokenHolder;
 
     function RateProvider(address _tokenHolder) {
     	tokenHolder = _tokenHolder;
