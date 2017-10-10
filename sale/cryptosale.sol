@@ -60,7 +60,6 @@ contract Cryptosale is Ownable {
 	// Main calculation
 	function buyTokens(address beneficiary, uint amountWei, uint _referralCode) internal {
 		uint revenueAmountWei = amountWei.mul(revenuePercent).div(100);
-		uint restAmountWei = amountWei.sub(revenueAmountWei);
 
 		uint referralCode = _referralCode; // 2. referral code from function parameter
 		if (referralCode == 0)
@@ -71,8 +70,8 @@ contract Cryptosale is Ownable {
 			uint referralRevenueAmountWei = revenueAmountWei.mul(bonusPercent).div(100); // bonusPercent > 0
 		}
 		
-		tokenHolder.deposit.value(restAmountWei)(beneficiary); //buyTokens
-		refundVault.deposit.value(revenueAmountWei)(beneficiary);
+		tokenHolder.deposit.value(amountWei.sub(revenueAmountWei))(beneficiary); //buyTokens
+		refundVault.deposit.value(revenueAmountWei.sub(referralRevenueAmountWei))(beneficiary);
 		
 		if (referralRevenueAmountWei > 0)
 			referralRefundVault.forwardFunds.value(referralRevenueAmountWei)(beneficiary, referralPartner); //deposit
