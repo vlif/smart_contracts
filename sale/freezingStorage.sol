@@ -4,6 +4,7 @@ import "./base/ownership/Ownable.sol";
 import "./base/token/MintableToken.sol";
 
 import "./crowdsaleInterface.sol";
+import "./cryptosaleInterface.sol";
 
 contract FreezingStorage is Ownable {
 	// Linked crowdsale contract
