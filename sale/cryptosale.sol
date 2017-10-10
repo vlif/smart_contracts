@@ -8,6 +8,10 @@ import "./cryptosaleRefundVault.sol";
 import "./referralRefundVault.sol";
 
 // Main cryptosale contract
+
+// Transaction cost: 5049405 gas.
+// Execution cost: 3824429 gas.
+
 contract Cryptosale is Ownable {
 	using SafeMath for uint;
 
@@ -49,7 +53,7 @@ contract Cryptosale is Ownable {
 
 	// Main calculation
 	function buyTokens(address beneficiary, uint amountWei) internal {
-		uint revenueAmountWei = amountWei.mul(revenuePercent.div(100));
+		uint revenueAmountWei = amountWei.mul(revenuePercent).div(100);
 		uint restAmountWei = amountWei.sub(revenueAmountWei);
 
 		uint referralCode = getReferralCode(amountWei);
@@ -58,10 +62,10 @@ contract Cryptosale is Ownable {
 			uint bonusPercent = ReferralMapPartnerBonus[referralPartner];
 			require(revenuePercent.add(bonusPercent) < 100);
 
-			uint referralRevenueAmountWei = restAmountWei.mul(bonusPercent.div(100)); // bonusPercent > 0
+			uint referralRevenueAmountWei = restAmountWei.mul(bonusPercent).div(100); // bonusPercent > 0
+			restAmountWei = restAmountWei.sub(referralRevenueAmountWei);
 		}
-		restAmountWei = restAmountWei.sub(referralRevenueAmountWei);
-
+		
 		tokenHolder.deposit.value(restAmountWei)(beneficiary); //buyTokens
 		refundVault.deposit.value(revenueAmountWei)(beneficiary);
 		
