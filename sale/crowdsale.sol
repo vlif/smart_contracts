@@ -6,6 +6,8 @@ import "./constants.sol";
 import "./cryptosale.sol";
 import "./rateProvider.sol";
 
+import "./freezingStorage.sol";
+
 /**
  * Example crowdsale contract
  * Contract cryptosale can buy sale tokens from crowdsale (rateProvider logic)
@@ -13,9 +15,12 @@ import "./rateProvider.sol";
 contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 	RateProvider public rateProvider;
 
+	address constant FREEZING_STORAGE = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;
+	address constant FREEZING_STORAGE_TOKENS = 1000000 * TOKEN_DECIMAL_MULTIPLIER;
+
 	function ExampleCrowdsale (
 		uint32 _startTime,
-		uint32 _endTime, 
+		uint32 _endTime,
 		// uint _rate,
 		uint _softCapWei, // 0.01
 		uint _hardCapTokens, // 3
@@ -36,6 +41,9 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 		RateProvider provider = new RateProvider(_tokenHolder);
         // provider.transferOwnership(owner);
         rateProvider = provider;
+
+		// Mint freezed Tokens
+        return token.mint(FREEZING_STORAGE, FREEZING_STORAGE_TOKENS);
 	}
 
 	// Override getRate to integrate with rate provider.

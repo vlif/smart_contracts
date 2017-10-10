@@ -15,7 +15,7 @@ contract TokenHolder is Ownable, RefundVaultProvider {
 	// Linked crowdsale contract
 	CrowdsaleInterface public crowdsale;
 
-	// Setting crowdsale contract Can execute from cryptosale
+	// Setting crowdsale contract. Can execute from cryptosale
 	function setCrowdsale(address _crowdsale) onlyOwner public {
 		crowdsale = CrowdsaleInterface(_crowdsale);
 	}
