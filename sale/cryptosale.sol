@@ -7,9 +7,7 @@ import "./tokenHolder.sol";
 import "./cryptosaleRefundVault.sol";
 import "./referralRefundVault.sol";
 
-/**
- * @dev Main cryptosale contract
- */
+// Main cryptosale contract
 contract Cryptosale is Ownable {
 	using SafeMath for uint;
 
@@ -42,9 +40,7 @@ contract Cryptosale is Ownable {
 		referralRefundVault = new ReferralRefundVault();
 	}
 
-	/**
-	 * @dev Buy sale tokens from crowdsale contract
-	 */
+	// Buy sale tokens from crowdsale contract
 	function() payable {
 		require(!isFinalized);
 			
@@ -70,7 +66,7 @@ contract Cryptosale is Ownable {
 		refundVault.deposit.value(revenueAmountWei)(beneficiary);
 		
 		if (referralRevenueAmountWei > 0)
-			referralRefundVault.deposit.value(referralRevenueAmountWei)(beneficiary, referralPartner);
+			referralRefundVault.forwardFunds.value(referralRevenueAmountWei)(beneficiary, referralPartner); //deposit
 	}
 
 	// Method for changing crowdsale contract
@@ -92,6 +88,7 @@ contract Cryptosale is Ownable {
 		referralRefundVault.claimRefund(msg.sender);
 	}
 
+	// Finalize cryptosale
 	function finalize() onlyOwner public {
 		require(!isFinalized);
 		require(tokenHolder.crowdsaleHasEnded()); 

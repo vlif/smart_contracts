@@ -7,7 +7,7 @@ contract CrowdsaleInterface {
 	RefundVault public vault;
 	MintableToken public token;
 
-	// У crowdsale должна быть паебал фоллбэк функция, но если тут ее определить абстрактно, то нихера не работает
+	// Crowdsale should have payable function but if abstract declare this function here it is not work
 	// function () payable;
 
 	function claimRefund() public;

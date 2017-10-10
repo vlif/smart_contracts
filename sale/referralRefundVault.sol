@@ -11,9 +11,11 @@ import "./refundVaultProvider.sol";
 contract ReferralRefundVault is Ownable, RefundVaultProvider {
     using SafeMath for uint256;
 
+    // Partner's referral revenue
     mapping (address => uint256) public partnersFunds;
 
-    function deposit(address investor, address partner) onlyOwner payable {
+    // Save investor's deposit funds for refunding and save partner's referral revenue
+    function forwardFunds(address investor, address partner) onlyOwner payable { //deposit
         require(state == State.Active);
 
         deposited[investor] = deposited[investor].add(msg.value);

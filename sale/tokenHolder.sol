@@ -8,12 +8,14 @@ import "./base/token/MintableToken.sol";
 import "./crowdsaleInterface.sol";
 import "./refundVaultProvider.sol";
 
+// Second main contract (after cryptosale) is token's holder
 contract TokenHolder is Ownable, RefundVaultProvider {
 	using SafeMath for uint256;
 
 	// Linked crowdsale contract
 	CrowdsaleInterface public crowdsale;
 
+	// Setting crowdsale contract Can execute from cryptosale
 	function setCrowdsale(address _crowdsale) onlyOwner public {
 		crowdsale = CrowdsaleInterface(_crowdsale);
 	}
@@ -45,16 +47,12 @@ contract TokenHolder is Ownable, RefundVaultProvider {
 	function() payable {
 	}
 
-	// [optional]
-	function getDepositedAmount() public returns(uint) {
-		RefundVault vault = RefundVault(crowdsale.vault());
-		return vault.deposited(this);
-	}
-
+	// Check that crowdsale has end
 	function crowdsaleHasEnded() public returns(bool) {
 		return crowdsale.hasEnded();
 	}
 
+	// Check that crowdsale is goal reached
 	function crowdsaleGoalReached() public returns(bool) {
 		return crowdsale.goalReached();
 	}
@@ -68,5 +66,11 @@ contract TokenHolder is Ownable, RefundVaultProvider {
         deposited[investor] = 0;
         MintableToken token = MintableToken(crowdsale.token());
         return token.transfer(investor, depositedValue);
+	}
+
+	// [optional]
+	function getDepositedAmount() public returns(uint) {
+		RefundVault vault = RefundVault(crowdsale.vault());
+		return vault.deposited(this);
 	}
 }
