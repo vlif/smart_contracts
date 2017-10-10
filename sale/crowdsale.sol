@@ -14,9 +14,9 @@ import "./freezingStorage.sol";
  */
 contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 	RateProvider public rateProvider;
-
+	
 	address constant FREEZING_STORAGE = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;
-	address constant FREEZING_STORAGE_TOKENS = 1000000 * TOKEN_DECIMAL_MULTIPLIER;
+	uint constant FREEZING_STORAGE_TOKENS = 1000000 * TOKEN_DECIMAL_MULTIPLIER;
 
 	function ExampleCrowdsale (
 		uint32 _startTime,
