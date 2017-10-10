@@ -6,29 +6,26 @@ import "./base/crowdsale/RefundVault.sol";
 import "./base/token/MintableToken.sol";
 
 import "./crowdsaleInterface.sol";
-import "./refundVaultCommon.sol";
+import "./refundVaultProvider.sol";
 
-contract TokenHolder is Ownable, RefundVaultCommon {
+contract TokenHolder is Ownable, RefundVaultProvider {
 	using SafeMath for uint256;
 
 	// Linked crowdsale contract
 	CrowdsaleInterface public crowdsale;
-	// Will remember all investors who ask help of cryptosale
-	// mapping (address => uint256) public deposited;
 
 	function setCrowdsale(address _crowdsale) onlyOwner public {
 		crowdsale = CrowdsaleInterface(_crowdsale);
 	}
 
-	// Основной метод покупки у crowdsale, вся магия тут
+	// Main method of buying token from crowdsale
 	function deposit(address beneficiary) onlyOwner payable public { //buyTokens
-		uint amountWei = msg.value;
-		require(crowdsale.call.value(amountWei)());
+		require(crowdsale.call.value(msg.value)());
 
-		deposited[beneficiary] = deposited[beneficiary].add(amountWei);
+		deposited[beneficiary] = deposited[beneficiary].add(msg.value);
 	}
 
-	// Возвращаем бабосики, если soft cup не пройден
+	// Return funds if softcup is not reached
 	function claimRefund(address investor) onlyOwner public {
 		require(state == State.Refunding);
 		uint depositedValue = deposited[investor];
@@ -44,7 +41,7 @@ contract TokenHolder is Ownable, RefundVaultCommon {
         Refunded(investor, depositedValue);
 	}
 
-	// Без этого чет не работает
+	// Important
 	function() payable {
 	}
 
@@ -62,7 +59,7 @@ contract TokenHolder is Ownable, RefundVaultCommon {
 		return crowdsale.goalReached();
 	}
 
-	// Раздаем токены инвесторам
+	// To give tokens investors
 	function withdraw(address investor) onlyOwner public returns(bool) {
 		require(state == State.Withdraw);
 		uint depositedValue = deposited[investor];

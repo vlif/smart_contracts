@@ -8,29 +8,29 @@ import "./cryptosaleRefundVault.sol";
 import "./referralRefundVault.sol";
 
 /**
- * Main cryptosale contract
- *
+ * @dev Main cryptosale contract
  */
 contract Cryptosale is Ownable {
 	using SafeMath for uint;
 
 	// This contract knows that who how much bought tokens
 	TokenHolder public tokenHolder;
+	
 	// Revenue percentage cryptosale
 	uint public revenuePercent;
 	// Storage contract of revenue cryptosale
 	CryptosaleRefundVault public refundVault;
 
+	// Flag of end cryptosale
 	bool public isFinalized = false;
 
 	// referralCode => partnerAddr => bonusPercent
 	mapping (uint => address) public ReferralMapCodePartner;
 	mapping (address => uint) public ReferralMapPartnerBonus;
+	// Storage contract of referral revenue
 	ReferralRefundVault public referralRefundVault;
 
-	/**
-	 * Constructor function
-	 */
+	// Constructor function
 	function Cryptosale(uint _revenuePercent, address _revenueWallet) {
 		require(_revenuePercent > 0);
 		require(_revenuePercent < 100);
@@ -43,7 +43,7 @@ contract Cryptosale is Ownable {
 	}
 
 	/**
-	 * Тут по ходу нам надо затариться токенами со скидкой у контракта crowdsale ! через TokenHolder !
+	 * @dev Buy sale tokens from crowdsale contract
 	 */
 	function() payable {
 		require(!isFinalized);
@@ -51,16 +51,18 @@ contract Cryptosale is Ownable {
 		buyTokens(msg.sender, msg.value);
 	}
 
-	// Calculation
+	// Main calculation
 	function buyTokens(address beneficiary, uint amountWei) internal {
-		uint revenueAmountWei = amountWei.mul(revenuePercent).div(100);
+		uint revenueAmountWei = amountWei.mul(revenuePercent.div(100));
 		uint restAmountWei = amountWei.sub(revenueAmountWei);
 
 		uint referralCode = getReferralCode(amountWei);
-		if (ReferralMapCodePartner[referralCode] != 0x0) {
-			address partner = ReferralMapCodePartner[referralCode];
-			uint bonusPercent = ReferralMapPartnerBonus[partner];
-			uint referralRevenueAmountWei = restAmountWei.mul(bonusPercent).div(100);
+		address referralPartner = ReferralMapCodePartner[referralCode];
+		if (referralPartner != address(0)) {
+			uint bonusPercent = ReferralMapPartnerBonus[referralPartner];
+			require(revenuePercent.add(bonusPercent) < 100);
+
+			uint referralRevenueAmountWei = restAmountWei.mul(bonusPercent.div(100)); // bonusPercent > 0
 		}
 		restAmountWei = restAmountWei.sub(referralRevenueAmountWei);
 
@@ -68,28 +70,31 @@ contract Cryptosale is Ownable {
 		refundVault.deposit.value(revenueAmountWei)(beneficiary);
 		
 		if (referralRevenueAmountWei > 0)
-			referralRefundVault.deposit.value(referralRevenueAmountWei)(beneficiary);
+			referralRefundVault.deposit.value(referralRevenueAmountWei)(beneficiary, referralPartner);
 	}
 
-	// Можно затариваться в другом месте, фасадный метод
+	// Method for changing crowdsale contract
 	function setCrowdsale(address _crowdsale) onlyOwner public {
 		require(_crowdsale != 0x0);
+		require(tokenHolder.crowdsale == address(0)); // can set crowdsale once
 
 		tokenHolder.setCrowdsale(_crowdsale);
 	}
 
-	// Возвращаем бабосики, если soft cup не пройден
+	// Return funds if softcup is not reached
 	function claimRefund() public {
 		require(isFinalized);
 		require(!tokenHolder.crowdsaleGoalReached());
 
 		tokenHolder.claimRefund(msg.sender);
 		refundVault.claimRefund(msg.sender);
+
+		referralRefundVault.claimRefund(msg.sender);
 	}
 
 	function finalize() onlyOwner public {
 		require(!isFinalized);
-		require(tokenHolder.crowdsaleHasEnded());
+		require(tokenHolder.crowdsaleHasEnded()); 
 
 		if (tokenHolder.crowdsaleGoalReached()) {
 			tokenHolder.close();
@@ -106,17 +111,17 @@ contract Cryptosale is Ownable {
 		isFinalized = true;
 	}
 
-	// Фасадный метод
+	// Investor can get buyed tokens if tokenHolder's state == Withdraw (facade method)
 	function withdraw() public returns(bool) {
 		return tokenHolder.withdraw(msg.sender);
 	}
 
 	// Add referral partner
 	function addReferralCode(uint code, address partner, uint bonusPercent) onlyOwner returns(bool) { //99999
-		require(bonusPercent > 0);
-		require(bonusPercent < 100);
+		require(bonusPercent > 0 && bonusPercent < 100);
 		require(partner != 0x0);
-		// require(code ???...);
+		require(code >= 10000); // 5
+		require(code <= 99999);
 
 		ReferralMapCodePartner[code] = partner;
 		ReferralMapPartnerBonus[partner] = bonusPercent;
@@ -126,9 +131,14 @@ contract Cryptosale is Ownable {
 
 	// Get referral code from amount of Wei
 	function getReferralCode(uint amountWei) internal returns(uint) {
-		uint meaningAmount = amountWei.div(100000000000); // 18 - 2 - 5
-		uint mainPartAmount = amountWei.div(10000000000000000).mul(100000); // 18 - 2 * 5
+		uint meaningPartAmount = amountWei.div(100000000000); // 18 - 2 - 5
+		uint basicPartAmount = amountWei.div(10000000000000000).mul(100000); // (18 - 2) * 5
 
-		return meaningAmount.sub(mainPartAmount);
+		return meaningPartAmount.sub(basicPartAmount);
+	}
+
+	// Referral partners can get revenue if referralRefundVault's state == Withdraw (facade method)
+	function referralWithdraw() public returns(bool) {
+		return referralRefundVault.withdraw(msg.sender);
 	}
 }

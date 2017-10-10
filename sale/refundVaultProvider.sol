@@ -3,7 +3,7 @@ pragma solidity ^0.4.16;
 import "./base/math/SafeMath.sol";
 import "./base/ownership/Ownable.sol";
 
-contract RefundVaultCommon is Ownable {
+contract RefundVaultProvider is Ownable {
     using SafeMath for uint256;
 
 	mapping (address => uint256) public deposited;
@@ -14,7 +14,7 @@ contract RefundVaultCommon is Ownable {
 	event Closed();
     event RefundsEnabled();
     event Refunded(address indexed beneficiary, uint weiAmount);
-
+    
     /**
 	 * Constructor function
 	 */

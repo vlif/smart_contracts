@@ -1,18 +1,15 @@
 pragma solidity ^0.4.16;
 
-// import "./base/math/SafeMath.sol";
 import "./base/ownership/Ownable.sol";
 
-import "./refundVaultCommon.sol";
+import "./refundVaultProvider.sol";
 
 /**
  * Storage contract of revenue cryptosale
  * We need 3 methods - deposit, refund/claimRefund, close
- *
+ * 
  */
-contract CryptosaleRefundVault is Ownable, RefundVaultCommon {
-	// using SafeMath for uint256;
-
+contract CryptosaleRefundVault is Ownable, RefundVaultProvider {
 	// Cryptosale wallet for getting revenue
 	address public wallet;
 
