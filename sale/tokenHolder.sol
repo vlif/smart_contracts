@@ -73,4 +73,9 @@ contract TokenHolder is Ownable, RefundVaultProvider {
 		RefundVault vault = RefundVault(crowdsale.vault());
 		return vault.deposited(this);
 	}
+
+	// [optional]
+	function getBalance() onlyOwner public returns(uint) {
+		return this.balance;
+	}
 }

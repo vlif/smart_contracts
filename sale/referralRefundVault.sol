@@ -31,4 +31,9 @@ contract ReferralRefundVault is Ownable, RefundVaultProvider {
         partnersFunds[partner] = 0;
         partner.transfer(depositedValue); // send revenue to referral partner
 	}
+
+    // [optional]
+    function getBalance() onlyOwner public returns(uint) {
+        return this.balance;
+    }
 }

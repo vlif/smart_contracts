@@ -10,7 +10,6 @@ import "./rateProvider.sol";
  * Example crowdsale contract
  * Contract cryptosale can buy sale tokens from crowdsale (rateProvider logic)
  */
-//1506613146, 1506699546, "10000000000000000", 3, "0xdd870fa1b7c4700f2bd7f44238821c26f7392148", "0x5e72914535f202659083db3a02c984188fa26e9f", "0x0dcd2f752394c41875e259e00bb44fd505297caf"
 contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 	RateProvider public rateProvider;
 
