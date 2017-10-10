@@ -14,7 +14,7 @@ import "./freezingStorage.sol";
  */
 contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 	RateProvider public rateProvider;
-	
+
 	address constant FREEZING_STORAGE = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;
 	uint constant FREEZING_STORAGE_TOKENS = 1000000 * TOKEN_DECIMAL_MULTIPLIER;
 
@@ -43,7 +43,7 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
         rateProvider = provider;
 
 		// Mint freezed Tokens
-        return token.mint(FREEZING_STORAGE, FREEZING_STORAGE_TOKENS);
+        token.mint(FREEZING_STORAGE, FREEZING_STORAGE_TOKENS);
 	}
 
 	// Override getRate to integrate with rate provider.
