@@ -20,8 +20,7 @@ contract FreezingStorage is Ownable {
 
 	// Constructor function
 	function FreezingStorage(address _forwardWallet, address _backwordWallet) {
-		require(_forwardWallet != address(0));
-		require(_backwordWallet != address(0));
+		require(_forwardWallet != address(0) && _backwordWallet != address(0));
 
 		forwardWallet = _forwardWallet;
 		backwordWallet = _backwordWallet;
@@ -43,10 +42,8 @@ contract FreezingStorage is Ownable {
 
 	// Sending tokens to forwardWallet and backwordWallet
 	function release() public returns(bool) {
-		// require(crowdsale.hasEnded());
-		// require(crowdsale.goalReached());
         require(cryptosale.isFinalized());
-
+        
         MintableToken token = MintableToken(crowdsale.token());
     	uint tokenAmount = token.balanceOf(this);
         require(tokenAmount > 0);
