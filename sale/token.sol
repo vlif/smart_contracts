@@ -13,7 +13,7 @@ contract ExampleToken is usingConstants, MintableToken {
     function name() constant public returns (string _name) {
         return "Example Token";
     }
-
+    
     function symbol() constant public returns (bytes32 _symbol) {
         return "EXT";
     }

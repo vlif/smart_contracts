@@ -6,7 +6,9 @@ import "./constants.sol";
 import "./cryptosale.sol";
 import "./rateProvider.sol";
 
+// delete
 import "./freezingStorage.sol";
+import "./token.sol";
 
 /**
  * Example crowdsale contract
