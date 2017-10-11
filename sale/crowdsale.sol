@@ -28,7 +28,7 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 		address _wallet,
 		address _token,
 		address _tokenHolder,
-		_freezingStorage // delete
+		address _freezingStorage // delete
 	) RefundableCrowdsale(
         _startTime,
         _endTime, 
