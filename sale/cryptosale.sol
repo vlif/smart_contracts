@@ -25,6 +25,11 @@ contract Cryptosale is Ownable {
 
 	// Flag of end cryptosale
 	bool public isFinalized = false;
+	
+	// Minimum amount of funds to be raised in weis
+    uint public goal;
+    // Amount of raised money in wei
+    uint public weiRaised;
 
 	// referralCode => partnerAddr => bonusPercent
 	mapping (uint => address) public ReferralMapCodePartner;
@@ -33,14 +38,17 @@ contract Cryptosale is Ownable {
 	ReferralRefundVault public referralRefundVault;
 
 	// Constructor function
-	function Cryptosale(address _revenueWallet, uint _revenuePercent) {
+	function Cryptosale(uint _goal, address _revenueWallet, uint _revenuePercent) {
 		require(_revenuePercent > 0 && _revenuePercent < 100);
+		require(_goal > 0);
 
 		tokenHolder = new TokenHolder();
 		refundVault = new CryptosaleRefundVault(_revenueWallet);
 		revenuePercent = _revenuePercent;
 
 		referralRefundVault = new ReferralRefundVault();
+
+		goal = _goal;
 	}
 
 	// Buy sale tokens from crowdsale contract
@@ -60,6 +68,7 @@ contract Cryptosale is Ownable {
 	// Main calculation
 	function buyTokens(address beneficiary, uint amountWei, uint _referralCode) internal {
 		uint revenueAmountWei = amountWei.mul(revenuePercent).div(100);
+		uint restAmountWei = amountWei.sub(revenueAmountWei);
 
 		uint referralCode = _referralCode; // 2. referral code from function parameter
 		if (referralCode == 0)
@@ -70,7 +79,11 @@ contract Cryptosale is Ownable {
 			uint referralRevenueAmountWei = revenueAmountWei.mul(bonusPercent).div(100); // bonusPercent > 0
 		}
 		
-		tokenHolder.deposit.value(amountWei.sub(revenueAmountWei))(beneficiary); //buyTokens
+		tokenHolder.deposit.value(restAmountWei)(beneficiary); //buyTokens
+		
+		// Update state
+        weiRaised = weiRaised.add(restAmountWei);
+
 		refundVault.deposit.value(revenueAmountWei.sub(referralRevenueAmountWei))(beneficiary);
 		
 		if (referralRevenueAmountWei > 0)
@@ -100,7 +113,8 @@ contract Cryptosale is Ownable {
 	// Finalize cryptosale
 	function finalize() onlyOwner public {
 		require(!isFinalized);
-		require(tokenHolder.crowdsaleHasEnded()); 
+		//require(!tokenHolder.crowdsaleIsFinalized());
+		require(tokenHolder.crowdsaleHasEnded());
 
 		if (tokenHolder.crowdsaleGoalReached()) {
 			tokenHolder.close();
@@ -121,6 +135,7 @@ contract Cryptosale is Ownable {
 	function withdraw() public {
 		tokenHolder.withdraw(msg.sender);
 	}
+
 
 	// Add referral partner
 	function addReferralCode(uint code, address partner, uint bonusPercent) onlyOwner returns(bool) { //99999
@@ -146,4 +161,10 @@ contract Cryptosale is Ownable {
 	function referralWithdraw() public {
 		referralRefundVault.withdraw(msg.sender);
 	}
+
+
+	// Check that cryptosale contract is reached 
+	function goalReached() public constant returns (bool) {
+        return weiRaised >= goal;
+    }
 }

@@ -44,8 +44,7 @@ contract TokenHolder is Ownable, RefundVaultProvider {
 	}
 
 	// Important
-	function() payable {
-	}
+	function() payable { }
 
 	// Check that crowdsale has end
 	function crowdsaleHasEnded() public returns(bool) {
