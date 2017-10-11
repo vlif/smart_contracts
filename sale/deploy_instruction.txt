@@ -1,14 +1,32 @@
 1. Деплой контракта Cryptosale
+"0xca35b7d915458ef540ade6068dfe2f44e8fa733c", 10
 
 2. Деплой контракта FreezingStorage для заморозки токенов между фондом и проектом
+"0xca35b7d915458ef540ade6068dfe2f44e8fa733c"
 
 3. Деплой контракта Token (при создании указывается адрес FreezingStorage)
 
-4. Деплой контракта Crowdsale (при создании указывается адреса cryptosale и токен)
 
-5. Вызывается cryptosale.setCrowdsale для задания адреса crowdsale
+4. Деплой контракта Crowdsale (при создании указывается адреса Cryptosale и Token)
+1507710482, 1507710902, "10000000000000000", 4, "0xdd870fa1b7c4700f2bd7f44238821c26f7392148", "0x5e72914535f202659083db3a02c984188fa26e9f", "0xe5240103e1ff986a2c8ae6b6728ffe0d9a395c59"
 
-6. Вызывается token.transferOwnership для задания корректного владельца токена(нужно, чтобы это был crowdsale)
+6. Задать свойства crowdsale и cryptosale у FreezingStorage (адреса Cryptosale и Crowdsale у нас теперь есть)
+Методы setCrowdsale и setCryptosale соответственно.
+
+5. Вызывается Сryptosale.setCrowdsale для задания адреса Crowdsale
+
+6. Вызывается Token.transferOwnership для задания корректного владельца токена(нужно, чтобы это был Crowdsale)
 
 7. Создание реферальных кодов
+11111, "0x4b0897b0513fdc7c541b6d9d7e929c4e5364d2db", 10
 
+-----------------
+
+8. Завершаем Crowdsale вызовом метода finalize() от имени owner-а контракта
+
+9. Завершаем Cryptosale вызовом метода finalize() (сработает, даже если Crowdsale не в статусе Finalized)
+
+10. Cryptosale получает средства в случае успеха автоматом (когда происходит Cryptosale.finalize())
+11. Инвесторы забирают свои токены при помощи Сryptosale.withdraw
+12. Реферальные партнеры забирают награду при помощи Сryptosale.referralWithdraw
+13. Освобождение токенов, которые начислены на счет контракта FreezingStorage
