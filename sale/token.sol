@@ -7,7 +7,7 @@ import "./constants.sol";
 
 // Token contract
 contract ExampleToken is usingConstants, MintableToken {
-	address public FREEZING_STORAGE;
+	address public FREEZING_STORAGE; //constant
 	uint constant FREEZING_STORAGE_TOKENS = 1000000 * TOKEN_DECIMAL_MULTIPLIER;
 
     function name() constant public returns (string _name) {
@@ -22,6 +22,7 @@ contract ExampleToken is usingConstants, MintableToken {
         return TOKEN_DECIMALS_UINT8;
     }
 
+    
     function ExampleToken(address _freezingStorage) {
     	// Mint freezed Tokens
 		FREEZING_STORAGE = _freezingStorage;
