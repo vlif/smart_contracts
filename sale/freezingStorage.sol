@@ -27,7 +27,7 @@ contract FreezingStorage is Ownable {
 
 		crowdsale = CrowdsaleInterface(_crowdsale);
 	}
-
+	
 	// Setting cryptosale contract. Can set cryptosale once
 	function setCryptosale(address _cryptosale) onlyOwner public { 
 		require(_cryptosale != 0x0 && cryptosale == address(0));
