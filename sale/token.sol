@@ -23,6 +23,7 @@ contract ExampleToken is usingConstants, MintableToken {
     }
 
 
+    // Constructor function
     function ExampleToken(address _freezingStorage) {
     	// Mint freezed Tokens
 		FREEZING_STORAGE = _freezingStorage;
