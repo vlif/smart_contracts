@@ -52,7 +52,7 @@ contract FreezingStorage is Ownable {
         	token.transfer(forwardWallet, tokenAmount);
     	} else {
     		if (!cryptosale.goalReached() && crowdsale.goalReached()) {
-    			uint realHonoredTokenAmount = tokenAmount.mul(cryptosale.goal().div(cryptosale.weiRaised()));
+    			uint realHonoredTokenAmount = tokenAmount.mul(cryptosale.weiRaised().div(cryptosale.goal()));
     			token.transfer(forwardWallet, realHonoredTokenAmount);
     			token.transfer(backwordWallet, tokenAmount.sub(realHonoredTokenAmount));
 			} else {

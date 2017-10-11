@@ -6,6 +6,6 @@ contract CryptosaleInterface {
     uint public goal;
     // amount of raised money in wei
     uint public weiRaised;
-
+    
     function goalReached() public constant returns (bool);
 }
