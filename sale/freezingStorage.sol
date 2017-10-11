@@ -2,23 +2,29 @@ pragma solidity ^0.4.16;
 
 import "./base/ownership/Ownable.sol";
 import "./base/token/MintableToken.sol";
+import "./base/math/SafeMath.sol";
 
 import "./crowdsaleInterface.sol";
 import "./cryptosaleInterface.sol";
 
 contract FreezingStorage is Ownable {
+	using SafeMath for uint256;
+
 	// Linked crowdsale contract
 	CrowdsaleInterface public crowdsale;
 	// Linked cryptosale contract
 	CryptosaleInterface public cryptosale;
 
-	address public holderWallet;
+	address public forwardWallet;
+	address public backwordWallet;
 
 	// Constructor function
-	function FreezingStorage(address _holderWallet) {
-		require(_holderWallet != address(0));
+	function FreezingStorage(address _forwardWallet, address _backwordWallet) {
+		require(_forwardWallet != address(0));
+		require(_backwordWallet != address(0));
 
-		holderWallet = _holderWallet;
+		forwardWallet = _forwardWallet;
+		backwordWallet = _backwordWallet;
 	}
 
 	// Setting crowdsale contract. Can set crowdsale once
@@ -35,16 +41,28 @@ contract FreezingStorage is Ownable {
 		cryptosale = CryptosaleInterface(_cryptosale);
 	}
 
-	// Sending tokens to wallet's holder if all conditions are reached
-	function release() public {
-		require(crowdsale.hasEnded());
-		require(crowdsale.goalReached());
+	// Sending tokens to forwardWallet and backwordWallet
+	function release() public returns(bool) {
+		// require(crowdsale.hasEnded());
+		// require(crowdsale.goalReached());
         require(cryptosale.isFinalized());
 
         MintableToken token = MintableToken(crowdsale.token());
-        uint tokenAmount = token.balanceOf(this);
+    	uint tokenAmount = token.balanceOf(this);
         require(tokenAmount > 0);
 
-        token.transfer(holderWallet, tokenAmount);
+        if (cryptosale.goalReached() && crowdsale.goalReached()) {
+        	token.transfer(forwardWallet, tokenAmount);
+    	} else {
+    		if (!cryptosale.goalReached() && crowdsale.goalReached()) {
+    			uint realHonoredTokenAmount = tokenAmount.mul(cryptosale.goal().div(cryptosale.weiRaised()));
+    			token.transfer(forwardWallet, realHonoredTokenAmount);
+    			token.transfer(backwordWallet, tokenAmount.sub(realHonoredTokenAmount));
+			} else {
+				token.transfer(backwordWallet, tokenAmount);
+			}
+    	}
+
+    	return true;
     }
 }
