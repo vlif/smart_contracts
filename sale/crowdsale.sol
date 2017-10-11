@@ -15,10 +15,6 @@ import "./freezingStorage.sol";
 contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 	RateProvider public rateProvider;
 
-	// address constant FREEZING_STORAGE = ...;
-	address public FREEZING_STORAGE;
-	uint constant FREEZING_STORAGE_TOKENS = 1000000 * TOKEN_DECIMAL_MULTIPLIER;
-
 	function ExampleCrowdsale (
 		uint32 _startTime,
 		uint32 _endTime,
@@ -27,8 +23,7 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 		uint _hardCapTokens, // 3
 		address _wallet,
 		address _token,
-		address _tokenHolder,
-		address _freezingStorage // delete
+		address _tokenHolder
 	) RefundableCrowdsale(
         _startTime,
         _endTime, 
@@ -43,10 +38,6 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 		RateProvider provider = new RateProvider(_tokenHolder);
         // provider.transferOwnership(owner);
         rateProvider = provider;
-
-		// Mint freezed Tokens
-		FREEZING_STORAGE = _freezingStorage; // delete
-        token.mint(FREEZING_STORAGE, FREEZING_STORAGE_TOKENS);
 	}
 
 	// Override getRate to integrate with rate provider.
