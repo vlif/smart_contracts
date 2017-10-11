@@ -1,6 +1,6 @@
 pragma solidity ^0.4.16;
 
-import "./base/token/MintableToken.sol"; 
+import "./base/token/MintableToken.sol";
 import "./base/math/SafeMath.sol";
 
 import "./constants.sol";
@@ -8,7 +8,7 @@ import "./constants.sol";
 // Token contract
 contract ExampleToken is usingConstants, MintableToken {
 	address public FREEZING_STORAGE; //constant
-	uint constant FREEZING_STORAGE_TOKENS = 1000000 * TOKEN_DECIMAL_MULTIPLIER;
+	uint constant FREEZING_STORAGE_TOKENS = 1 * TOKEN_DECIMAL_MULTIPLIER;
 
     function name() constant public returns (string _name) {
         return "Example Token";

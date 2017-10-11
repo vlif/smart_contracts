@@ -33,7 +33,7 @@ contract Cryptosale is Ownable {
 	ReferralRefundVault public referralRefundVault;
 
 	// Constructor function
-	function Cryptosale(uint _revenuePercent, address _revenueWallet) {
+	function Cryptosale(address _revenueWallet, uint _revenuePercent) {
 		require(_revenuePercent > 0 && _revenuePercent < 100);
 
 		tokenHolder = new TokenHolder();
