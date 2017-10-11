@@ -13,7 +13,7 @@ contract ExampleToken is usingConstants, MintableToken {
     function name() constant public returns (string _name) {
         return "Example Token";
     }
-    
+
     function symbol() constant public returns (bytes32 _symbol) {
         return "EXT";
     }
@@ -22,10 +22,10 @@ contract ExampleToken is usingConstants, MintableToken {
         return TOKEN_DECIMALS_UINT8;
     }
 
-    
+
     function ExampleToken(address _freezingStorage) {
     	// Mint freezed Tokens
 		FREEZING_STORAGE = _freezingStorage;
-        token.mint(FREEZING_STORAGE, FREEZING_STORAGE_TOKENS);
+        mint(FREEZING_STORAGE, FREEZING_STORAGE_TOKENS);
     }
 }
