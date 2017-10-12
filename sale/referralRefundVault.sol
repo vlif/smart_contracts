@@ -52,7 +52,7 @@ contract ReferralRefundVault is Ownable, RefundVaultProvider {
     }
 
     // [optional]
-    function getBalance() public returns(uint) {
+    function getBalance() public constant returns(uint) {
         return this.balance;
     }
 }
