@@ -8,7 +8,7 @@ contract CrowdsaleInterface {
 	RefundVault public vault;
 	MintableToken public token;
 	// start and end timestamps where investments are allowed (both inclusive)
-    uint256 public startTime;
+    uint public startTime;
 	
 	// Crowdsale should have payable function but if abstract declare this function here it is not work
 	// function () payable;
