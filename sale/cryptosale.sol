@@ -46,7 +46,7 @@ contract Cryptosale is Ownable {
 		refundVault = new CryptosaleRefundVault(_revenueWallet);
 		revenuePercent = _revenuePercent;
 
-		referralRefundVault = new ReferralRefundVault();
+		referralRefundVault = new ReferralRefundVault(tokenHolder, _revenueWallet);
 
 		goal = _goal;
 	}
