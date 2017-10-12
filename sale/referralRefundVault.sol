@@ -20,7 +20,7 @@ contract ReferralRefundVault is Ownable, RefundVaultProvider {
     // Cryptosale wallet
     address public cryptosaleWallet;
 
-    function ReferralRefundVault(address _tokenHolder, _cryptosaleWallet) {
+    function ReferralRefundVault(address _tokenHolder, address _cryptosaleWallet) {
         tokenHolder = TokenHolder(_tokenHolder);
         cryptosaleWallet = _cryptosaleWallet;
     }
