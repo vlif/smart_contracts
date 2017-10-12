@@ -1,5 +1,6 @@
 pragma solidity ^0.4.16;
 
+// Abstract cryptosale interface contract
 contract CryptosaleInterface {
 	bool public isFinalized;
 	// minimum amount of funds to be raised in weis

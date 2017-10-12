@@ -3,10 +3,11 @@ pragma solidity ^0.4.16;
 import "./base/crowdsale/RefundVault.sol";
 import "./base/token/MintableToken.sol";
 
+// Abstract crowdsale interface contract
 contract CrowdsaleInterface {
 	RefundVault public vault;
 	MintableToken public token;
-
+	
 	// Crowdsale should have payable function but if abstract declare this function here it is not work
 	// function () payable;
 

@@ -43,7 +43,7 @@ contract FreezingStorage is Ownable {
 	// Sending tokens to forwardWallet and backwordWallet
 	function release() public returns(bool) {
         require(cryptosale.isFinalized());
-        
+
         MintableToken token = MintableToken(crowdsale.token());
     	uint tokenAmount = token.balanceOf(this);
         require(tokenAmount > 0);
@@ -52,7 +52,7 @@ contract FreezingStorage is Ownable {
         	token.transfer(forwardWallet, tokenAmount);
     	} else {
     		if (!cryptosale.goalReached() && crowdsale.goalReached()) {
-    			uint realHonoredTokenAmount = tokenAmount.mul(cryptosale.weiRaised().div(cryptosale.goal()));
+    			uint realHonoredTokenAmount = (tokenAmount * (weiRaised / goal * 100)) / 100;
     			token.transfer(forwardWallet, realHonoredTokenAmount);
     			token.transfer(backwordWallet, tokenAmount.sub(realHonoredTokenAmount));
 			} else {
