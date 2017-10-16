@@ -47,6 +47,7 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
 		return rateProvider.getRate(msg.sender, rate);
     }
 
+    
     // [optional]
     function getDepositedAmount(address _beneficiary) public constant returns(uint) {
     	return vault.deposited(_beneficiary);

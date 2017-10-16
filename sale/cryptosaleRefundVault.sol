@@ -24,6 +24,7 @@ contract CryptosaleRefundVault is Ownable, RefundVaultProvider {
         wallet.transfer(this.balance); // send revenue to cryptosale
     }
 
+
     // [optional]
 	function getBalance() public constant returns(uint) {
 		return this.balance;

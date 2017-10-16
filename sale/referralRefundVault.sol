@@ -51,6 +51,7 @@ contract ReferralRefundVault is Ownable, RefundVaultProvider {
         cryptosaleWallet.transfer(this.balance);
     }
 
+
     // [optional]
     function getBalance() public constant returns(uint) {
         return this.balance;

@@ -47,7 +47,7 @@ contract FreezingStorage is Ownable {
         MintableToken token = MintableToken(crowdsale.token());
     	uint tokenAmount = token.balanceOf(this);
         require(tokenAmount > 0);
-
+        
         if (cryptosale.goalReached() && crowdsale.goalReached()) {
         	token.transfer(forwardWallet, tokenAmount);
     	} else {
@@ -59,7 +59,7 @@ contract FreezingStorage is Ownable {
 				token.transfer(backwordWallet, tokenAmount);
 			}
     	}
-
+    	
     	return true;
     }
 }

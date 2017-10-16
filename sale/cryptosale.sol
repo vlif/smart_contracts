@@ -54,7 +54,7 @@ contract Cryptosale is Ownable {
 	// Buy sale tokens from crowdsale contract
 	function() payable {
 		require(!isFinalized);
-			
+		
 		buyTokens(msg.sender, msg.value, 0);
 	}
 

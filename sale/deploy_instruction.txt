@@ -7,7 +7,7 @@
 3. Деплой контракта Token (при создании указывается адрес FreezingStorage)
 
 4. Деплой контракта Crowdsale (при создании указывается адреса Cryptosale и Token)
-1507733440, 1507733980, "10000000000000000", 4, "0xdd870fa1b7c4700f2bd7f44238821c26f7392148", "0x5e72914535f202659083db3a02c984188fa26e9f", "0xbbf289d846208c16edc8474705c748aff07732db"
+1507807688, 1507808108, "10000000000000000", 4, "0xdd870fa1b7c4700f2bd7f44238821c26f7392148", "0x5e72914535f202659083db3a02c984188fa26e9f", "0xe5240103e1ff986a2c8ae6b6728ffe0d9a395c59"
 
 6. Задать свойства crowdsale и cryptosale у FreezingStorage (адреса Cryptosale и Crowdsale у нас теперь есть)
 Методы setCrowdsale и setCryptosale соответственно.
