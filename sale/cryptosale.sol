@@ -36,6 +36,7 @@ contract Cryptosale is Ownable {
 	mapping (address => uint) public ReferralMapPartnerBonus;
 	// Storage contract of referral revenue
 	ReferralRefundVault public referralRefundVault;
+	uint public referralRevenueRate = 1;
 
 	// Constructor function
 	function Cryptosale(uint _goal, address _revenueWallet, uint _revenuePercent) {
@@ -76,7 +77,10 @@ contract Cryptosale is Ownable {
 		address referralPartner = ReferralMapCodePartner[referralCode];
 		if (referralPartner != address(0)) {
 			uint bonusPercent = ReferralMapPartnerBonus[referralPartner];
-			uint referralRevenueAmountWei = revenueAmountWei.mul(bonusPercent).div(100); // bonusPercent > 0
+			
+			require(bonusPercent.mul(referralRevenueRate) < 100);
+			// bonusPercent > 0
+			uint referralRevenueAmountWei = revenueAmountWei.mul(bonusPercent.mul(referralRevenueRate)).div(100);
 		}
 		
 		tokenHolder.deposit.value(restAmountWei)(beneficiary); //buyTokens
@@ -110,6 +114,11 @@ contract Cryptosale is Ownable {
 		referralRefundVault.claimRefund(msg.sender);
 	}
 
+	// Investor can get buyed tokens if tokenHolder's state == Withdraw (facade method)
+	function withdraw() public {
+		tokenHolder.withdraw(msg.sender);
+	}
+
 	// Finalize cryptosale
 	function finalize() onlyOwner public {
 		require(!isFinalized);
@@ -131,12 +140,7 @@ contract Cryptosale is Ownable {
 		isFinalized = true;
 	}
 
-	// Investor can get buyed tokens if tokenHolder's state == Withdraw (facade method)
-	function withdraw() public {
-		tokenHolder.withdraw(msg.sender);
-	}
-
-
+	
 	// Add referral partner
 	function addReferralCode(uint code, address partner, uint bonusPercent) onlyOwner returns(bool) { //99999
 		require(bonusPercent > 0 && bonusPercent < 100);
@@ -160,6 +164,11 @@ contract Cryptosale is Ownable {
 	// Referral partners can get revenue if referralRefundVault's state == Withdraw (facade method)
 	function referralWithdraw() public {
 		referralRefundVault.withdraw(msg.sender);
+	}
+
+	// Set referral revenue rate
+	function setReferralRevenueRate(uint _rate) onlyOwner {
+		referralRevenueRate = _rate;
 	}
 
 
