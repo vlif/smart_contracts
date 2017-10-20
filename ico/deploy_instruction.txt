@@ -1,4 +1,30 @@
-1. Deploy Token Contract 
-2. Deploy Crowdsale Contract 
-3. Change Token Contract owner to Crowdsale Contract (method: transferOwmership()) 
-4. Make starting initialization of Crowdsale Contract by calling method init() Crowdsales Contract
+1. Deploy Token contract
+Do not has parameters
+
+2. Change values of constants in Crowdsale contract:
+TEAM_BEN_ADDRESS,
+TEAM_PHIL_ADDRESS,
+WALLET_ADDRESS,
+INVESTOR_ADDRESS,
+BONUS_ADDRESS,
+COMPANY_COLD_STORAGE_ADDRESS,
+PRE_SALE_ADDRESS
+
+3. Deploy Crowdsale Contract 
+@param _startTime Start and end timestamps where investments are allowed (both inclusive)
+@param _endTime
+@param _softCapWei Minimum amount of funds to be raised in weis
+@param _hardCapTokens Maximum amount of tokens to mint
+@param _wallet Address where funds are collected
+@param _token The address of token being sold (have got above)
+
+4. Change Token contract owner to Crowdsale contract
+Token contract have method transferOwmership()
+@param newOwner Address of Crowdsale contract (have got above)
+
+5. Make starting initialization of Crowdsale Contract by calling method init() of Crowdsale contract
+Do not has parameters
+
+====
+ATTENTION! Now ETR Token rate value is 240(1 ETH = 240 ETR) and you can change it in file ESportsConstants.sol. 
+====

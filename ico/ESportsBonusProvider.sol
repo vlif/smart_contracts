@@ -20,8 +20,7 @@ contract ESportsBonusProviderI is Ownable {
     function addDelayedBonus(
         address _buyer, 
         uint _totalSold,
-        uint _amountTokens,
-        uint32 _startTime
+        uint _amountTokens
     ) onlyOwner public returns (uint);
 
     function releaseBonus(address _buyer, uint _totalSold) onlyOwner public returns (uint);
@@ -62,7 +61,7 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
         
         // apply bonus for amount
         if (now < _startTime + FIRST_WEEK) {
-            bonus = bonus.add(_amountTokens.mul(10).div(100)); // 1
+            bonus = bonus.add(_amountTokens.div(10)); // 1
         }
 
         return bonus;
@@ -71,13 +70,12 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
     function addDelayedBonus(
         address _buyer,
         uint _totalSold,
-        uint _amountTokens,
-        uint32 _startTime
+        uint _amountTokens
     ) onlyOwner public returns (uint) {
         uint bonus = 0;
 
         if (_totalSold < BONUS_THRESHOLD_ETR) {
-            uint amountThresholdBonus = _amountTokens.mul(10).div(100); // 2
+            uint amountThresholdBonus = _amountTokens.div(10); // 2
             investorBonuses[_buyer] = investorBonuses[_buyer].add(amountThresholdBonus); 
             bonus = bonus.add(amountThresholdBonus);
         }
