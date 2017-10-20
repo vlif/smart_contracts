@@ -46,7 +46,7 @@ contract ReferralRefundVault is Ownable, RefundVaultProvider {
     // If referral partners doesn't took the revenue at defined period then cryptosale will get it
     function releaseDanglingMoney() public {
         require(state == State.Withdraw);
-        require(tokenHolder.getCrowdsaleStartTime() + 3 minutes <= now); // 3 months //90 days
+        require(tokenHolder.getCrowdsaleStartTime() + 90 days <= now); //3 minutes //3 months
 
         cryptosaleWallet.transfer(this.balance);
     }
