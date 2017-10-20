@@ -101,6 +101,23 @@ contract Crowdsale {
         // uint tokens = amountWei.mul(actualRate).div(rateScale);
         uint256 tokens = amountWei.mul(actualRate);
 
+
+        // change, if minted token would be less
+        uint change = 0;
+
+        // if hard cap reached
+        if (tokens.add(totalSupply) > hardCap) {
+            // rest tokens
+            uint maxTokens = hardCap.sub(totalSupply);
+            uint realAmount = maxTokens.div(actualRate);
+
+            // rest tokens rounded by actualRate
+            tokens = realAmount.mul(actualRate);
+            change = amountWei - realAmount;
+            amountWei = realAmount;
+        }
+
+
         // update state
         weiRaised = weiRaised.add(amountWei);
         // soldTokens = soldTokens.add(tokens);
@@ -108,6 +125,12 @@ contract Crowdsale {
         token.mint(beneficiary, tokens);
         TokenPurchase(beneficiary, beneficiary, amountWei, tokens);
 
+
+        if (change != 0) {
+            msg.sender.transfer(change);
+        }
+
+        
         forwardFunds(beneficiary, amountWei);
     }
 

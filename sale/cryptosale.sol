@@ -168,6 +168,7 @@ contract Cryptosale is Ownable {
 
 	// Set referral revenue rate
 	function setReferralRevenueRate(uint _rate) onlyOwner {
+		require(_rate > 0);
 		referralRevenueRate = _rate;
 	}
 
