@@ -55,7 +55,7 @@ contract FreezingStorage is Ownable {
     			// uint realHonoredTokenAmount = (tokenAmount * (cryptosale.weiRaised() * 100 / cryptosale.goal())) / 100;
     			uint k =  100 - (100 - (weiRaised * 100 / goal)) / 2;
     			uint realHonoredTokenAmount = tokenAmount * k / 100;
-
+				
     			token.transfer(forwardWallet, realHonoredTokenAmount);
     			token.transfer(backwordWallet, tokenAmount.sub(realHonoredTokenAmount));
 			} else {
