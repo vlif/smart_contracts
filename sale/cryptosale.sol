@@ -82,6 +82,8 @@ contract Cryptosale is Ownable {
 			// bonusPercent > 0
 			uint referralRevenueAmountWei = revenueAmountWei.mul(bonusPercent.mul(referralRevenueRate)).div(100);
 		}
+
+		require(weiRaised <= goal.sub(restAmountWei));
 		
 		tokenHolder.deposit.value(restAmountWei)(beneficiary); //buyTokens
 		
