@@ -1,6 +1,6 @@
 pragma solidity 0.4.15;
 
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import './zeppelin-solidity/contracts/math/SafeMath.sol';
 import './storages/Ticket.sol';
 import './storages/Fund.sol';
 
