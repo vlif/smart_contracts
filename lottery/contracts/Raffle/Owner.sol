@@ -1,6 +1,6 @@
 pragma solidity 0.4.15;
 
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+import '../zeppelin-solidity/contracts/ownership/Ownable.sol';
 
 import './../storages/raffles/Regular.sol';
 import './../storages/raffles/Final.sol';
