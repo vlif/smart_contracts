@@ -1,10 +1,11 @@
 pragma solidity ^0.4.16;
 
+import "./zeppelin/ownership/Ownable.sol";
 // import './zeppelin/token/ERC20Basic.sol';
 
 import "./ESportsToken.sol";
 
-contract ESportsFreezingStorage {
+contract ESportsFreezingStorage is Ownable {
 	// timestamp when token release is enabled
     uint64 public releaseTime;
 
@@ -19,7 +20,7 @@ contract ESportsFreezingStorage {
         token = _token;
     }
 
-    function release(address _beneficiary) returns(uint) { //onlyOwner
+    function release(address _beneficiary) onlyOwner returns(uint) {
         //require(now >= releaseTime);
         if (now < releaseTime) return 0;
 
