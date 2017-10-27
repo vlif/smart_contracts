@@ -59,7 +59,7 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
     ) onlyOwner public constant returns (uint) {
         uint bonus = 0;
         
-        // apply bonus for amount
+        // Apply bonus for amount
         if (now < _startTime + FIRST_WEEK) {
             bonus = bonus.add(_amountTokens.div(10)); // 1
         }

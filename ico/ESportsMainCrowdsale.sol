@@ -7,13 +7,13 @@ import "./ESportsConstants.sol";
 import "./ESportsToken.sol";
 import "./ESportsBonusProvider.sol";
 
-contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
-	// Overall 100.00% 60 000 000
+contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
+    uint constant OVERALL_AMOUNT_TOKENS = 60000000 * TOKEN_DECIMAL_MULTIPLIER; // overall 100.00%
     uint constant TEAM_BEN_TOKENS = 6000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00% // Founders
     uint constant TEAM_PHIL_TOKENS = 6000000 * TOKEN_DECIMAL_MULTIPLIER;
     uint constant COMPANY_COLD_STORAGE_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
     uint constant INVESTOR_TOKENS = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00%
-    uint constant BONUS_TOKENS = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00% // pre-sale
+    uint constant BONUS_TOKENS = 3000000 * TOKEN_DECIMAL_MULTIPLIER; // 5.00% // Pre-sale
 	uint constant BUFFER_TOKENS = 6000000 * TOKEN_DECIMAL_MULTIPLIER; // 10.00%
     uint constant PRE_SALE_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
 
@@ -39,17 +39,16 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         uint32 _startTime,
         uint32 _endTime,
         uint _softCapWei,
-        uint _hardCapTokens,
         address _wallet,
         address _token
 	) RefundableCrowdsale(
         _startTime,
         _endTime, 
         RATE,
-        _hardCapTokens * TOKEN_DECIMAL_MULTIPLIER, // 60 000 000
+        OVERALL_AMOUNT_TOKENS,
         _wallet,
         _token,
-        _softCapWei // _goal // 2 000 000
+        _softCapWei
 	) {
 	}
 
@@ -96,7 +95,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
 
         // bonuses
         require(token.mint(BONUS_ADDRESS, BONUS_TOKENS));
-        require(token.mint(bonusProvider, BUFFER_TOKENS)); // mint bonus tokent to bonus provider
+        require(token.mint(bonusProvider, BUFFER_TOKENS)); // mint bonus token to bonus provider
 
         ESportsToken(token).addExcluded(INVESTOR_ADDRESS);
         ESportsToken(token).addExcluded(BONUS_ADDRESS);
@@ -111,18 +110,17 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     /**
      * @dev Mint of tokens in the name of the founders and freeze part of them
      */
-    function mintToFounders() internal returns(bool) {
-        ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(20).div(100), startTime + 1 years); //minutes
-        ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 3 years); //minutes
-        ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 5 years); //minutes
+    function mintToFounders() internal {
+        ESportsToken token = ESportsToken(token);
+        token.mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(20).div(100), startTime + 1 years);
+        token.mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 3 years);
+        token.mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 5 years);
         require(token.mint(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(20).div(100)));
 
-        ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(20).div(100), startTime + 1 years); //minutes
-        ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 3 years); //minutes
-        ESportsToken(token).mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 5 years); //minutes
+        token.mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(20).div(100), startTime + 1 years);
+        token.mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 3 years);
+        token.mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 5 years);
         require(token.mint(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(20).div(100)));
-
-        return true;
     }
 
     /**

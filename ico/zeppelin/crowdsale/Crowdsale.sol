@@ -1,7 +1,7 @@
 pragma solidity ^0.4.11;
 
-import '../token/MintableToken.sol';
-import '../math/SafeMath.sol';
+import "../token/MintableToken.sol";
+import "../math/SafeMath.sol";
 
 /**
  * @title Crowdsale 
@@ -81,24 +81,24 @@ contract Crowdsale {
         return rate;
     }
 
-    // fallback function can be used to buy tokens
+    // Fallback function can be used to buy tokens
     function() payable {
         buyTokens(msg.sender, msg.value);
     }
 
-    // low level token purchase function
+    // Low level token purchase function
     function buyTokens(address beneficiary, uint amountWei) internal {
         require(beneficiary != 0x0);
 
-        // total minted tokens
+        // Total minted tokens
         uint totalSupply = token.totalSupply();
 
-        // actual token minting rate (with considering bonuses and discounts)
+        // Actual token minting rate (with considering bonuses and discounts)
         uint actualRate = getRate(amountWei);
 
         require(validPurchase(amountWei, actualRate, totalSupply));
 
-        // calculate token amount to be created
+        // Calculate token amount to be created
         // uint tokens = rate.mul(msg.value).div(1 ether);
         uint tokens = amountWei.mul(actualRate);
 
@@ -106,33 +106,30 @@ contract Crowdsale {
             require(tokens.add(totalSupply) <= hardCap);
         }
 
-
-        // change, if minted token would be less
+        // Change, if minted token would be less
         uint change = 0;
 
-        // if hard cap reached
+        // If hard cap reached
         if (tokens.add(totalSupply) > hardCap) {
-            // rest tokens
+            // Rest tokens
             uint maxTokens = hardCap.sub(totalSupply);
             uint realAmount = maxTokens.div(actualRate);
 
-            // rest tokens rounded by actualRate
+            // Rest tokens rounded by actualRate
             tokens = realAmount.mul(actualRate);
-            change = amountWei - realAmount;
+            change = amountWei.sub(realAmount);
             amountWei = realAmount;
         }
 
-
-        // bonuses
+        // Bonuses
         postBuyTokens(beneficiary, tokens);
 
-        // update state
+        // Update state
         weiRaised = weiRaised.add(amountWei);
         soldTokens = soldTokens.add(tokens);
 
         token.mint(beneficiary, tokens);
         TokenPurchase(msg.sender, beneficiary, amountWei, tokens);
-
 
         if (msg.value != 0) {
             if (change != 0) {
@@ -142,8 +139,8 @@ contract Crowdsale {
         }
     }
 
-    // send ether to the fund collection wallet
-    // override to create custom fund forwarding mechanisms
+    // Send ether to the fund collection wallet
+    // Override to create custom fund forwarding mechanisms
     function forwardFunds(uint amountWei) internal {
         wallet.transfer(amountWei);
     }
