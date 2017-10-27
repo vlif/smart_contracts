@@ -12,11 +12,13 @@ PRE_SALE_ADDRESS
 3. Deploy Crowdsale Contract
 Transaction cost: 3172533 gas.
 Transaction cost: 2741218 gas. 
+Transaction cost: 3186355 gas. 
 
 4. Change Token contract owner to Crowdsale contract
 Transaction cost: 30971 gas.
 
 5. Make starting initialization of Crowdsale Contract by calling method init() of Crowdsale contract
+Transaction cost: 2818096 gas. 
 
 ====
 ATTENTION! Now ETR Token rate value is 240(1 ETH = 240 ETR) and you can change it in file ESportsConstants.sol. 
