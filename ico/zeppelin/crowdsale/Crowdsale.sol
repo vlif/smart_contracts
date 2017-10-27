@@ -146,7 +146,8 @@ contract Crowdsale {
     }
 
     // Trasfer bonuses and adding delayed bonuses
-    function postBuyTokens(address _beneficiary, uint _tokens) internal;
+    function postBuyTokens(address _beneficiary, uint _tokens) internal {
+    }
 
     /**
      * @dev Check if the specified purchase is valid.
@@ -165,7 +166,7 @@ contract Crowdsale {
      * @return true if crowdsale event has ended
      */
     function hasEnded() public constant returns (bool) {
-        return now > endTime || token.totalSupply() > hardCap.sub(rate);
+        return now > endTime || token.totalSupply() > hardCap.sub(getRate());
     }
 
     /**

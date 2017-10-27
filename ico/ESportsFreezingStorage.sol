@@ -10,8 +10,8 @@ contract ESportsFreezingStorage is Ownable {
     uint64 public releaseTime;
 
 	// ERC20 basic token contract being held
-    ESportsToken token;
     // ERC20Basic token;
+    ESportsToken token;
 
     function ESportsFreezingStorage(ESportsToken _token, uint64 _releaseTime) { //ERC20Basic
         require(_releaseTime > now);
@@ -21,16 +21,13 @@ contract ESportsFreezingStorage is Ownable {
     }
 
     function release(address _beneficiary) onlyOwner returns(uint) {
-        //require(now >= releaseTime);
-        if (now < releaseTime) return 0;
+        require(now >= releaseTime);
 
         uint amount = token.balanceOf(this);
-        //require(amount > 0);
-        if (amount == 0)  return 0;
+        require(amount > 0);
 
         // token.safeTransfer(beneficiary, amount);
-        bool result = token.transfer(_beneficiary, amount);
-        if (!result) return 0;
+        require(token.transfer(_beneficiary, amount));
         
         return amount;
     }

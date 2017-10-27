@@ -17,7 +17,7 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
 	uint constant BUFFER_TOKENS = 6000000 * TOKEN_DECIMAL_MULTIPLIER; // 10.00%
     uint constant PRE_SALE_TOKENS = 12000000 * TOKEN_DECIMAL_MULTIPLIER; // 20.00%
 
-    // Kovan addresses
+    // Kovan test addresses. This addresses must be changed before deployment to mainnet
     address constant TEAM_BEN_ADDRESS = 0x000b341E1774b02D77a1175971BC50b841D21eD0;
     address constant TEAM_PHIL_ADDRESS = 0x004C05E2c37a73233B63d09c52C4f68AFDfb1763;
     address constant WALLET_ADDRESS = 0x00cbCcd31cdeeF93c302F1f0440e0aba1E45a6A4;
@@ -128,7 +128,9 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
      */
     function buyForBitcoin(address _beneficiary, uint _amountWei) public returns(bool) {
         require(msg.sender == btcBuyer);
+
         buyTokens(_beneficiary, _amountWei);
+        
         return true;
     }
 
@@ -137,7 +139,9 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
      */
     function setBtcBuyer(address _newBtcBuyerAddress) onlyOwner returns(bool) {
         require(_newBtcBuyerAddress != 0x0);
+
         btcBuyer = _newBtcBuyerAddress;
+
         return true;
     }
 

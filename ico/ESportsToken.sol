@@ -27,7 +27,7 @@ contract ESportsToken is ESportsConstants, MintableToken {
         return "ESports Token";
     }
 
-    function symbol() constant public returns (bytes32 _symbol) {
+    function symbol() constant public returns (string _symbol) {
         return "ERT";
     }
 
@@ -89,8 +89,8 @@ contract ESportsToken is ESportsConstants, MintableToken {
         uint total = 0;
         ESportsFreezingStorage[] storage frozenStorages = frozenFunds[msg.sender];
         for (uint x = 0; x < frozenStorages.length; x++) {
-            uint amount = frozenStorages[x].release(msg.sender);
-            total = total.add(amount);
+            uint amount = frozenStorages[x].call(bytes4(sha3("release(address)")), msg.sender);
+            if (amount) total = total.add(amount);
         }
 
         return total;
@@ -101,22 +101,11 @@ contract ESportsToken is ESportsConstants, MintableToken {
      * @param _value The amount of token to be burned.
      */
     function burn(uint _value) public {
-        require(_value > 0 && balances[msg.sender] >= _value);
+        require(_value > 0);
 
         balances[msg.sender] = balances[msg.sender].sub(_value);
         totalSupply = totalSupply.sub(_value);
+        
         Burn(msg.sender, _value);
     }
-
-    /**
-     * @dev Get the total number of frozen tokens [optional]
-     */
-    // function getTotalAmountFrozenFunds(address _beneficiary) constant returns(uint) {
-    //     uint total = 0;
-    //     for (uint x = 0; x < frozenFunds[_beneficiary].length; x++) {
-    //         total = total.add(balanceOf(frozenFunds[_beneficiary][x]));
-    //     }
-    // 
-    //     return total;
-    // }
 }

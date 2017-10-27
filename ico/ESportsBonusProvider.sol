@@ -1,7 +1,7 @@
 pragma solidity ^0.4.16;
 
 import "./zeppelin/ownership/Ownable.sol";
-import './zeppelin/math/SafeMath.sol';
+import "./zeppelin/math/SafeMath.sol";
 
 import "./ESportsConstants.sol";
 import "./ESportsToken.sol";
@@ -43,7 +43,7 @@ contract ESportsBonusProvider is usingESportsConstants, ESportsBonusProviderI {
     using SafeMath for uint;
 
     mapping (address => uint256) investorBonuses;
-    uint constant FIRST_WEEK = 7 * 1 days;
+    uint constant FIRST_WEEK = 7 days;
     uint constant BONUS_THRESHOLD_ETR = 20000 * RATE * TOKEN_DECIMAL_MULTIPLIER; // 5 000 000 EUR -> 20 000 ETH -> ETR
 
     function ESportsBonusProvider(ESportsToken _token, address _returnAddressBonuses) {
