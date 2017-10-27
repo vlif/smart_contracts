@@ -30,5 +30,4 @@ contract CappedCrowdsale is Crowdsale {
         bool capReached = weiRaised >= cap;
         return super.hasEnded() || capReached;
     }
-
 }

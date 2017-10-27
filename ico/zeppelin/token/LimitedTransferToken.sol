@@ -18,7 +18,6 @@ import "./ERC20.sol";
  */
 
 contract LimitedTransferToken is ERC20 {
-
     /**
      * @dev Checks whether it can transfer or otherwise throws.
      */

@@ -1,15 +1,12 @@
 pragma solidity ^0.4.11;
 
-
 import "../ownership/Ownable.sol";
-
 
 /**
  * @title Destructible
  * @dev Base contract that can be destroyed by owner. All funds in contract will be sent to the owner.
  */
 contract Destructible is Ownable {
-
     function Destructible() payable { } 
 
     /**

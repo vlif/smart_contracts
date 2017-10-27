@@ -21,5 +21,4 @@ contract CanReclaimToken is Ownable {
     	uint256 balance = token.balanceOf(this);
     	token.safeTransfer(owner, balance);
   	}
-
 }

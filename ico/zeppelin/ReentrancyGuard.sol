@@ -7,7 +7,6 @@ pragma solidity ^0.4.11;
  * mark it `external`.
  */
 contract ReentrancyGuard {
-
     /**
      * @dev We use a single lock for the whole contract.
      */
@@ -27,5 +26,4 @@ contract ReentrancyGuard {
         _;
         rentrancy_lock = false;
     }
-
 }

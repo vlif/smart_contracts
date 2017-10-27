@@ -1,6 +1,5 @@
 pragma solidity ^0.4.11;
 
-
 /**
  * @title LimitBalance
  * @dev Simple contract to limit the balance of child contract.
@@ -8,7 +7,6 @@ pragma solidity ^0.4.11;
  * @dev See: https://github.com/ConsenSys/smart-contract-best-practices#remember-that-ether-can-be-forcibly-sent-to-an-account
  */
 contract LimitBalance {
-
     uint256 public limit;
 
     /**
@@ -27,5 +25,4 @@ contract LimitBalance {
         _;
 
     }
-
 }

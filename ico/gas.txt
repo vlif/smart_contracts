@@ -1,0 +1,22 @@
+1. Deploy Token contract
+Transaction cost: 1500751 gas. 
+
+2. Change values of constants in Crowdsale contract:
+TEAM_BEN_ADDRESS,
+TEAM_PHIL_ADDRESS,
+INVESTOR_ADDRESS,
+BONUS_ADDRESS,
+COMPANY_COLD_STORAGE_ADDRESS,
+PRE_SALE_ADDRESS
+
+3. Deploy Crowdsale Contract
+Transaction cost: 3172533 gas.
+
+4. Change Token contract owner to Crowdsale contract
+Transaction cost: 30971 gas.
+
+5. Make starting initialization of Crowdsale Contract by calling method init() of Crowdsale contract
+
+====
+ATTENTION! Now ETR Token rate value is 240(1 ETH = 240 ETR) and you can change it in file ESportsConstants.sol. 
+====

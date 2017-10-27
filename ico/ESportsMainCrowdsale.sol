@@ -24,7 +24,6 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
     // Kovan test addresses. This addresses must be changed before deployment to mainnet
     address constant TEAM_BEN_ADDRESS = 0x14723a09acff6d2a60dcdf7aa4aff308fddc160c; //0x000b341E1774b02D77a1175971BC50b841D21eD0
     address constant TEAM_PHIL_ADDRESS = 0x4b0897b0513fdc7c541b6d9d7e929c4e5364d2db; //0x004C05E2c37a73233B63d09c52C4f68AFDfb1763
-    address constant WALLET_ADDRESS = 0xca35b7d915458ef540ade6068dfe2f44e8fa733c; //0x00cbCcd31cdeeF93c302F1f0440e0aba1E45a6A4
     address constant INVESTOR_ADDRESS = 0x583031d1113ad414f02576bd6afabfb302140225; //0x00657a4639f55083524242540ED3B0bdA534f69B
     address constant BONUS_ADDRESS = 0x583031d1113ad414f02576bd6afabfb302140225; //0x0005762D49BC63F16B39aead421b2ad9Db794f2B
     address constant COMPANY_COLD_STORAGE_ADDRESS = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148; //0x0019d9b0BF58beA7b5aFB6977Af87243650bBcC4
@@ -42,7 +41,7 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
     function ESportsMainCrowdsale(
         uint32 _startTime,
         uint32 _endTime,
-        uint _softCapWei,
+        uint _softCapWei, // 4000000 EUR
         address _wallet,
         address _token
 	) RefundableCrowdsale(
@@ -92,7 +91,7 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
         // bProvider.transferOwnership(owner);
         bonusProvider = bProvider;
 
-        mintToFounders();
+        // mintToFounders();
 
         require(token.mint(INVESTOR_ADDRESS, INVESTOR_TOKENS));
         require(token.mint(COMPANY_COLD_STORAGE_ADDRESS, COMPANY_COLD_STORAGE_TOKENS));

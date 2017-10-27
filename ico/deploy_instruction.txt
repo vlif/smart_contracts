@@ -4,7 +4,6 @@ Do not has parameters
 2. Change values of constants in Crowdsale contract:
 TEAM_BEN_ADDRESS,
 TEAM_PHIL_ADDRESS,
-WALLET_ADDRESS,
 INVESTOR_ADDRESS,
 BONUS_ADDRESS,
 COMPANY_COLD_STORAGE_ADDRESS,

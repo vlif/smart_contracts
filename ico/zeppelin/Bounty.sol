@@ -1,9 +1,7 @@
 pragma solidity ^0.4.11;
 
-
 import './payment/PullPayment.sol';
 import './lifecycle/Destructible.sol';
-
 
 /**
  * @title Bounty
@@ -55,13 +53,11 @@ contract Bounty is PullPayment, Destructible {
 
 }
 
-
 /**
  * @title Target
  * @dev Your main contract should inherit from this class and implement the checkInvariant method.
  */
 contract Target {
-
     /**
      * @dev Checks all values a contract assumes to be true all the time. If this function returns
      * false, the contract is broken in some way and is in an inconsistent state.

@@ -1,8 +1,6 @@
 pragma solidity ^0.4.11;
 
-
 import './Claimable.sol';
-
 
 /**
  * @title DelayedClaimable
@@ -10,7 +8,6 @@ import './Claimable.sol';
  * a certain block number.
  */
 contract DelayedClaimable is Claimable {
-
     uint256 public end;
     uint256 public start;
 
@@ -26,7 +23,6 @@ contract DelayedClaimable is Claimable {
         start = _start;
     }
 
-
     /**
      * @dev Allows the pendingOwner address to finalize the transfer, as long as it is called within
      * the specified start and end time.
@@ -38,5 +34,4 @@ contract DelayedClaimable is Claimable {
         pendingOwner = 0x0;
         end = 0;
     }
-
 }

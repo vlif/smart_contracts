@@ -1,8 +1,6 @@
 pragma solidity ^0.4.11;
 
-
 import "../ownership/Ownable.sol";
-
 
 /**
  * @title Pausable
@@ -13,7 +11,6 @@ contract Pausable is Ownable {
     event Unpause();
 
     bool public paused = false;
-
 
     /**
      * @dev Modifier to make a function callable only when the contract is not paused.

@@ -1,9 +1,7 @@
 pragma solidity ^0.4.11;
 
-
 import './StandardToken.sol';
 import '../ownership/Ownable.sol';
-
 
 /**
  * @title Mintable token
@@ -18,7 +16,6 @@ contract MintableToken is StandardToken, Ownable {
     event MintFinished();
 
     bool public mintingFinished = false;
-
 
     modifier canMint() {
         require(!mintingFinished);
