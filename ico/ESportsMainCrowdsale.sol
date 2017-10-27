@@ -1,5 +1,9 @@
 pragma solidity ^0.4.16;
 
+/**
+ * ATTENTION! Source code of zeppelin smart contract was changed.
+ */
+
 import "./zeppelin/crowdsale/RefundableCrowdsale.sol";
 import "./zeppelin/math/SafeMath.sol";
 
@@ -28,7 +32,7 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
     
     address btcBuyer = 0x1eee4c7d88aadec2ab82dd191491d1a9edf21e9a;
 
-    ESportsBonusProviderI public bonusProvider;
+    ESportsBonusProvider public bonusProvider;
 
     bool private isInit = false;
     
@@ -54,7 +58,7 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
 
     /**
      * @dev Release delayed bonus tokens
-     * @return amount of got bonus tokens
+     * @return Amount of got bonus tokens
      */
     function releaseBonus() returns(uint) {
         return bonusProvider.releaseBonus(msg.sender, soldTokens);
@@ -62,8 +66,8 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
 
     /**
      * @dev Trasfer bonuses and adding delayed bonuses
-     * @param _beneficiary future bonuses holder
-     * @param _tokens amount of bonus tokens
+     * @param _beneficiary Future bonuses holder
+     * @param _tokens Amount of bonus tokens
      */
     function postBuyTokens(address _beneficiary, uint _tokens) internal {
         uint bonuses = bonusProvider.getBonusAmount(_beneficiary, soldTokens, _tokens, startTime);
@@ -81,9 +85,10 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
     function init() onlyOwner public returns(bool) {
         require(!isInit);
 
+        ESportsToken token = ESportsToken(token);
         isInit = true;
 
-        ESportsBonusProvider bProvider = new ESportsBonusProvider(ESportsToken(token), COMPANY_COLD_STORAGE_ADDRESS);
+        ESportsBonusProvider bProvider = new ESportsBonusProvider(token, COMPANY_COLD_STORAGE_ADDRESS);
         // bProvider.transferOwnership(owner);
         bonusProvider = bProvider;
 
@@ -97,12 +102,12 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
         require(token.mint(BONUS_ADDRESS, BONUS_TOKENS));
         require(token.mint(bonusProvider, BUFFER_TOKENS)); // mint bonus token to bonus provider
 
-        ESportsToken(token).addExcluded(INVESTOR_ADDRESS);
-        ESportsToken(token).addExcluded(BONUS_ADDRESS);
-        ESportsToken(token).addExcluded(COMPANY_COLD_STORAGE_ADDRESS);
-        ESportsToken(token).addExcluded(PRE_SALE_ADDRESS);
+        token.addExcluded(INVESTOR_ADDRESS);
+        token.addExcluded(BONUS_ADDRESS);
+        token.addExcluded(COMPANY_COLD_STORAGE_ADDRESS);
+        token.addExcluded(PRE_SALE_ADDRESS);
 
-        ESportsToken(token).addExcluded(bonusProvider);
+        token.addExcluded(bonusProvider);
 
         return true;
     }
@@ -112,6 +117,7 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
      */
     function mintToFounders() internal {
         ESportsToken token = ESportsToken(token);
+
         token.mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(20).div(100), startTime + 1 years);
         token.mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 3 years);
         token.mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 5 years);

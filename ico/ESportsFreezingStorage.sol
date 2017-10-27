@@ -12,7 +12,7 @@ contract ESportsFreezingStorage is Ownable {
 	// ERC20 basic token contract being held
     // ERC20Basic token;
     ESportsToken token;
-
+    
     function ESportsFreezingStorage(ESportsToken _token, uint64 _releaseTime) { //ERC20Basic
         require(_releaseTime > now);
    		

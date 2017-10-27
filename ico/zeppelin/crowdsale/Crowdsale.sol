@@ -160,7 +160,7 @@ contract Crowdsale {
 
         return withinPeriod && nonZeroPurchase && hardCapNotReached;
     }
-
+    
     /**
      * @dev Because of discount hasEnded might be true, but validPurchase returns false.
      * @return true if crowdsale event has ended
