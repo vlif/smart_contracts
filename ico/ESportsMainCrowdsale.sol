@@ -91,16 +91,16 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
         // bProvider.transferOwnership(owner);
         bonusProvider = bProvider;
 
-        // mintToFounders();
+        mintToFounders(ertToken);
 
-        /*require(token.mint(INVESTOR_ADDRESS, INVESTOR_TOKENS));
+        require(token.mint(INVESTOR_ADDRESS, INVESTOR_TOKENS));
         require(token.mint(COMPANY_COLD_STORAGE_ADDRESS, COMPANY_COLD_STORAGE_TOKENS));
         require(token.mint(PRE_SALE_ADDRESS, PRE_SALE_TOKENS));
 
         // bonuses
         require(token.mint(BONUS_ADDRESS, BONUS_TOKENS));
         require(token.mint(bonusProvider, BUFFER_TOKENS)); // mint bonus token to bonus provider
-        */
+        
         ertToken.addExcluded(INVESTOR_ADDRESS);
         ertToken.addExcluded(BONUS_ADDRESS);
         ertToken.addExcluded(COMPANY_COLD_STORAGE_ADDRESS);
@@ -114,17 +114,15 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
     /**
      * @dev Mint of tokens in the name of the founders and freeze part of them
      */
-    function mintToFounders() internal {
-        ESportsToken token = ESportsToken(token);
-
-        token.mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(20).div(100), startTime + 1 minutes); //years
-        token.mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 3 minutes);
-        token.mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 5 minutes);
+    function mintToFounders(ESportsToken ertToken) internal {
+        ertToken.mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(20).div(100), startTime + 1 minutes); //years
+        ertToken.mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 3 minutes);
+        ertToken.mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 5 minutes);
         require(token.mint(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(20).div(100)));
 
-        token.mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(20).div(100), startTime + 1 minutes);
-        token.mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 3 minutes);
-        token.mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 5 minutes);
+        ertToken.mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(20).div(100), startTime + 1 minutes);
+        ertToken.mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 3 minutes);
+        ertToken.mintTimelocked(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(30).div(100), startTime + 5 minutes);
         require(token.mint(TEAM_PHIL_ADDRESS, TEAM_PHIL_TOKENS.mul(20).div(100)));
     }
 
