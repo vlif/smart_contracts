@@ -1,7 +1,7 @@
 pragma solidity ^0.4.16;
 
 import "./zeppelin/crowdsale/RefundableCrowdsale.sol";
-import './zeppelin/math/SafeMath.sol';
+import "./zeppelin/math/SafeMath.sol";
 
 import "./ESportsConstants.sol";
 import "./ESportsToken.sol";
@@ -111,7 +111,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
     /**
      * @dev Mint of tokens in the name of the founders and freeze part of them
      */
-    function mintToFounders() onlyOwner internal returns(bool) {
+    function mintToFounders() internal returns(bool) {
         ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(20).div(100), startTime + 1 years); //minutes
         ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 3 years); //minutes
         ESportsToken(token).mintTimelocked(TEAM_BEN_ADDRESS, TEAM_BEN_TOKENS.mul(30).div(100), startTime + 5 years); //minutes
@@ -153,7 +153,7 @@ contract ESportsMainCrowdsale is usingESportsConstants, RefundableCrowdsale {
         bonusProvider.releaseThisBonuses();
 
         if (goalReached()) {
-            ESportsToken(token).crowdsaleFinished();
+            ESportsToken(token).allowMoveTokens();
         }
         token.transferOwnership(owner); // change token owner
     }

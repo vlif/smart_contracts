@@ -1,4 +1,4 @@
-pragma solidity ^0.4.7;
+pragma solidity ^0.4.16;
 
 contract usingConstants {
     uint constant TOKEN_DECIMALS = 18;

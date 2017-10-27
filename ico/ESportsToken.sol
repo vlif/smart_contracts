@@ -6,15 +6,18 @@ import "./zeppelin/math/SafeMath.sol";
 import "./ESportsConstants.sol";
 import "./ESportsFreezingStorage.sol";
 
-contract ESportsToken is usingESportsConstants, MintableToken {
-    event Burn(address indexed burner, uint256 value);
+contract ESportsToken is ESportsConstants, MintableToken {
+    using SafeMath for uint;
+
+    event Burn(address indexed burner, uint value);
+    event MintTimelocked(address indexed beneficiary, uint amount);
 
     /**
-     * @dev Pause token transfer. After successfully finished crowdsale it becomes true.
+     * @dev Pause token transfer. After successfully finished crowdsale it becomes false
      */
     bool public paused = true;
     /**
-     * @dev Accounts who can transfer token even if paused. Works only during crowdsale.
+     * @dev Accounts who can transfer token even if paused. Works only during crowdsale
      */
     mapping(address => bool) excluded;
 
@@ -32,7 +35,7 @@ contract ESportsToken is usingESportsConstants, MintableToken {
         return TOKEN_DECIMALS_UINT8;
     }
     
-    function crowdsaleFinished() onlyOwner {
+    function allowMoveTokens() onlyOwner {
         paused = false;
     }
 
@@ -45,9 +48,9 @@ contract ESportsToken is usingESportsConstants, MintableToken {
     }
 
     /**
-     * @dev Wrapper of token.transferFrom 
+     * @dev Wrapper of token.transferFrom
      */
-    function transferFrom(address _from, address _to, uint256 _value) returns (bool) {
+    function transferFrom(address _from, address _to, uint _value) returns (bool) {
         require(!paused || excluded[_from]);
 
         return super.transferFrom(_from, _to, _value);
@@ -56,7 +59,7 @@ contract ESportsToken is usingESportsConstants, MintableToken {
     /**
      * @dev Wrapper of token.transfer 
      */
-    function transfer(address _to, uint256 _value) returns (bool) {
+    function transfer(address _to, uint _value) returns (bool) {
         require(!paused || excluded[msg.sender]);
 
         return super.transfer(_to, _value);
@@ -73,24 +76,14 @@ contract ESportsToken is usingESportsConstants, MintableToken {
         frozenFunds[_to].push(timelock);
         addExcludedInternal(timelock);
 
+        MintTimelocked(_to, _amount);
+
         return timelock;
     }
 
     /**
-     * @dev Get the total number of frozen tokens [optional]
-     */
-    function getTotalAmountFrozenFunds(address _beneficiary) constant returns(uint) {
-        uint total = 0;
-        for (uint x = 0; x < frozenFunds[_beneficiary].length; x++) {
-            total = total + balanceOf(frozenFunds[_beneficiary][x]);
-        }
-
-        return total;
-    }
-
-    /**
      * @dev Release frozen tokens
-     * @return total amount of released tokens
+     * @return Total amount of released tokens
      */
     function returnFrozenFreeFunds() public returns (uint) {
         uint total = 0;
@@ -107,12 +100,23 @@ contract ESportsToken is usingESportsConstants, MintableToken {
      * @dev Burns a specific amount of tokens.
      * @param _value The amount of token to be burned.
      */
-    function burn(uint256 _value) public {
-        require(_value > 0);
+    function burn(uint _value) public {
+        require(_value > 0 && balances[msg.sender] >= _value);
 
-        address burner = msg.sender;
-        balances[burner] = balances[burner].sub(_value);
+        balances[msg.sender] = balances[msg.sender].sub(_value);
         totalSupply = totalSupply.sub(_value);
-        Burn(burner, _value);
+        Burn(msg.sender, _value);
     }
+
+    /**
+     * @dev Get the total number of frozen tokens [optional]
+     */
+    // function getTotalAmountFrozenFunds(address _beneficiary) constant returns(uint) {
+    //     uint total = 0;
+    //     for (uint x = 0; x < frozenFunds[_beneficiary].length; x++) {
+    //         total = total.add(balanceOf(frozenFunds[_beneficiary][x]));
+    //     }
+    // 
+    //     return total;
+    // }
 }

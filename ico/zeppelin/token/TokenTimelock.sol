@@ -1,12 +1,10 @@
 pragma solidity ^0.4.11;
 
-
-import './ERC20Basic.sol';
+import "./ERC20Basic.sol";
 // import "../token/SafeERC20.sol";
-// import '../ownership/Ownable.sol';
+// import "../ownership/Ownable.sol";
 
 // import "../../ESportsToken.sol";
-
 
 /**
  * @title TokenTimelock

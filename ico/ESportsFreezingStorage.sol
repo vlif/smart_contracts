@@ -6,7 +6,7 @@ import "./zeppelin/ownership/Ownable.sol";
 import "./ESportsToken.sol";
 
 contract ESportsFreezingStorage is Ownable {
-	// timestamp when token release is enabled
+	// Timestamp when token release is enabled
     uint64 public releaseTime;
 
 	// ERC20 basic token contract being held
