@@ -87,7 +87,7 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
         ESportsToken token = ESportsToken(token);
         isInit = true;
 
-        ESportsBonusProvider bProvider = new ESportsBonusProvider(token, COMPANY_COLD_STORAGE_ADDRESS);
+        ESportsBonusProvider bProvider = new ESportsBonusProvider(ESportsToken(token), COMPANY_COLD_STORAGE_ADDRESS);
         // bProvider.transferOwnership(owner);
         bonusProvider = bProvider;
 
@@ -101,12 +101,12 @@ contract ESportsMainCrowdsale is ESportsConstants, RefundableCrowdsale {
         require(token.mint(BONUS_ADDRESS, BONUS_TOKENS));
         require(token.mint(bonusProvider, BUFFER_TOKENS)); // mint bonus token to bonus provider
 
-        token.addExcluded(INVESTOR_ADDRESS);
-        token.addExcluded(BONUS_ADDRESS);
-        token.addExcluded(COMPANY_COLD_STORAGE_ADDRESS);
-        token.addExcluded(PRE_SALE_ADDRESS);
+        ESportsToken(token).addExcluded(INVESTOR_ADDRESS);
+        ESportsToken(token).addExcluded(BONUS_ADDRESS);
+        ESportsToken(token).addExcluded(COMPANY_COLD_STORAGE_ADDRESS);
+        ESportsToken(token).addExcluded(PRE_SALE_ADDRESS);
 
-        token.addExcluded(bonusProvider);
+        ESportsToken(token).addExcluded(address(bonusProvider));
 
         return true;
     }

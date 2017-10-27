@@ -11,6 +11,7 @@ PRE_SALE_ADDRESS
 
 3. Deploy Crowdsale Contract
 Transaction cost: 3172533 gas.
+Transaction cost: 2741218 gas. 
 
 4. Change Token contract owner to Crowdsale contract
 Transaction cost: 30971 gas.
