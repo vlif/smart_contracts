@@ -89,8 +89,9 @@ contract ESportsToken is ESportsConstants, MintableToken {
         uint total = 0;
         ESportsFreezingStorage[] storage frozenStorages = frozenFunds[msg.sender];
         for (uint x = 0; x < frozenStorages.length; x++) {
-            uint amount = frozenStorages[x].call(bytes4(sha3("release(address)")), msg.sender);
-            if (amount) total = total.add(amount);
+            uint amount = balanceOf(frozenStorages[x]);
+            if (frozenStorages[x].call(bytes4(sha3("release(address)")), msg.sender))
+                total = total.add(amount);
         }
 
         return total;

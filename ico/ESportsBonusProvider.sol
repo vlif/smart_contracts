@@ -6,7 +6,7 @@ import "./zeppelin/math/SafeMath.sol";
 import "./ESportsConstants.sol";
 import "./ESportsToken.sol";
 
-contract ESportsBonusProvider is ESportsConstants {
+contract ESportsBonusProvider is ESportsConstants, Ownable {
     // 1) 10% on your investment during first week
     // 2) 10% to all investors during ICO ( not presale) if we reach 5 000 000 euro investments
 

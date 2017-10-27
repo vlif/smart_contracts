@@ -77,7 +77,7 @@ contract Crowdsale {
      * @dev this method might be overridden for implementing any sale logic.
      * @return Actual rate.
      */
-    function getRate(uint amount) internal constant returns (uint) {
+    function getRate() internal constant returns (uint) {
         return rate;
     }
 
@@ -94,7 +94,7 @@ contract Crowdsale {
         uint totalSupply = token.totalSupply();
 
         // Actual token minting rate (with considering bonuses and discounts)
-        uint actualRate = getRate(amountWei);
+        uint actualRate = getRate();
 
         require(validPurchase(amountWei, actualRate, totalSupply));
 
@@ -160,7 +160,7 @@ contract Crowdsale {
 
         return withinPeriod && nonZeroPurchase && hardCapNotReached;
     }
-    
+
     /**
      * @dev Because of discount hasEnded might be true, but validPurchase returns false.
      * @return true if crowdsale event has ended
