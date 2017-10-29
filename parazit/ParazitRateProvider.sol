@@ -13,21 +13,30 @@ contract ParazitRateProviderI {
      * @return ETH to Token rate.
      */
     function getRate(address buyer, uint totalSold) public constant returns (uint);
+
+    /**
+     * @dev rate scale (or divider), to support not integer rates.
+     * @return Rate divider.
+     */
+    function getRateScale() public constant returns (uint);
 }
 
-contract ParazitRateProvider is usingParazitConstants {
+contract ParazitRateProvider is ParazitConstants, ParazitRateProviderI {
     using SafeMath for uint;
 
-    uint constant BASE_RATE = 1;
-    uint constant PRE_SALE_STEP = 5000000 * TOKEN_DECIMAL_MULTIPLIER;
+    // Rate calculate accuracy
+    uint constant RATE_SCALE = 1000000;
+    uint constant BASE_RATE = 2824858757 * RATE_SCALE; // 0.000354 eth = 1 Gpcc -> 2824,8587570621468926553672316384
     
     function getRate(address buyer, uint totalSold) public constant returns (uint) {
         uint rate = BASE_RATE;
 
-        if (totalSold < PRE_SALE_STEP) {
-            rate += rate.mul(30).div(100); // + 30 %
-        }
+        rate += rate.mul(30).div(100); // +30 %
 
         return rate;
+    }
+
+    function getRateScale() public constant returns (uint) {
+        return RATE_SCALE;
     }
 }

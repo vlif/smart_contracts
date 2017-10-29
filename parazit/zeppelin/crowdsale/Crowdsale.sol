@@ -47,13 +47,14 @@ contract Crowdsale {
      */
     event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint value, uint amount);
 
-    function Crowdsale(uint32 _startTime, uint32 _endTime, uint _hardCap, address _wallet) {
+    function Crowdsale(uint32 _startTime, uint32 _endTime, uint _hardCap, address _wallet, address _token) {
         require(_startTime >= now);
         require(_endTime >= _startTime);
         require(_wallet != 0x0);
         require(_hardCap > 0); //_rate
 
-        token = createTokenContract();
+        // token = createTokenContract();
+        token = MintableToken(_token);
 
         startTime = _startTime;
         endTime = _endTime;
@@ -61,17 +62,28 @@ contract Crowdsale {
         wallet = _wallet;
     }
 
-    // creates the token to be sold.
-    // override this method to have crowdsale of a specific mintable token.
-    function createTokenContract() internal returns (MintableToken) {
-        return new MintableToken();
-    }
+    // Creates the token to be sold.
+    // Override this method to have crowdsale of a specific mintable token.
+    // function createTokenContract() internal returns (MintableToken) {
+    //     return new MintableToken();
+    // }
+
 
     /**
-     * @dev this method might be overridden for implementing any sale logic.
+     * @dev This method might be overridden for implementing any sale logic.
      * @return Actual rate.
      */
-    function getRate() internal constant returns (uint);
+    function getRate() internal constant returns (uint) {
+    }
+
+
+    /**
+     * @dev rate scale (or divider), to support not integer rates.
+     * @return Rate divider.
+     */
+    function getRateScale() internal constant returns (uint) {
+        return 1;
+    }
 
     // Fallback function can be used to buy tokens
     function() payable {
@@ -87,12 +99,12 @@ contract Crowdsale {
 
         // actual token minting rate (with considering bonuses and discounts)
         uint actualRate = getRate();
+        uint rateScale = getRateScale();
 
         require(validPurchase(amountWei, actualRate, totalSupply));
 
         // calculate token amount to be created
-        uint tokens = amountWei.mul(actualRate);
-
+        uint tokens = amountWei.mul(actualRate).div(rateScale);
 
         // change, if minted token would be less
         uint change = 0;
@@ -101,14 +113,13 @@ contract Crowdsale {
         if (tokens.add(totalSupply) > hardCap) {
             // rest tokens
             uint maxTokens = hardCap.sub(totalSupply);
-            uint realAmount = maxTokens.div(actualRate);
+            uint realAmount = maxTokens.mul(rateScale).div(actualRate);
 
             // rest tokens rounded by actualRate
-            tokens = realAmount.mul(actualRate);
+            tokens = realAmount.mul(actualRate).div(rateScale);
             change = amountWei - realAmount;
             amountWei = realAmount;
         }
-
 
         // update state
         weiRaised = weiRaised.add(amountWei);

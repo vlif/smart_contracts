@@ -6,12 +6,12 @@ import './zeppelin/math/SafeMath.sol';
 import './ParazitConstants.sol';
 
 // Token contract
-contract ParazitGPCCToken is usingParazitConstants, MintableToken {
+contract ParazitGPCCToken is ParazitConstants, MintableToken {
     function name() constant public returns (string _name) {
         return "GPCC Token";
     }
 
-    function symbol() constant public returns (bytes32 _symbol) {
+    function symbol() constant public returns (string _symbol) {
         return "GPCC";
     }
 
