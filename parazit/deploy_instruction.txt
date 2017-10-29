@@ -1,0 +1,33 @@
+// 1 stage (pre-ico)
+1. Deploy token contract
+Transaction cost: 958979 gas.
+
+2. Deploy pre-ico crowdsale contract
+Transaction cost: 1725019 gas.
+
+3. Change token owner
+Transaction cost: 30820 gas. 
+
+4. Pay
+Transaction cost: 150415 gas. 
+Transaction cost: 105437 gas. 
+
+5. Finalize pre-ico
+Transaction cost: 61246 gas. 
+Transaction cost: 54546 gas. 
+
+// 2 stage
+6. Deploy main crowdsale contract
+Transaction cost: 1968927 gas. 
+
+7. Change token owner
+Transaction cost: 30820 gas. 
+
+8. Init main crowdsale contract (invoke init())
+Transaction cost: 138179 gas.
+
+9. Pay
+Transaction cost: 120437 gas. 
+
+10. Finalize main crowdsale
+Transaction cost: 77994 gas. 
