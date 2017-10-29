@@ -104,14 +104,14 @@ contract Crowdsale {
         require(validPurchase(amountWei, actualRate, totalSupply));
 
 
-        // calculate token amount to be created
+        // Calculate token amount to be created
         uint tokens = amountWei.mul(actualRate).div(rateScale);
 
 
-        // change, if minted token would be less
+        // Change, if minted token would be less
         uint change = 0;
 
-        // if hard cap reached
+        // If hard cap reached
         if (tokens.add(totalSupply) > hardCap) {
             // rest tokens
             uint maxTokens = hardCap.sub(totalSupply);
@@ -124,7 +124,7 @@ contract Crowdsale {
         }
 
 
-        // update state
+        // Update state
         weiRaised = weiRaised.add(amountWei);
         soldTokens = soldTokens.add(tokens);
 

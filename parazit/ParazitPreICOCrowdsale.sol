@@ -7,7 +7,8 @@ import './ParazitRateProvider.sol';
 import './ParazitGPCCToken.sol';
 
 // Pre ICO crowdsale contract
-contract ParazitMainCrowdsale is ParazitConstants, RefundableCrowdsale {
+contract ParazitMainCrowdsale is ParazitConstants, RefundableCrowdsale 
+{
     ParazitRateProviderI public rateProvider;
 
 	function ParazitMainCrowdsale (
