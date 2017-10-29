@@ -13,7 +13,7 @@ ParazitMainCrowdsale.sol +
 /zeppelin/payment/ +
 /zeppelin/token/ +
 
-====== tests
+====== tests ???
 
 34.5
 34500000000000000000
@@ -38,8 +38,11 @@ HARD CAP: 700,000
 2723076923077509585798
 816923,0769232528757394
 
-====== gas
+2723076923210982248527
 
+====== gas +
+
+// 1 stage
 1. Deploy token contract
 Transaction cost: 958979 gas.
 
@@ -55,15 +58,32 @@ Transaction cost: 105437 gas.
 
 5. Finalize pre-ico
 Transaction cost: 61246 gas. 
+Transaction cost: 54546 gas. 
 
+// 2 stage
 6. Deploy main crowdsale contract
-
+Transaction cost: 1968927 gas. 
 
 7. Change token owner
-
+Transaction cost: 30820 gas. 
 
 8. Init main crowdsale contract (invoke init())
+Transaction cost: 138179 gas.
+totalSupply 9999999999999999999998861 -> 33999999999999999999998861
 
+9. Pay
+Transaction cost: 120437 gas. 
+
+67898305079999999999998861
+200000000000000000000000000
+169596610150507999999998861
+totalSupply 199999999999999999999999498
+weiRaized 48970000006855800000960
+14 691 000,002056740000288 USD
+HARD CAP: 13,280,000  $ Price including the bonus = 0.08 
+
+10. Finalize main crowdsale
+Transaction cost: 77994 gas. 
 
 ======
 
