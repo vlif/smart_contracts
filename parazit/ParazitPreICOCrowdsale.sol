@@ -57,9 +57,10 @@ contract ParazitMainCrowdsale is ParazitConstants, RefundableCrowdsale {
         endTime = _endTime;
     }
 
-    // If pre ico finish then we need to change token owner
+    // If pre ico finished then we need to change token owner
     function finalization() internal {
         super.finalization();
+
         token.transferOwnership(owner);
     }
 }

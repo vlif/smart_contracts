@@ -8,11 +8,9 @@ import './ParazitConstants.sol';
 contract ParazitRateProviderI {
     /**
      * @dev Calculate actual rate using the specified parameters.
-     * @param buyer     Investor (buyer) address.
-     * @param totalSold Amount of sold tokens.
      * @return ETH to Token rate.
      */
-    function getRate(address buyer, uint totalSold) public constant returns (uint);
+    function getRate() public constant returns (uint);
 
     /**
      * @dev rate scale (or divider), to support not integer rates.
@@ -26,9 +24,9 @@ contract ParazitRateProvider is ParazitConstants, ParazitRateProviderI {
 
     // Rate calculate accuracy
     uint constant RATE_SCALE = 1000000;
-    uint constant BASE_RATE = 2824858757 * RATE_SCALE; // 0.000354 eth = 1 Gpcc -> 2824,8587570621468926553672316384
+    uint constant BASE_RATE = 2824858757; //* RATE_SCALE // 0.000354 eth = 1 Gpcc -> 2824,8587570621468926553672316384
     
-    function getRate(address buyer, uint totalSold) public constant returns (uint) {
+    function getRate() public constant returns (uint) {
         uint rate = BASE_RATE;
 
         rate += rate.mul(30).div(100); // +30 %

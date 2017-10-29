@@ -103,8 +103,10 @@ contract Crowdsale {
 
         require(validPurchase(amountWei, actualRate, totalSupply));
 
+
         // calculate token amount to be created
         uint tokens = amountWei.mul(actualRate).div(rateScale);
+
 
         // change, if minted token would be less
         uint change = 0;
@@ -120,6 +122,7 @@ contract Crowdsale {
             change = amountWei - realAmount;
             amountWei = realAmount;
         }
+
 
         // update state
         weiRaised = weiRaised.add(amountWei);
