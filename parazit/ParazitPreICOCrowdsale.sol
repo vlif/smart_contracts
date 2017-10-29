@@ -6,10 +6,8 @@ import './ParazitConstants.sol';
 import './ParazitPreICORateProvider.sol';
 import './ParazitGPCCToken.sol';
 
-
 //delete
 import './ParazitMainCrowdsale.sol';
-
 
 // Pre ICO crowdsale contract
 contract ParazitPreICOCrowdsale is ParazitConstants, RefundableCrowdsale {

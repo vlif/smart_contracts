@@ -1,8 +1,38 @@
-1. Transaction cost: 842524 gas.
-2. Transaction cost: 1725339 gas.
-3. Transaction cost: 30754 gas. 
-4. pay Transaction cost: 150415 gas. 
-5. finalize Transaction cost: 61180 gas. 
+====== check
+
+ParazitGPCCToken.sol +
+ParazitPreICORateProvider.sol +
+ParazitConstants.sol +
+ParazitMainRateProvider.sol +
+ParazitMainCrowdsale.sol +
+/zeppelin/crowdsale/ +
+/zeppelin/exapmles/ +
+/zeppelin/lifecycle/ +
+/zeppelin/math/ +
+/zeppelin/ownership/ +
+/zeppelin/payment/ +
+/zeppelin/token/ +
+
+====== tests
+
+
+
+====== gas
+
+1. Deploy token contract
+Transaction cost: 842524 gas.
+
+2. 
+Transaction cost: 1725339 gas.
+
+3. 
+Transaction cost: 30754 gas. 
+
+4. Pay
+Transaction cost: 150415 gas. 
+
+5. Finalize 
+Transaction cost: 61180 gas. 
 
 ======
 

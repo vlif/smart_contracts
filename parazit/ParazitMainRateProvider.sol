@@ -6,16 +6,12 @@ import './zeppelin/math/SafeMath.sol';
 import './ParazitConstants.sol';
 
 contract ParazitMainRateProviderI {
-    /**
-     * @dev Calculate actual rate using the specified parameters.
-     * @return ETH to Token rate.
-     */
+    // Calculate actual rate using the specified parameters
+    // Return ETH to Token rate
     function getRate() public constant returns (uint);
 
-    /**
-     * @dev rate scale (or divider), to support not integer rates.
-     * @return Rate divider.
-     */
+    // Rate scale (or divider), to support not integer rates
+    // Return Rate divider
     function getRateScale() public constant returns (uint);
 }
 

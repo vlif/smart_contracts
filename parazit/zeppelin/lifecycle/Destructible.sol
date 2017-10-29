@@ -7,7 +7,6 @@ import "../ownership/Ownable.sol";
  * @dev Base contract that can be destroyed by owner. All funds in contract will be sent to the owner.
  */
 contract Destructible is Ownable {
-
     function Destructible() payable { } 
 
     /**

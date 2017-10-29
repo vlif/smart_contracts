@@ -18,14 +18,14 @@ contract Crowdsale {
     // The token being sold
     MintableToken public token;
 
-    // start and end timestamps where investments are allowed (both inclusive)
+    // Start and end timestamps where investments are allowed (both inclusive)
     uint32 public startTime;
     uint32 public endTime;
 
-    // address where funds are collected
+    // Address where funds are collected
     address public wallet;
 
-    // amount of raised money in wei
+    // Amount of raised money in wei
     uint public weiRaised;
 
     /**

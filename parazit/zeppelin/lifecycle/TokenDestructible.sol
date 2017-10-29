@@ -10,7 +10,6 @@ import "../token/ERC20Basic.sol";
  * listed tokens will be sent to the owner.
  */
 contract TokenDestructible is Ownable {
-
     function TokenDestructible() payable { } 
 
     /** 

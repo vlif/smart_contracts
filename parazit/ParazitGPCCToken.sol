@@ -7,20 +7,16 @@ import './ParazitConstants.sol';
 
 // Token contract
 contract ParazitGPCCToken is ParazitConstants, MintableToken {
-    /**
-     * @dev Pause token transfer. After successfully finished crowdsale it becomes false
-     */
+    // Pause token transfer. After successfully finished crowdsale it becomes false
     bool public paused = true;
-    /**
-     * @dev Accounts who can transfer token even if paused. Works only during crowdsale
-     */
+    // Accounts who can transfer token even if paused. Works only during crowdsale
     mapping(address => bool) excluded;
 
     function name() constant public returns (string _name) {
         return "GPCC Token";
     }
 
-    function symbol() constant public returns (string _symbol) {
+    function symbol() constant public returns (string _symbol) { // EIP-20 Compliance
         return "GPCC";
     }
 
