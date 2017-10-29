@@ -37,7 +37,7 @@ contract ParazitMainCrowdsale is ParazitConstants, RefundableCrowdsale {
 
 	// Override getRate to integrate with rate provider.
     function getRate() internal constant returns(uint) {
-		return rateProvider.getRate(msg.sender, soldTokens);
+		return rateProvider.getRate();
     }
 
     // Override getRateScale to integrate with rate provider.
