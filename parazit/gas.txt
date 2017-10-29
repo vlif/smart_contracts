@@ -1,4 +1,4 @@
-====== check
+====== check +
 
 ParazitGPCCToken.sol +
 ParazitPreICORateProvider.sol +
@@ -15,24 +15,40 @@ ParazitMainCrowdsale.sol +
 
 ====== tests
 
+34.5
+34500000000000000000
+totalSupply 126694915248000000000000
+30% For 35.4 ETH you will receive 100,000 GPCCT + 30,000 bonus = 130,000 GPCC
+35.4
+129999999993600000000000
 
+3672316384,1
+
+8703022598441600000000000
+10000000000000000000000000
+weiRaized 2723076923210982248527 
+2723076923210982248527
+totalSupply = soldTokens 9999999999999999999998861
+HARD CAP: 700,000
+816 923 ,0769632946745581
 
 ====== gas
 
 1. Deploy token contract
-Transaction cost: 842524 gas.
+Transaction cost: 958979 gas.
 
-2. 
-Transaction cost: 1725339 gas.
+2. Deploy pre-ico crowdsale contract
+Transaction cost: 1725019 gas.
 
-3. 
-Transaction cost: 30754 gas. 
+3. Change token owner
+Transaction cost: 30820 gas. 
 
 4. Pay
 Transaction cost: 150415 gas. 
+Transaction cost: 105437 gas. 
 
 5. Finalize 
-Transaction cost: 61180 gas. 
+Transaction cost: 61246 gas. 
 
 ======
 
