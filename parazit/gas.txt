@@ -32,6 +32,12 @@ totalSupply = soldTokens 9999999999999999999998861
 HARD CAP: 700,000
 816 923 ,0769632946745581
 
+9999999999999999999998861
+9999999999999999999997000
+2723076923210982248527
+2723076923077509585798
+816923,0769232528757394
+
 ====== gas
 
 1. Deploy token contract
@@ -47,8 +53,17 @@ Transaction cost: 30820 gas.
 Transaction cost: 150415 gas. 
 Transaction cost: 105437 gas. 
 
-5. Finalize 
+5. Finalize pre-ico
 Transaction cost: 61246 gas. 
+
+6. Deploy main crowdsale contract
+
+
+7. Change token owner
+
+
+8. Init main crowdsale contract (invoke init())
+
 
 ======
 

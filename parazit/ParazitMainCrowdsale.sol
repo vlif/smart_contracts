@@ -16,6 +16,7 @@ contract ParazitMainCrowdsale is ParazitConstants, RefundableCrowdsale {
     address constant BOUNTY_ADDRESS = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;
 
     ParazitMainRateProviderI public rateProvider;
+    bool private isInit = false;
 
     //1509281673,1509282633,"16666666666666666666666","200000000","0xca35b7d915458ef540ade6068dfe2f44e8fa733c","0x5e72914535f202659083db3a02c984188fa26e9f"
 	function ParazitMainCrowdsale (
@@ -33,6 +34,17 @@ contract ParazitMainCrowdsale is ParazitConstants, RefundableCrowdsale {
         _token,
         _softCapWei // 16666666666666666666666,666666667 Wei -> 16666,666666666666666666666666667 ETH -> 5000000,0000000000000000000000001 USD (300)
 	) {
+        ParazitMainRateProvider provider = new ParazitMainRateProvider();
+        // provider.transferOwnership(owner);
+        rateProvider = provider;
+	}
+
+    // Initialization of crowdsale. Starts once after deployment token contract
+    // , deployment crowdsale contract and change token contract's owner 
+    function init() onlyOwner public returns(bool) {
+        require(!isInit);
+
+        isInit = true;
         ParazitGPCCToken gpccToken = ParazitGPCCToken(token);
 
         require(token.mint(TEAM_ADDRESS, TEAM_TOKENS));
@@ -41,10 +53,8 @@ contract ParazitMainCrowdsale is ParazitConstants, RefundableCrowdsale {
         gpccToken.addExcluded(TEAM_ADDRESS);
         gpccToken.addExcluded(BOUNTY_ADDRESS);
 
-        ParazitMainRateProvider provider = new ParazitMainRateProvider();
-        // provider.transferOwnership(owner);
-        rateProvider = provider;
-	}
+        return true;
+    }
 
 	// Override token creation to integrate with GPCC token.
     // function createTokenContract() internal returns (MintableToken) {
