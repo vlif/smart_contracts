@@ -5,7 +5,7 @@ import './zeppelin/math/SafeMath.sol';
 
 import './ParazitConstants.sol';
 
-contract ParazitRateProviderI {
+contract ParazitMainRateProviderI {
     /**
      * @dev Calculate actual rate using the specified parameters.
      * @return ETH to Token rate.
@@ -19,7 +19,8 @@ contract ParazitRateProviderI {
     function getRateScale() public constant returns (uint);
 }
 
-contract ParazitRateProvider is ParazitConstants, ParazitRateProviderI {
+// Contract for rate calculation
+contract ParazitMainRateProvider is ParazitConstants, ParazitMainRateProviderI {
     using SafeMath for uint;
 
     // Rate calculate accuracy
@@ -29,7 +30,7 @@ contract ParazitRateProvider is ParazitConstants, ParazitRateProviderI {
     function getRate() public constant returns (uint) {
         uint rate = BASE_RATE;
 
-        rate += rate.mul(30).div(100); // +30 %
+        rate += rate.mul(20).div(100); // +20 %
 
         return rate;
     }

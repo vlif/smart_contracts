@@ -1,3 +1,12 @@
 1. Transaction cost: 842524 gas.
-2.
-3.
+2. Transaction cost: 1725339 gas.
+3. Transaction cost: 30754 gas. 
+4. pay Transaction cost: 150415 gas. 
+5. finalize Transaction cost: 61180 gas. 
+
+======
+
+35.4 ETH -> 129999999993600000000000 Tokens
+
+1 totalSupply
+9999999999999999999998861
