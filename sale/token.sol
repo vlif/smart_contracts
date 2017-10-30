@@ -6,7 +6,7 @@ import "./base/math/SafeMath.sol";
 import "./constants.sol";
 
 // Token contract
-contract ExampleToken is usingConstants, MintableToken {
+contract ExampleToken is Constants, MintableToken {
 	address public FREEZING_STORAGE; //constant
 	uint constant FREEZING_STORAGE_TOKENS = 1 * TOKEN_DECIMAL_MULTIPLIER;
 
@@ -14,7 +14,7 @@ contract ExampleToken is usingConstants, MintableToken {
         return "Example Token";
     }
 
-    function symbol() constant public returns (bytes32 _symbol) {
+    function symbol() constant public returns (string _symbol) { // EIP-20 Compliance
         return "EXT";
     }
 
@@ -22,9 +22,9 @@ contract ExampleToken is usingConstants, MintableToken {
         return TOKEN_DECIMALS_UINT8;
     }
 
-
     // Constructor function
     function ExampleToken(address _freezingStorage) {
+        require(_freezingStorage != 0x0);
     	// Mint freezed Tokens
 		FREEZING_STORAGE = _freezingStorage;
         mint(FREEZING_STORAGE, FREEZING_STORAGE_TOKENS);

@@ -26,6 +26,40 @@ contract FreezingStorage is Ownable {
 		backwordWallet = _backwordWallet;
 	}
 
+	/**
+     * public methods
+     */
+
+	// Sending tokens to forwardWallet and backwordWallet
+	function release() public returns(bool) {
+		require(cryptosale.isFinalized());
+
+        MintableToken token = MintableToken(crowdsale.token());
+    	uint tokenAmount = token.balanceOf(this);
+        require(tokenAmount > 0);
+        
+        if (cryptosale.goalReached() && crowdsale.goalReached()) {
+        	token.transfer(forwardWallet, tokenAmount);
+    	} else {
+    		if (!cryptosale.goalReached() && crowdsale.goalReached()) {
+    			// uint realHonoredTokenAmount = (tokenAmount * (cryptosale.weiRaised() * 100 / cryptosale.goal())) / 100;
+    			uint k =  100 - (100 - (cryptosale.weiRaised() * 100 / cryptosale.goal())) / 2;
+    			uint realHonoredTokenAmount = cryptosale.weiRaised() * k / 100; //tokenAmount
+				
+    			token.transfer(forwardWallet, realHonoredTokenAmount);
+    			token.transfer(backwordWallet, tokenAmount.sub(realHonoredTokenAmount));
+			} else {
+				token.transfer(backwordWallet, tokenAmount);
+			}
+    	}
+    	
+    	return true;
+    }
+
+    /**
+     * only owner methods
+     */
+
 	// Setting crowdsale contract. Can set crowdsale once
 	function setCrowdsale(address _crowdsale) onlyOwner public {
 		require(_crowdsale != 0x0 && crowdsale == address(0));
@@ -39,30 +73,4 @@ contract FreezingStorage is Ownable {
 
 		cryptosale = CryptosaleInterface(_cryptosale);
 	}
-
-	// Sending tokens to forwardWallet and backwordWallet
-	function release() public returns(bool) {
-        require(cryptosale.isFinalized());
-
-        MintableToken token = MintableToken(crowdsale.token());
-    	uint tokenAmount = token.balanceOf(this);
-        require(tokenAmount > 0);
-        
-        if (cryptosale.goalReached() && crowdsale.goalReached()) {
-        	token.transfer(forwardWallet, tokenAmount);
-    	} else {
-    		if (!cryptosale.goalReached() && crowdsale.goalReached()) {
-    			// uint realHonoredTokenAmount = (tokenAmount * (cryptosale.weiRaised() * 100 / cryptosale.goal())) / 100;
-    			uint k =  100 - (100 - (cryptosale.weiRaised() * 100 / cryptosale.goal())) / 2;
-    			uint realHonoredTokenAmount = tokenAmount * k / 100;
-
-    			token.transfer(forwardWallet, realHonoredTokenAmount);
-    			token.transfer(backwordWallet, tokenAmount.sub(realHonoredTokenAmount));
-			} else {
-				token.transfer(backwordWallet, tokenAmount);
-			}
-    	}
-    	
-    	return true;
-    }
 }

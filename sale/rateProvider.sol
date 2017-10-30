@@ -5,7 +5,7 @@ import "./base/math/SafeMath.sol";
 
 import "./constants.sol";
 
-contract RateProvider is usingConstants, Ownable {
+contract RateProvider is Constants, Ownable {
     using SafeMath for uint;
     
     address public tokenHolder;

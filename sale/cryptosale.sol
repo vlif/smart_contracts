@@ -8,13 +8,9 @@ import "./cryptosaleRefundVault.sol";
 import "./referralRefundVault.sol";
 
 // Main cryptosale contract
-
-// Transaction cost: 5049405 gas.
-// Execution cost: 3824429 gas.
-
 contract Cryptosale is Ownable {
 	using SafeMath for uint;
-
+	
 	// This contract knows that who how much bought tokens
 	TokenHolder public tokenHolder;
 	
@@ -44,7 +40,7 @@ contract Cryptosale is Ownable {
 		require(_goal > 0);
 
 		tokenHolder = new TokenHolder();
-		refundVault = new CryptosaleRefundVault(_revenueWallet);
+		refundVault = new CryptosaleRefundVault(tokenHolder, _revenueWallet);
 		revenuePercent = _revenuePercent;
 
 		referralRefundVault = new ReferralRefundVault(tokenHolder, _revenueWallet);
@@ -52,49 +48,100 @@ contract Cryptosale is Ownable {
 		goal = _goal;
 	}
 
+	/**
+	 * payable methods
+	 */
+
 	// Buy sale tokens from crowdsale contract
 	function() payable {
-		require(!isFinalized);
-		
 		buyTokens(msg.sender, msg.value, 0);
 	}
 
-	function buy(uint referralCode) payable { 
-		require(!isFinalized);
+	function buy(uint referralCode) payable {
 		require(referralCode >= 10000 && referralCode <= 99999); // 5
 
 		buyTokens(msg.sender, msg.value, referralCode);
 	}
 
+	/**
+	 * public methods
+	 */
+
+	// Return funds if softcup is not reached
+	// Throws exeption if crowdsale is not finished
+	function claimRefund() public {
+		require(isFinalized);
+		require(tokenHolder.crowdsaleHasEnded() && !tokenHolder.crowdsaleGoalReached());
+
+		tokenHolder.claimRefund(msg.sender);
+		refundVault.claimRefund(msg.sender);
+		referralRefundVault.claimRefund(msg.sender);
+	}
+
+	// Investor can get buyed tokens if crowdsale ended and reached goal(tokenHolder's state == Withdraw (facade method))
+	function withdraw() public {
+		tokenHolder.withdraw(msg.sender);
+	}
+
+	// Referral partners can get revenue if crowdsale reached goal(referralRefundVault's state == Withdraw (facade method))
+	function referralWithdraw() public {
+		referralRefundVault.withdraw(msg.sender);
+	}
+
+	// Check that cryptosale contract is reached 
+	function goalReached() public constant returns (bool) {
+        return weiRaised >= goal;
+    }
+
+    /**
+	 * internal methods
+	 */
+
 	// Main calculation
 	function buyTokens(address beneficiary, uint amountWei, uint _referralCode) internal {
+		require(!isFinalized);
+
 		uint revenueAmountWei = amountWei.mul(revenuePercent).div(100);
 		uint restAmountWei = amountWei.sub(revenueAmountWei);
 
 		uint referralCode = _referralCode; // 2. referral code from function parameter
-		if (referralCode == 0)
+		if (referralCode == 0) {
 			referralCode = getReferralCode(amountWei); // 1. referral code from msg.value
+		}
 		address referralPartner = ReferralMapCodePartner[referralCode];
 		if (referralPartner != address(0)) {
 			uint bonusPercent = ReferralMapPartnerBonus[referralPartner];
-			
 			require(bonusPercent.mul(referralRevenueRate) < 100);
+
 			// bonusPercent > 0
 			uint referralRevenueAmountWei = revenueAmountWei.mul(bonusPercent.mul(referralRevenueRate)).div(100);
 		}
 
 		require(weiRaised <= goal.sub(restAmountWei));
 		
-		tokenHolder.deposit.value(restAmountWei)(beneficiary); //buyTokens
+
+		tokenHolder.deposit.value(restAmountWei)(beneficiary);
 		
 		// Update state
         weiRaised = weiRaised.add(restAmountWei);
 
-		refundVault.deposit.value(revenueAmountWei.sub(referralRevenueAmountWei))(beneficiary);
-		
-		if (referralRevenueAmountWei > 0)
-			referralRefundVault.forwardFunds.value(referralRevenueAmountWei)(beneficiary, referralPartner); //deposit
+		refundVault.forwardFunds.value(revenueAmountWei.sub(referralRevenueAmountWei))(beneficiary);
+		if (referralRevenueAmountWei > 0) {
+			referralRefundVault.forwardFunds.value(referralRevenueAmountWei)(beneficiary, referralPartner);
+		}
 	}
+
+	// Get referral code from amount of Wei
+	function getReferralCode(uint amountWei) internal constant returns(uint) {
+		uint meaningPartAmount = amountWei.div(100000000000); // 18 - 2 - 5
+		uint basicPartAmount = amountWei.div(10000000000000000).mul(100000); // (18 - 2) * 5
+
+		return meaningPartAmount.sub(basicPartAmount);
+	}
+
+	/**
+	 * only owner methods
+	 */
 
 	// Method for changing crowdsale contract
 	function setCrowdsale(address _crowdsale) onlyOwner public {
@@ -104,45 +151,28 @@ contract Cryptosale is Ownable {
 		tokenHolder.setCrowdsale(_crowdsale);
 	}
 
-	// Return funds if softcup is not reached
-	// Throws exeption if crowdsale is not finished
-	function claimRefund() public {
-		require(isFinalized);
-		require(!tokenHolder.crowdsaleGoalReached());
-
-		tokenHolder.claimRefund(msg.sender);
-		refundVault.claimRefund(msg.sender);
-
-		referralRefundVault.claimRefund(msg.sender);
-	}
-
-	// Investor can get buyed tokens if tokenHolder's state == Withdraw (facade method)
-	function withdraw() public {
-		tokenHolder.withdraw(msg.sender);
-	}
-
 	// Finalize cryptosale
 	function finalize() onlyOwner public {
 		require(!isFinalized);
-		//require(!tokenHolder.crowdsaleIsFinalized());
-		require(tokenHolder.crowdsaleHasEnded());
-
-		if (tokenHolder.crowdsaleGoalReached()) {
-			tokenHolder.close();
-            refundVault.close();
-
-            referralRefundVault.close();
-        } else {
-			tokenHolder.enableRefunds();
-            refundVault.enableRefunds();
-
-            referralRefundVault.enableRefunds();
-        }
+		// require(!tokenHolder.crowdsaleIsFinalized());
+		// require(tokenHolder.crowdsaleHasEnded());
 
 		isFinalized = true;
+
+		if (tokenHolder.crowdsaleGoalReached()) {
+			// tokenHolder.close();
+			refundVault.close();
+
+			// referralRefundVault.close();
+		}
+/* 		else {
+			tokenHolder.enableRefunds();
+			refundVault.enableRefunds();
+
+			referralRefundVault.enableRefunds();
+		} */
 	}
 
-	
 	// Add referral partner
 	function addReferralCode(uint code, address partner, uint bonusPercent) onlyOwner returns(bool) { //99999
 		require(bonusPercent > 0 && bonusPercent < 100);
@@ -155,28 +185,9 @@ contract Cryptosale is Ownable {
 		return true;
 	}
 
-	// Get referral code from amount of Wei
-	function getReferralCode(uint amountWei) internal returns(uint) {
-		uint meaningPartAmount = amountWei.div(100000000000); // 18 - 2 - 5
-		uint basicPartAmount = amountWei.div(10000000000000000).mul(100000); // (18 - 2) * 5
-
-		return meaningPartAmount.sub(basicPartAmount);
-	}
-
-	// Referral partners can get revenue if referralRefundVault's state == Withdraw (facade method)
-	function referralWithdraw() public {
-		referralRefundVault.withdraw(msg.sender);
-	}
-
 	// Set referral revenue rate
 	function setReferralRevenueRate(uint _rate) onlyOwner {
 		require(_rate > 0);
 		referralRevenueRate = _rate;
-	}
-
-
-	// Check that cryptosale contract is reached 
-	function goalReached() public constant returns (bool) {
-        return weiRaised >= goal;
-    }
+	}	
 }

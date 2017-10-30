@@ -14,7 +14,7 @@ import "./token.sol";
  * Example crowdsale contract
  * Contract cryptosale can buy sale tokens from crowdsale (rateProvider logic)
  */
-contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
+contract ExampleCrowdsale is Constants, RefundableCrowdsale {
 	RateProvider public rateProvider;
 
 	function ExampleCrowdsale (
@@ -42,13 +42,19 @@ contract ExampleCrowdsale is usingConstants, RefundableCrowdsale {
         rateProvider = provider;
 	}
 
+	/**
+     * internal methods
+     */
+
 	// Override getRate to integrate with rate provider.
     function getRate() internal constant returns(uint) {
 		return rateProvider.getRate(msg.sender, rate);
     }
 
-    
-    // [optional]
+    /**
+     * optional methods
+     */
+
     function getDepositedAmount(address _beneficiary) public constant returns(uint) {
     	return vault.deposited(_beneficiary);
     }
