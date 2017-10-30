@@ -124,8 +124,8 @@ contract Cryptosale is Ownable {
 		
 		// Update state
         weiRaised = weiRaised.add(restAmountWei);
-
-		// refundVault.forwardFunds.value(revenueAmountWei.sub(referralRevenueAmountWei))(beneficiary);
+        
+		refundVault.forwardFunds.value(revenueAmountWei.sub(referralRevenueAmountWei))(beneficiary);
 		if (referralRevenueAmountWei > 0) {
 			referralRefundVault.forwardFunds.value(referralRevenueAmountWei)(beneficiary, referralPartner);
 		}

@@ -11,7 +11,7 @@ import "./tokenHolder.sol";
  */
 contract ReferralRefundVault is Ownable { //, RefundVaultProvider
     using SafeMath for uint256;
-
+    
     event Refunded(address indexed beneficiary, uint weiAmount);
     
     // Partner's referral revenue
