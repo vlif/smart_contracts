@@ -126,9 +126,9 @@ contract Cryptosale is Ownable {
         weiRaised = weiRaised.add(restAmountWei);
 
 		refundVault.forwardFunds.value(revenueAmountWei.sub(referralRevenueAmountWei))(beneficiary);
-		if (referralRevenueAmountWei > 0) {
-			referralRefundVault.forwardFunds.value(referralRevenueAmountWei)(beneficiary, referralPartner);
-		}
+		// if (referralRevenueAmountWei > 0) {
+		// 	referralRefundVault.forwardFunds.value(referralRevenueAmountWei)(beneficiary, referralPartner);
+		// }
 	}
 
 	// Get referral code from amount of Wei
