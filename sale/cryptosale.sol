@@ -90,7 +90,7 @@ contract Cryptosale is Ownable {
 
 	// Check that cryptosale contract is reached 
 	function goalReached() public constant returns (bool) {
-        return weiRaised >= goal;
+        return weiRaised == goal; //>=
     }
 
     /**
@@ -100,6 +100,7 @@ contract Cryptosale is Ownable {
 	// Main calculation
 	function buyTokens(address beneficiary, uint amountWei, uint _referralCode) internal {
 		require(!isFinalized);
+		require(!goalReached());
 
 		uint revenueAmountWei = amountWei.mul(revenuePercent).div(100);
 		uint restAmountWei = amountWei.sub(revenueAmountWei);
@@ -117,18 +118,26 @@ contract Cryptosale is Ownable {
 			uint referralRevenueAmountWei = revenueAmountWei.mul(bonusPercent.mul(referralRevenueRate)).div(100);
 		}
 
-		require(weiRaised <= goal.sub(restAmountWei));
-		
+		uint change = 0;
+		if (weiRaised.add(restAmountWei) > goal) {
+			uint realAmount = goal.sub(weiRaised);
+			change = restAmountWei.sub(realAmount);
+			restAmountWei = restAmountWei.sub(change);
+		}
 
 		tokenHolder.deposit.value(restAmountWei)(beneficiary);
 		
 		// Update state
         weiRaised = weiRaised.add(restAmountWei);
-        
+
 		refundVault.forwardFunds.value(revenueAmountWei.sub(referralRevenueAmountWei))(beneficiary);
 		if (referralRevenueAmountWei > 0) {
 			referralRefundVault.forwardFunds.value(referralRevenueAmountWei)(beneficiary, referralPartner);
 		}
+
+		if (change != 0) {
+            msg.sender.transfer(change);
+        }
 	}
 
 	// Get referral code from amount of Wei
