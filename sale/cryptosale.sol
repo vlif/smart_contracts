@@ -10,7 +10,7 @@ import "./referralRefundVault.sol";
 // Main cryptosale contract
 contract Cryptosale is Ownable {
 	using SafeMath for uint;
-	
+
 	// This contract knows that who how much bought tokens
 	TokenHolder public tokenHolder;
 	
@@ -40,10 +40,10 @@ contract Cryptosale is Ownable {
 		require(_goal > 0);
 
 		tokenHolder = new TokenHolder();
-		refundVault = new CryptosaleRefundVault(tokenHolder, _revenueWallet);
+		refundVault = new CryptosaleRefundVault(address(tokenHolder), _revenueWallet);
 		revenuePercent = _revenuePercent;
 
-		referralRefundVault = new ReferralRefundVault(tokenHolder, _revenueWallet);
+		referralRefundVault = new ReferralRefundVault(address(tokenHolder), _revenueWallet);
 
 		goal = _goal;
 	}
@@ -126,9 +126,9 @@ contract Cryptosale is Ownable {
         weiRaised = weiRaised.add(restAmountWei);
 
 		// refundVault.forwardFunds.value(revenueAmountWei.sub(referralRevenueAmountWei))(beneficiary);
-		// if (referralRevenueAmountWei > 0) {
-		// 	referralRefundVault.forwardFunds.value(referralRevenueAmountWei)(beneficiary, referralPartner);
-		// }
+		if (referralRevenueAmountWei > 0) {
+			referralRefundVault.forwardFunds.value(referralRevenueAmountWei)(beneficiary, referralPartner);
+		}
 	}
 
 	// Get referral code from amount of Wei

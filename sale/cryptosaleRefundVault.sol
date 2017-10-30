@@ -35,12 +35,12 @@ contract CryptosaleRefundVault is Ownable { //, RefundVaultProvider
 	 */
 
 	// Close cryptosale refund
-    function close() onlyOwner {
+    function close() onlyOwner public {
         // super.close();
         wallet.transfer(this.balance); // send revenue to cryptosale
     }
     
-    function claimRefund(address investor) onlyOwner {
+    function claimRefund(address investor) onlyOwner public {
         // require(state == State.Refunding);
         require(tokenHolder.crowdsaleHasEnded() && !tokenHolder.crowdsaleGoalReached());
         uint depositedValue = deposited[investor];
@@ -51,7 +51,7 @@ contract CryptosaleRefundVault is Ownable { //, RefundVaultProvider
         Refunded(investor, depositedValue);
     }
 
-    function forwardFunds(address investor) onlyOwner payable {
+    function forwardFunds(address investor) onlyOwner payable public {
         // require(state == State.Active);
         
         if (tokenHolder.crowdsaleGoalReached()) {
