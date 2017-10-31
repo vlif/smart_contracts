@@ -106,6 +106,7 @@ contract ESportsToken is ESportsConstants, MintableToken {
      * @param _value The amount of token to be burned.
      */
     function burn(uint _value) public {
+        require(!paused || excluded[msg.sender]);
         require(_value > 0);
 
         balances[msg.sender] = balances[msg.sender].sub(_value);
