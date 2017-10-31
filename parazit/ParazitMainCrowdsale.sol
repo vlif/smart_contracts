@@ -21,7 +21,7 @@ contract ParazitMainCrowdsale is ParazitConstants, RefundableCrowdsale {
 
     ParazitMainRateProviderI public rateProvider;
     bool private isInit = false;
-
+    
     //1509281673,1509282633,"16666666666666666666666","200000000","0xca35b7d915458ef540ade6068dfe2f44e8fa733c","0x5e72914535f202659083db3a02c984188fa26e9f"
 	function ParazitMainCrowdsale (
 		uint32 _startTime, // crowdsale start time
