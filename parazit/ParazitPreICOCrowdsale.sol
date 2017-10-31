@@ -1,5 +1,9 @@
 pragma solidity ^0.4.16;
 
+/**
+ * ATTENTION! Source code of zeppelin smart contract was changed.
+ */
+
 import './zeppelin/crowdsale/RefundableCrowdsale.sol';
 
 import './ParazitConstants.sol';
