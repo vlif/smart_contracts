@@ -45,9 +45,9 @@ contract ParazitPreICOCrowdsale is ParazitConstants, RefundableCrowdsale {
     }
 
     // Override getRateScale to integrate with rate provider
-    function getRateScale() internal constant returns (uint) {
-        return rateProvider.getRateScale();
-    }
+    // function getRateScale() internal constant returns (uint) {
+    //     return rateProvider.getRateScale();
+    // }
 
     // Admin can set new rate provider
     function setRateProvider(address _rateProviderAddress) onlyOwner {
