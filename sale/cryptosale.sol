@@ -88,10 +88,12 @@ contract Cryptosale is Ownable {
 		referralRefundVault.withdraw(msg.sender);
 	}
 
+
 	// Check that cryptosale contract is reached 
 	function goalReached() public constant returns (bool) {
         return weiRaised == goal; //>=
     }
+
 
     /**
 	 * internal methods
@@ -198,5 +200,5 @@ contract Cryptosale is Ownable {
 	function setReferralRevenueRate(uint _rate) onlyOwner {
 		require(_rate > 0);
 		referralRevenueRate = _rate;
-	}	
+	}
 }

@@ -20,7 +20,7 @@ Transaction cost: 963307 gas.
 Transaction cost: 973376 gas. 
 
 4. Деплой контракта Crowdsale (при создании указывается адреса Token и TokenHolder)
-1509382908, 1509386388, "10000000000000000", 4, "0xdd870fa1b7c4700f2bd7f44238821c26f7392148", "0xa54b49a2ebcf1e8d4c8732202e2f3b720077e1bc", "0x38904f978d13a7a888a025f42812267cb4fca362"
+1509384228, 1509386388, "10000000000000000", 4, "0xdd870fa1b7c4700f2bd7f44238821c26f7392148", "0x5df0fee02e17c879e719f092003e35111c24fcbc", "0x8722aff990eda4d2d11915705076af5823f5f14c"
 Transaction cost: 1801436 gas. 
 Execution cost: 1364252 gas.
 Transaction cost: 1728662 gas. 
