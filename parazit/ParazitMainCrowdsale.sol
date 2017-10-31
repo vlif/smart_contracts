@@ -71,9 +71,9 @@ contract ParazitMainCrowdsale is ParazitConstants, RefundableCrowdsale {
     }
 
     // Override getRateScale to integrate with rate provider.
-    function getRateScale() internal constant returns (uint) {
-        return rateProvider.getRateScale();
-    }
+    // function getRateScale() internal constant returns (uint) {
+    //     return rateProvider.getRateScale();
+    // }
 
     // Admin can set new rate provider.
     function setRateProvider(address _rateProviderAddress) onlyOwner {
@@ -97,4 +97,12 @@ contract ParazitMainCrowdsale is ParazitConstants, RefundableCrowdsale {
         }
         token.transferOwnership(owner);
     }
+
+
+    function validPurchase(uint _amountWei, uint _actualRate, uint _totalSupply) internal constant returns (bool) {
+        require(isInit);
+        return super.validPurchase(_amountWei, _actualRate, _totalSupply);
+    }
+
+    
 }

@@ -81,9 +81,9 @@ contract Crowdsale {
      * @dev rate scale (or divider), to support not integer rates.
      * @return Rate divider.
      */
-    function getRateScale() internal constant returns (uint) {
-        return 1;
-    }
+    // function getRateScale() internal constant returns (uint) {
+    //     return 1;
+    // }
 
     // Fallback function can be used to buy tokens
     function() payable {
@@ -99,13 +99,13 @@ contract Crowdsale {
 
         // actual token minting rate (with considering bonuses and discounts)
         uint actualRate = getRate();
-        uint rateScale = getRateScale();
+        // uint rateScale = getRateScale();
 
         require(validPurchase(amountWei, actualRate, totalSupply));
 
 
         // Calculate token amount to be created
-        uint tokens = amountWei.mul(actualRate).div(rateScale);
+        uint tokens = amountWei.mul(actualRate); //.div(rateScale)
 
 
         // Change, if minted token would be less
@@ -115,10 +115,10 @@ contract Crowdsale {
         if (tokens.add(totalSupply) > hardCap) {
             // rest tokens
             uint maxTokens = hardCap.sub(totalSupply);
-            uint realAmount = maxTokens.mul(rateScale).div(actualRate);
+            uint realAmount = maxTokens.div(actualRate); //.mul(rateScale)
 
             // rest tokens rounded by actualRate
-            tokens = realAmount.mul(actualRate).div(rateScale);
+            tokens = realAmount.mul(actualRate); //.div(rateScale)
             change = amountWei - realAmount;
             amountWei = realAmount;
         }
