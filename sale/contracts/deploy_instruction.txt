@@ -1,0 +1,72 @@
+1. Деплой контракта Cryptosale
+"9999999999999999", "0xca35b7d915458ef540ade6068dfe2f44e8fa733c", 10
+Transaction cost: 3449247 gas. 
+Execution cost: 2615703 gas.
+2992709 gas
+Transaction cost: 3246075 gas. 
+Transaction cost: 3078753 gas. 
+
+2. Деплой контракта FreezingStorage для заморозки токенов между фондом и проектом
+"0xca35b7d915458ef540ade6068dfe2f44e8fa733c", "0xdd870fa1b7c4700f2bd7f44238821c26f7392148"
+Transaction cost: 816569 gas. 
+Execution cost: 579425 gas.
+Transaction cost: 775852 gas.
+Transaction cost: 805363 gas. 
+
+3. Деплой контракта Token (при создании указывается адрес FreezingStorage)
+Transaction cost: 1031408 gas. 
+Execution cost: 740268 gas.
+Transaction cost: 963307 gas.
+Transaction cost: 973376 gas. 
+
+-----------------
+
+4. Деплой контракта Crowdsale (при создании указывается адреса Token и TokenHolder)
+1509384228, 1509386388, "10000000000000000", 4, "0xdd870fa1b7c4700f2bd7f44238821c26f7392148", "0x5df0fee02e17c879e719f092003e35111c24fcbc", "0x8722aff990eda4d2d11915705076af5823f5f14c"
+Transaction cost: 1801436 gas. 
+Execution cost: 1364252 gas.
+Transaction cost: 1728662 gas. 
+Transaction cost: 1728598 gas.
+
+5. Задать свойства crowdsale и cryptosale у FreezingStorage (адреса Cryptosale и Crowdsale у нас теперь есть)
+Методы setCrowdsale и setCryptosale соответственно.
+Transaction cost: 43987 gas. 
+Execution cost: 21307 gas.
+Transaction cost: 44119 gas. 
+Execution cost: 21439 gas.
+
+6. Вызывается Сryptosale.setCrowdsale для задания адреса Crowdsale
+Transaction cost: 49228 gas. 
+Execution cost: 26548 gas.
+
+7. Вызывается Token.transferOwnership для задания корректного владельца токена(нужно, чтобы это был Crowdsale)
+Transaction cost: 30762 gas. 
+Execution cost: 8082 gas.
+
+8. Создание реферальных кодов
+11111, "0x4b0897b0513fdc7c541b6d9d7e929c4e5364d2db", 10
+Transaction cost: 64835 gas. 
+Execution cost: 41707 gas.
+
+pay
+Transaction cost: 265053 gas. 
+Transaction cost: 148328 gas. 
+
+-----------------
+
+9. Завершаем Crowdsale вызовом метода finalize() от имени owner-а контракта
+
+10. Завершаем Cryptosale вызовом метода finalize() (сработает, даже если Crowdsale не в статусе Finalized)
+
+10. Cryptosale получает средства в случае успеха автоматом (когда происходит Cryptosale.finalize())
+11. Инвесторы забирают свои токены при помощи Сryptosale.withdraw
+12. Реферальные партнеры забирают награду при помощи Сryptosale.referralWithdraw
+13. Освобождение токенов, которые начислены на счет контракта FreezingStorage
+
+-----------------
+
+Завершить Сryptosale можно вызовом метода finalize()
+Тут несколько сценариев
+a) Связанный с ним контракт Crowdsale достиг цели -> перечисляем награду Cryptosale, разрешаем забрать токены инвесторам, реферальным партнерам тоже разрешаем забрать награду
+b) Контракт Crowdsale не достиг цели -> Cryptosale не получает ничего, как и реферальные партнеры. Разрешается инвестору забрать свои вложения (отдает tokenHolder, депозит награды Cryptosale, депозит реферальной награды)
+Нужно отметить, что не проверяется достижение цели самим Cryptosale (у которого есть своя цель), так как в данном случае это неважно.

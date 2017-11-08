@@ -1,0 +1,269 @@
+{
+  "contractName": "CryptosaleInterface",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "goal",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "weiRaised",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "goalReached",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "isFinalized",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.16;\r\n\r\n// Abstract cryptosale interface contract\r\ncontract CryptosaleInterface {\r\n\tbool public isFinalized;\r\n\t// minimum amount of funds to be raised in weis\r\n    uint public goal;\r\n    // amount of raised money in wei\r\n    uint public weiRaised;\r\n    \r\n    function goalReached() public constant returns (bool);\r\n}",
+  "sourcePath": "C:\\OpenServer\\domains\\smart_contracts\\sale\\contracts\\CryptosaleInterface.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/C/OpenServer/domains/smart_contracts/sale/contracts/CryptosaleInterface.sol",
+      "exportedSymbols": {
+        "CryptosaleInterface": [
+          605
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".16"
+          ]
+        },
+        "id": 593,
+        "name": "PragmaDirective",
+        "src": "0:24:3"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            605
+          ],
+          "name": "CryptosaleInterface",
+          "scope": 606
+        },
+        "children": [
+          {
+            "attributes": {
+              "constant": false,
+              "name": "isFinalized",
+              "scope": 605,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "bool",
+              "value": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "bool",
+                  "type": "bool"
+                },
+                "id": 594,
+                "name": "ElementaryTypeName",
+                "src": "104:4:3"
+              }
+            ],
+            "id": 595,
+            "name": "VariableDeclaration",
+            "src": "104:23:3"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "goal",
+              "scope": 605,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "uint256",
+              "value": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "uint",
+                  "type": "uint256"
+                },
+                "id": 596,
+                "name": "ElementaryTypeName",
+                "src": "184:4:3"
+              }
+            ],
+            "id": 597,
+            "name": "VariableDeclaration",
+            "src": "184:16:3"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "weiRaised",
+              "scope": 605,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "uint256",
+              "value": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "uint",
+                  "type": "uint256"
+                },
+                "id": 598,
+                "name": "ElementaryTypeName",
+                "src": "245:4:3"
+              }
+            ],
+            "id": 599,
+            "name": "VariableDeclaration",
+            "src": "245:21:3"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": true,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "goalReached",
+              "payable": false,
+              "scope": 605,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 600,
+                "name": "ParameterList",
+                "src": "299:2:3"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 604,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 601,
+                        "name": "ElementaryTypeName",
+                        "src": "327:4:3"
+                      }
+                    ],
+                    "id": 602,
+                    "name": "VariableDeclaration",
+                    "src": "327:4:3"
+                  }
+                ],
+                "id": 603,
+                "name": "ParameterList",
+                "src": "326:6:3"
+              }
+            ],
+            "id": 604,
+            "name": "FunctionDefinition",
+            "src": "279:54:3"
+          }
+        ],
+        "id": 605,
+        "name": "ContractDefinition",
+        "src": "71:265:3"
+      }
+    ],
+    "id": 606,
+    "name": "SourceUnit",
+    "src": "0:336:3"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2017-11-04T12:32:10.692Z"
+}

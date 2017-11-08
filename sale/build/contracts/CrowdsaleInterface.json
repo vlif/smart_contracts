@@ -1,0 +1,476 @@
+{
+  "contractName": "CrowdsaleInterface",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "endTime",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "startTime",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "goalReached",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "claimRefund",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "hasEnded",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "vault",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "token",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.16;\r\n\r\nimport \"./base/crowdsale/RefundVault.sol\";\r\nimport \"./base/token/MintableToken.sol\";\r\n\r\n// Abstract crowdsale interface contract\r\ncontract CrowdsaleInterface {\r\n\tRefundVault public vault;\r\n\tMintableToken public token;\r\n\t// Start and end timestamps where investments are allowed\r\n    uint public startTime;\r\n    uint public endTime;\r\n\t\r\n\t// Crowdsale should have payable function but if abstract declare this function here it is not work\r\n\t// function () payable;\r\n\r\n\tfunction claimRefund() public;\r\n\r\n\tfunction hasEnded() public constant returns (bool);\r\n\tfunction goalReached() public constant returns (bool);\r\n}",
+  "sourcePath": "C:\\OpenServer\\domains\\smart_contracts\\sale\\contracts\\CrowdsaleInterface.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/C/OpenServer/domains/smart_contracts/sale/contracts/CrowdsaleInterface.sol",
+      "exportedSymbols": {
+        "CrowdsaleInterface": [
+          41
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".16"
+          ]
+        },
+        "id": 17,
+        "name": "PragmaDirective",
+        "src": "0:24:1"
+      },
+      {
+        "attributes": {
+          "SourceUnit": 2364,
+          "absolutePath": "/C/OpenServer/domains/smart_contracts/sale/contracts/base/crowdsale/RefundVault.sol",
+          "file": "./base/crowdsale/RefundVault.sol",
+          "scope": 42,
+          "symbolAliases": [
+            null
+          ],
+          "unitAlias": ""
+        },
+        "id": 18,
+        "name": "ImportDirective",
+        "src": "28:42:1"
+      },
+      {
+        "attributes": {
+          "SourceUnit": 2895,
+          "absolutePath": "/C/OpenServer/domains/smart_contracts/sale/contracts/base/token/MintableToken.sol",
+          "file": "./base/token/MintableToken.sol",
+          "scope": 42,
+          "symbolAliases": [
+            null
+          ],
+          "unitAlias": ""
+        },
+        "id": 19,
+        "name": "ImportDirective",
+        "src": "72:40:1"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            41
+          ],
+          "name": "CrowdsaleInterface",
+          "scope": 42
+        },
+        "children": [
+          {
+            "attributes": {
+              "constant": false,
+              "name": "vault",
+              "scope": 41,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "contract RefundVault",
+              "value": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "contractScope": null,
+                  "name": "RefundVault",
+                  "referencedDeclaration": 2363,
+                  "type": "contract RefundVault"
+                },
+                "id": 20,
+                "name": "UserDefinedTypeName",
+                "src": "190:11:1"
+              }
+            ],
+            "id": 21,
+            "name": "VariableDeclaration",
+            "src": "190:24:1"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "token",
+              "scope": 41,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "contract MintableToken",
+              "value": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "contractScope": null,
+                  "name": "MintableToken",
+                  "referencedDeclaration": 2894,
+                  "type": "contract MintableToken"
+                },
+                "id": 22,
+                "name": "UserDefinedTypeName",
+                "src": "218:13:1"
+              }
+            ],
+            "id": 23,
+            "name": "VariableDeclaration",
+            "src": "218:26:1"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "startTime",
+              "scope": 41,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "uint256",
+              "value": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "uint",
+                  "type": "uint256"
+                },
+                "id": 24,
+                "name": "ElementaryTypeName",
+                "src": "311:4:1"
+              }
+            ],
+            "id": 25,
+            "name": "VariableDeclaration",
+            "src": "311:21:1"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "endTime",
+              "scope": 41,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "uint256",
+              "value": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "uint",
+                  "type": "uint256"
+                },
+                "id": 26,
+                "name": "ElementaryTypeName",
+                "src": "339:4:1"
+              }
+            ],
+            "id": 27,
+            "name": "VariableDeclaration",
+            "src": "339:19:1"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": false,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "claimRefund",
+              "payable": false,
+              "scope": 41,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 28,
+                "name": "ParameterList",
+                "src": "515:2:1"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 29,
+                "name": "ParameterList",
+                "src": "524:0:1"
+              }
+            ],
+            "id": 30,
+            "name": "FunctionDefinition",
+            "src": "495:30:1"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": true,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "hasEnded",
+              "payable": false,
+              "scope": 41,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 31,
+                "name": "ParameterList",
+                "src": "547:2:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 35,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 32,
+                        "name": "ElementaryTypeName",
+                        "src": "575:4:1"
+                      }
+                    ],
+                    "id": 33,
+                    "name": "VariableDeclaration",
+                    "src": "575:4:1"
+                  }
+                ],
+                "id": 34,
+                "name": "ParameterList",
+                "src": "574:6:1"
+              }
+            ],
+            "id": 35,
+            "name": "FunctionDefinition",
+            "src": "530:51:1"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": true,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "goalReached",
+              "payable": false,
+              "scope": 41,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 36,
+                "name": "ParameterList",
+                "src": "604:2:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 40,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 37,
+                        "name": "ElementaryTypeName",
+                        "src": "632:4:1"
+                      }
+                    ],
+                    "id": 38,
+                    "name": "VariableDeclaration",
+                    "src": "632:4:1"
+                  }
+                ],
+                "id": 39,
+                "name": "ParameterList",
+                "src": "631:6:1"
+              }
+            ],
+            "id": 40,
+            "name": "FunctionDefinition",
+            "src": "584:54:1"
+          }
+        ],
+        "id": 41,
+        "name": "ContractDefinition",
+        "src": "158:483:1"
+      }
+    ],
+    "id": 42,
+    "name": "SourceUnit",
+    "src": "0:641:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2017-11-04T12:32:10.691Z"
+}
