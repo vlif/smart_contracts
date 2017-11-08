@@ -10,6 +10,7 @@ const FreezingStorage = artifacts.require("./FreezingStorage.sol");
 const RateProvider = artifacts.require("./RateProvider.sol");
 const CryptosaleRefundVault = artifacts.require("./CryptosaleRefundVault.sol");
 const ReferralRefundVault = artifacts.require("./ReferralRefundVault.sol");
+const ExampleCrowdsale = artifacts.require("./ExampleCrowdsale.sol");
 
 
 contract('Cryptosale', function(accounts) {
@@ -45,7 +46,7 @@ contract('Cryptosale', function(accounts) {
     // 		});
     // });
 
-    it ('# Example token construct', async() => {
+    it ('#2 Example token construct', async() => {
     	const freezingStorage = await FreezingStorage.deployed(accounts[0], accounts[1]);
     	const exampleToken = await ExampleToken.deployed(freezingStorage.address);
     	freezingStorage.address.should.be.equals(await exampleToken.FREEZING_STORAGE(), 'FREEZING_STORAGE must be');
@@ -53,6 +54,10 @@ contract('Cryptosale', function(accounts) {
             .should.be.equals(Number(web3.toWei(1, 'ether')), 'balanceOf freezingStorage must be');
     });
 
+    it('#3 Example crowdsale construct', async() => {
+        // snapshotId = (await snapshot()).result;
+        const crowdsale = await ExampleCrowdsale.deployed();
+        (await crowdsale.token()).should.have.length(42);
+    });
     
-
 });

@@ -41,7 +41,7 @@ contract ExampleCrowdsale is Constants, RefundableCrowdsale {
         // provider.transferOwnership(owner);
         rateProvider = provider;
 	}
-
+    
 	/**
      * internal methods
      */

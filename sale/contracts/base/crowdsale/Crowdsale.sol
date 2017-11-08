@@ -54,7 +54,7 @@ contract Crowdsale {
         require(_endTime >= _startTime);
         require(_rate > 0);
         require(_wallet != 0x0);
-        require(_hardCap > _rate);
+        // require(_hardCap > _rate);
 
         // token = createTokenContract();
         token = MintableToken(_token);
