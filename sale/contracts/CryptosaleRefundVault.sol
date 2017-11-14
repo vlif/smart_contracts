@@ -5,6 +5,7 @@ import "./base/math/SafeMath.sol";
 
 // import "./refundVaultProvider.sol";
 import "./TokenHolder.sol";
+import "./Cryptosale.sol";
 
 /**
  * Storage contract of revenue cryptosale
@@ -54,7 +55,8 @@ contract CryptosaleRefundVault is Ownable { //, RefundVaultProvider
     function forwardFunds(address investor) onlyOwner payable public {
         // require(state == State.Active);
         
-        if (tokenHolder.crowdsaleGoalReached()) {
+        Cryptosale cryptosale = Cryptosale(owner);
+        if (tokenHolder.crowdsaleGoalReached() || msg.value >= cryptosale.goal()) {
         	wallet.transfer(msg.value);
     	} else {
         	deposited[investor] = deposited[investor].add(msg.value);

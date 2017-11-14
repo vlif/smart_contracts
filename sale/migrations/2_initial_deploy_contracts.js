@@ -1,7 +1,7 @@
 // const MyWishCrowdsale = artifacts.require("./MyWishCrowdsale.sol");
 
 // module.exports = function(deployer) {
-//   deployer.deploy(MyWishCrowdsale, new Date("2017-10-25T9:00:00Z+0300").getTime() / 1000, new Date("2017-11-26T11:00:00Z+0300").getTime() / 1000, 22000000);
+//   deployer.deploy(MyWishCrowdsale, new Date("2017-10-25T9:00:00+0300").getTime() / 1000, new Date("2017-11-26T11:00:00+0300").getTime() / 1000, 22000000);
 // };
 
 // const SafeMath = artifacts.require('./base/math/SafeMath.sol');
@@ -44,13 +44,12 @@ module.exports = function(deployer, network, accounts) {
 			var cryptosale = instance; //Cryptosale.deployed()
 
 			return cryptosale.tokenHolder().then(function(tokenHolderInstance) {
-				// console.info(new Date()); //2017-11-08T11:02:23.474Z
-				console.info(Date.parse("2017-11-09T9:00:00.474Z"));
-				console.info(Date.parse("2017-12-26T11:00:00.474Z"));
-				console.info(web3.toWei(0.01, 'ether'));
-				console.info(accounts[0]);
-				console.info(ExampleToken.address);
-				console.info(tokenHolderInstance);
+				// console.info(Date.parse("2017-11-13T13:00:00.474Z")); //2017-11-08T11:02:23.474Z
+				// console.info(new Date("2017-11-09T09:00:00+0300"));
+				// console.info(web3.toWei(0.01, 'ether'));
+				// console.info(accounts[0]);
+				// console.info(ExampleToken.address);
+				// console.info(tokenHolderInstance);
 
 				// uint32 _startTime,
 				// uint32 _endTime,
@@ -59,10 +58,10 @@ module.exports = function(deployer, network, accounts) {
 				// uint _hardCapTokens, // 3
 				// address _wallet,
 				// address _token,
-				// address _tokenHolder
+				// address _tokenHolder 
 				return deployer.deploy(ExampleCrowdsale,
-					new Date("2017-11-09T9:00:00Z+0300").getTime() / 1000, 
-					new Date("2017-12-26T11:00:00Z+0300").getTime() / 1000, 
+					new Date("2017-11-13T15:00:01+0300").getTime() / 1000, //Date.parse("2017-11-13T13:00:00.474Z") / 1000, 
+					new Date("2017-12-26T11:00:00+0300").getTime() / 1000, //Date.parse("2017-12-26T11:00:00.474Z") / 1000, 
 					web3.toWei(0.01, 'ether'),
 					3,
 					accounts[0],

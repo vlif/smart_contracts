@@ -68,7 +68,7 @@ contract Cryptosale is Ownable {
 	 */
 
 	// Return funds if softcup is not reached
-	// Throws exeption if crowdsale is not finished
+	// Throws exception if crowdsale is not finished
 	function claimRefund() public {
 		require(isFinalized);
 		require(tokenHolder.crowdsaleHasEnded() && !tokenHolder.crowdsaleGoalReached());

@@ -126,7 +126,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 1910,
+          "SourceUnit": 2366,
           "absolutePath": "/C/OpenServer/domains/smart_contracts/sale/contracts/base/crowdsale/RefundVault.sol",
           "file": "./base/crowdsale/RefundVault.sol",
           "scope": 42,
@@ -141,7 +141,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 2441,
+          "SourceUnit": 2897,
           "absolutePath": "/C/OpenServer/domains/smart_contracts/sale/contracts/base/token/MintableToken.sol",
           "file": "./base/token/MintableToken.sol",
           "scope": 42,
@@ -188,7 +188,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "RefundVault",
-                  "referencedDeclaration": 1909,
+                  "referencedDeclaration": 2365,
                   "type": "contract RefundVault"
                 },
                 "id": 20,
@@ -216,7 +216,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "MintableToken",
-                  "referencedDeclaration": 2440,
+                  "referencedDeclaration": 2896,
                   "type": "contract MintableToken"
                 },
                 "id": 22,
@@ -472,5 +472,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2017-11-08T10:56:07.384Z"
+  "updatedAt": "2017-11-14T07:35:08.778Z"
 }

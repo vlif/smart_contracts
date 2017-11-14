@@ -10,7 +10,8 @@ module.exports = {
                 accounts: [10, 100, 10000, 1000000].map(function (v) {
                     return {balance: "" + v + ether};
                 }),
-                time: new Date("2017-10-10T15:00:00Z")
+                // time: new Date("2017-11-13T15:00:00Z")
+                time: new Date("2017-11-13T15:00:00+0300")
             }),
             gas: 4000000
         }
